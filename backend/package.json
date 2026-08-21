@@ -11,5 +11,10 @@
   },
   "dependencies": {
     "ioredis": "^5.11.1"
-  }
+  },
+  "workspaces": [
+    "gateway",
+    "services/*",
+    "shared"
+  ]
 }
