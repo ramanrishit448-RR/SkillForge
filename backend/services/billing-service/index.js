@@ -1,6 +1,5 @@
+import "dotenv/config";
 import express from 'express'
-import dotenv from "dotenv"
-dotenv.config()
 import dns from "dns"
 import { connectDb } from './configs/db.js'
 import paymentRouter from './routes/billing.route.js'
