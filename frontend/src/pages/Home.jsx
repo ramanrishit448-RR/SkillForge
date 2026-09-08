@@ -17,6 +17,7 @@ import {
   FiCheckCircle,
 } from "react-icons/fi";
 import { LoginModal } from "../components/LoginModel";
+import QuarterCircleOrbit from "../components/QuarterCircleOrbit";
 
 export default function Home({ user, setUser }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -98,51 +99,117 @@ export default function Home({ user, setUser }) {
           </div>
         </header>
 
-        {/* ── HERO SECTION ── */}
-        <section className="relative pt-16 sm:pt-20 pb-16 text-center">
-          {/* Main Headline */}
-          <motion.h1
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl sm:text-6xl lg:text-[70px] font-extrabold tracking-[-0.035em] text-[#141414] leading-[1.08] max-w-4xl mx-auto"
-          >
-            Careers That Matter, <br />
-            Talent That Transforms
-          </motion.h1>
+        {/* ── HERO SECTION WITH ROTATING ORBITAL TRACK ── */}
+        <section className="relative pt-8 sm:pt-12 pb-6 sm:pb-10 overflow-visible">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-end min-h-[580px]">
+            {/* Left Editorial Content */}
+            <div className="lg:col-span-6 z-20 text-left pb-6">
+              {/* Eyebrow Pill Tag */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FBDCD0] bg-[#FFF2ED] text-[#E05A3E] text-[11px] font-bold tracking-wider uppercase mb-5"
+              >
+                <span>FROM PREPARATION TO OFFER</span>
+              </motion.div>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-sm sm:text-base text-[#141414]/60 max-w-xl mx-auto mt-5 leading-relaxed font-normal"
-          >
-            The autonomous multi-agent career preparation platform. Master technical
-            interviews with live code execution, optimize your resume with semantic
-            ATS matching, and accelerate through dynamic learning roadmaps.
-          </motion.p>
+              {/* Main Headline */}
+              <motion.h1
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.05 }}
+                className="text-4xl sm:text-5xl lg:text-[60px] font-extrabold tracking-tight text-[#141414] leading-[1.05]"
+              >
+                AI Workforce.<br />
+                Built for Tech Careers.
+              </motion.h1>
 
-          {/* Action CTAs */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-8 flex items-center justify-center gap-3"
-          >
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="px-5 py-2.5 rounded-md bg-[#141414] text-white text-xs font-semibold hover:bg-black/90 shadow-sm transition-all cursor-pointer"
-            >
-              Start AI Preparation
-            </button>
-            <a
-              href="#platform"
-              className="px-5 py-2.5 rounded-md border border-[#DCD7CB] bg-white/70 text-[#141414] text-xs font-medium hover:border-[#141414]/40 hover:bg-white transition-all cursor-pointer"
-            >
-              Explore Platform
-            </a>
-          </motion.div>
+              {/* Subtitle */}
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.12 }}
+                className="mt-4 text-xs sm:text-sm text-[#141414]/65 max-w-lg leading-relaxed font-normal"
+              >
+                They simulate, evaluate and guide across live technical interviews, ATS resume audits, and customized engineering roadmaps so you land top-tier tech offers.
+              </motion.p>
+
+              {/* Action Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.18 }}
+                className="mt-7 flex items-center gap-3"
+              >
+                <button
+                  onClick={() => setShowLoginModal(true)}
+                  className="px-6 py-3 rounded-xl bg-[#E55734] hover:bg-[#D44725] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all cursor-pointer"
+                >
+                  Start Preparation
+                </button>
+                <a
+                  href="#platform"
+                  className="px-5 py-3 rounded-xl border border-[#DCD7CB] bg-white text-[#141414] text-xs font-semibold hover:border-[#141414]/40 transition-all cursor-pointer"
+                >
+                  Explore Agents
+                </a>
+              </motion.div>
+
+              {/* Floating AI Team Stack Card (Bottom Left) */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.25 }}
+                className="mt-10 pt-4"
+              >
+                <p className="text-[10px] font-bold text-[#141414]/40 uppercase tracking-wider mb-2.5">
+                  YOUR AI TEAM
+                </p>
+
+                <div className="relative">
+                  {/* Background Ghost Card 2 */}
+                  <div className="absolute -left-3 -top-2.5 w-64 sm:w-72 h-32 rounded-2xl bg-white/40 border border-[#E6E2D8] -rotate-3 pointer-events-none" />
+                  {/* Background Ghost Card 1 */}
+                  <div className="absolute -left-1.5 -top-1 w-64 sm:w-72 h-32 rounded-2xl bg-white/60 border border-[#E6E2D8] -rotate-1.5 pointer-events-none" />
+
+                  {/* Active Foreground Card */}
+                  <div className="relative w-full max-w-sm rounded-2xl bg-white/95 backdrop-blur-xl border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <h4 className="text-xs font-bold text-[#141414] tracking-tight">
+                        INTERVIEW AGENT
+                      </h4>
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[10px] font-semibold text-emerald-700">Active</span>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-[#141414]/65 leading-relaxed">
+                      Conducts realistic technical rounds with code execution, speech analysis, and follow-up questioning.
+                    </p>
+
+                    <div className="flex items-center gap-1.5 mt-3 flex-wrap">
+                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75">
+                        VOICE
+                      </span>
+                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75">
+                        LIVE IDE
+                      </span>
+                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75">
+                        RUBRIC
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* Right Orbital Quarter-Circle Animated Track */}
+            <div className="lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-visible">
+              <QuarterCircleOrbit className="translate-y-2 sm:translate-y-6" />
+            </div>
+          </div>
 
           {/* ── EMBEDDED DASHBOARD CONTAINER (MOCKUP LIKE SCREENSHOT) ── */}
           <motion.div
