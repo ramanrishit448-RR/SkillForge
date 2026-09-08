@@ -20,13 +20,323 @@ import QuarterCircleOrbit from "../components/QuarterCircleOrbit";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const AI_TEAM_MEMBERS = [
+  {
+    id: "interview",
+    name: "INTERVIEW AGENT",
+    status: "Active",
+    statusDot: "bg-emerald-500",
+    statusText: "text-emerald-700",
+    desc: "Conducts realistic technical rounds with code execution, speech analysis, and follow-up questioning.",
+    tags: ["VOICE", "LIVE IDE", "RUBRIC"],
+  },
+  {
+    id: "resume",
+    name: "RESUME AGENT",
+    status: "Active",
+    statusDot: "bg-blue-500",
+    statusText: "text-blue-700",
+    desc: "Vector-indexes resumes against 1,200+ industry job descriptions using Qdrant & Gemini to catch gaps.",
+    tags: ["QDRANT", "ATS AUDIT", "SEMANTIC"],
+  },
+  {
+    id: "roadmap",
+    name: "ROADMAP AGENT",
+    status: "Active",
+    statusDot: "bg-amber-500",
+    statusText: "text-amber-700",
+    desc: "Generates custom multi-week engineering curricula backed by real-time web verification and tutorials.",
+    tags: ["AGENTIC", "YOUTUBE", "PROJECTS"],
+  },
+  {
+    id: "feedback",
+    name: "FEEDBACK AGENT",
+    status: "Active",
+    statusDot: "bg-purple-500",
+    statusText: "text-purple-700",
+    desc: "Evaluates edge cases, algorithmic efficiency, and communication clarity to return structured grading reports.",
+    tags: ["DIAGNOSTICS", "SCORING", "INSIGHTS"],
+  },
+];
+
+function SwitchableAiTeamStack() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const deckRef = useRef(null);
+  const frontCardRef = useRef(null);
+  const midCardRef = useRef(null);
+  const backCardRef = useRef(null);
+  const isShuffling = useRef(false);
+
+  const current = AI_TEAM_MEMBERS[activeIdx];
+  const next1 = AI_TEAM_MEMBERS[(activeIdx + 1) % AI_TEAM_MEMBERS.length];
+  const next2 = AI_TEAM_MEMBERS[(activeIdx + 2) % AI_TEAM_MEMBERS.length];
+
+  const shuffleTo = (targetIdx) => {
+    if (isShuffling.current || targetIdx === activeIdx) return;
+    isShuffling.current = true;
+
+    // Animate front card sliding out
+    gsap.to(frontCardRef.current, {
+      x: 75,
+      y: -10,
+      rotation: 7,
+      opacity: 0,
+      scale: 0.92,
+      duration: 0.28,
+      ease: "power2.in",
+      onComplete: () => {
+        setActiveIdx(targetIdx);
+        // Reset transforms
+        gsap.set(frontCardRef.current, { x: 0, y: 0, rotation: 0, opacity: 1, scale: 1 });
+        gsap.fromTo(
+          frontCardRef.current,
+          { scale: 0.95, opacity: 0.8 },
+          {
+            scale: 1,
+            opacity: 1,
+            duration: 0.25,
+            ease: "back.out(1.4)",
+            onComplete: () => {
+              isShuffling.current = false;
+            },
+          }
+        );
+      },
+    });
+
+    // Middle card glides forward into front spot
+    gsap.to(midCardRef.current, {
+      x: 0,
+      y: 0,
+      rotation: 0,
+      opacity: 1,
+      duration: 0.28,
+      ease: "power2.out",
+    });
+  };
+
+  const shuffleNext = () => {
+    shuffleTo((activeIdx + 1) % AI_TEAM_MEMBERS.length);
+  };
+
+  const shufflePrev = () => {
+    shuffleTo((activeIdx - 1 + AI_TEAM_MEMBERS.length) % AI_TEAM_MEMBERS.length);
+  };
+
+  // Auto-cycle every 4.5 seconds when not hovering
+  useEffect(() => {
+    if (isHovered) return;
+    const interval = setInterval(() => {
+      shuffleNext();
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [activeIdx, isHovered]);
+
+  // Fan out animation on hover
+  useEffect(() => {
+    if (!midCardRef.current || !backCardRef.current) return;
+    if (isHovered) {
+      gsap.to(midCardRef.current, {
+        x: -12,
+        y: -9,
+        rotation: -3.5,
+        duration: 0.35,
+        ease: "power2.out",
+      });
+      gsap.to(backCardRef.current, {
+        x: -22,
+        y: -17,
+        rotation: -7,
+        duration: 0.35,
+        ease: "power2.out",
+      });
+    } else {
+      gsap.to(midCardRef.current, {
+        x: -6,
+        y: -5,
+        rotation: -2,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+      gsap.to(backCardRef.current, {
+        x: -12,
+        y: -10,
+        rotation: -4,
+        duration: 0.4,
+        ease: "power2.out",
+      });
+    }
+  }, [isHovered]);
+
+  // Continuous subtle floating bob
+  useEffect(() => {
+    const tween = gsap.to(deckRef.current, {
+      y: -6,
+      duration: 3.2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+    return () => tween.kill();
+  }, []);
+
+  return (
+    <div className="mt-10 pt-4">
+      {/* Header controls with title and mini switcher */}
+      <div className="flex items-center justify-between max-w-sm mb-2.5">
+        <p className="text-[10px] font-bold text-[#141414]/40 uppercase tracking-wider">
+          YOUR AI TEAM
+        </p>
+        <div className="flex items-center gap-1.5 text-[10px] font-mono text-black/40">
+          <span>{activeIdx + 1}/{AI_TEAM_MEMBERS.length}</span>
+          <div className="flex items-center">
+            <button
+              onClick={shufflePrev}
+              className="w-5 h-5 rounded hover:bg-black/5 hover:text-black flex items-center justify-center transition-colors cursor-pointer"
+              title="Previous agent"
+            >
+              ‹
+            </button>
+            <button
+              onClick={shuffleNext}
+              className="w-5 h-5 rounded hover:bg-black/5 hover:text-black flex items-center justify-center transition-colors cursor-pointer"
+              title="Next agent"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div
+        ref={deckRef}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="relative w-full max-w-sm select-none will-change-transform"
+      >
+        {/* ── BACK CARD (peek 2) ── */}
+        <div
+          ref={backCardRef}
+          onClick={() => shuffleTo((activeIdx + 2) % AI_TEAM_MEMBERS.length)}
+          className="absolute top-0 left-0 w-full rounded-2xl bg-[#FAF8F3] border border-[#E6E2D8] p-4 sm:p-5 shadow-xs cursor-pointer transition-colors hover:bg-white/80"
+          style={{
+            transform: "translate(-12px, -10px) rotate(-4deg)",
+            zIndex: 10,
+            opacity: 0.65,
+          }}
+          title={`Click to switch to ${next2.name}`}
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-bold text-[#141414]/50 tracking-tight">
+              {next2.name}
+            </span>
+            <span className={`w-2 h-2 rounded-full ${next2.statusDot} opacity-50`} />
+          </div>
+        </div>
+
+        {/* ── MIDDLE CARD (peek 1) ── */}
+        <div
+          ref={midCardRef}
+          onClick={() => shuffleTo((activeIdx + 1) % AI_TEAM_MEMBERS.length)}
+          className="absolute top-0 left-0 w-full rounded-2xl bg-white/85 backdrop-blur-md border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-white/95"
+          style={{
+            transform: "translate(-6px, -5px) rotate(-2deg)",
+            zIndex: 20,
+            opacity: 0.85,
+          }}
+          title={`Click to switch to ${next1.name}`}
+        >
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-bold text-[#141414]/75 tracking-tight">
+              {next1.name}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <span className={`w-2 h-2 rounded-full ${next1.statusDot} opacity-75`} />
+              <span className="text-[10px] font-semibold text-[#141414]/50">Next</span>
+            </div>
+          </div>
+          <p className="text-[11px] text-[#141414]/50 line-clamp-2 leading-relaxed">
+            {next1.desc}
+          </p>
+        </div>
+
+        {/* ── FRONT ACTIVE CARD ── */}
+        <div
+          ref={frontCardRef}
+          onClick={shuffleNext}
+          className="relative w-full rounded-2xl bg-white/95 backdrop-blur-xl border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.05)] cursor-pointer group hover:border-[#141414]/35 transition-colors"
+          style={{ zIndex: 30 }}
+        >
+          <div className="flex items-center justify-between mb-1.5">
+            <h4 className="text-xs font-bold text-[#141414] tracking-tight">
+              {current.name}
+            </h4>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className={`w-2 h-2 rounded-full ${current.statusDot} animate-pulse`} />
+                <span className={`text-[10px] font-semibold ${current.statusText}`}>
+                  {current.status}
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-black/35 group-hover:text-black/70 transition-colors">
+                ↻
+              </span>
+            </div>
+          </div>
+
+          <p className="text-[11px] text-[#141414]/65 leading-relaxed min-h-[34px]">
+            {current.desc}
+          </p>
+
+          <div className="flex items-center justify-between mt-3 pt-1">
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {current.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            <span className="text-[10px] text-black/40 font-medium group-hover:text-[#E05A3E] transition-colors flex items-center gap-1">
+              Switch card <FiArrowRight size={10} />
+            </span>
+          </div>
+
+          {/* Mini progress dots */}
+          <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-[#F0ECE4]">
+            {AI_TEAM_MEMBERS.map((m, idx) => (
+              <button
+                key={m.id}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shuffleTo(idx);
+                }}
+                className={`h-1 rounded-full transition-all cursor-pointer ${
+                  activeIdx === idx ? "w-5 bg-[#141414]" : "w-2 bg-black/15 hover:bg-black/30"
+                }`}
+                title={`Switch to ${m.name}`}
+              />
+            ))}
+            <span className="text-[9px] font-mono text-black/30 ml-auto">
+              Tap card to switch
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home({ user, setUser }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
   const containerRef = useRef(null);
   const heroRef = useRef(null);
-  const teamCardRef = useRef(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -91,34 +401,7 @@ export default function Home({ user, setUser }) {
           "-=0.7"
         );
 
-      // ── 2. CONTINUOUS FLOATING BOB ON AI TEAM STACK ──
-      gsap.to(".gsap-float-card", {
-        y: -7,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-
-      gsap.to(".gsap-ghost-card-1", {
-        y: 4,
-        rotation: -0.5,
-        duration: 3.6,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-
-      gsap.to(".gsap-ghost-card-2", {
-        y: -3,
-        rotation: -4,
-        duration: 4.2,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-
-      // ── 3. STUDIO DASHBOARD PREVIEW SCROLLTRIGGER ──
+      // ── 2. STUDIO DASHBOARD PREVIEW SCROLLTRIGGER ──
       gsap.from(".gsap-studio-container", {
         scrollTrigger: {
           trigger: ".gsap-studio-container",
@@ -186,34 +469,6 @@ export default function Home({ user, setUser }) {
 
     return () => ctx.revert();
   }, []);
-
-  // ── MOUSE PARALLAX TILT ON HERO AI TEAM CARD ──
-  const handleHeroMouseMove = (e) => {
-    if (!teamCardRef.current) return;
-    const rect = teamCardRef.current.getBoundingClientRect();
-    const cardCenterX = rect.left + rect.width / 2;
-    const cardCenterY = rect.top + rect.height / 2;
-    const deltaX = (e.clientX - cardCenterX) / 28;
-    const deltaY = (e.clientY - cardCenterY) / 28;
-
-    gsap.to(teamCardRef.current, {
-      rotateX: -deltaY,
-      rotateY: deltaX,
-      transformPerspective: 800,
-      duration: 0.45,
-      ease: "power1.out",
-    });
-  };
-
-  const handleHeroMouseLeave = () => {
-    if (!teamCardRef.current) return;
-    gsap.to(teamCardRef.current, {
-      rotateX: 0,
-      rotateY: 0,
-      duration: 0.7,
-      ease: "power2.out",
-    });
-  };
 
   return (
     <div
@@ -296,8 +551,6 @@ export default function Home({ user, setUser }) {
         {/* ── HERO SECTION WITH ROTATING ORBITAL TRACK ── */}
         <section
           ref={heroRef}
-          onMouseMove={handleHeroMouseMove}
-          onMouseLeave={handleHeroMouseLeave}
           className="relative pt-8 sm:pt-12 pb-6 sm:pb-10 overflow-visible"
         >
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-end min-h-[580px]">
@@ -343,50 +596,9 @@ export default function Home({ user, setUser }) {
                 </a>
               </div>
 
-              {/* Floating AI Team Stack Card (Bottom Left) */}
-              <div className="gsap-team-stack mt-10 pt-4">
-                <p className="text-[10px] font-bold text-[#141414]/40 uppercase tracking-wider mb-2.5">
-                  YOUR AI TEAM
-                </p>
-
-                <div className="relative">
-                  {/* Background Ghost Card 2 */}
-                  <div className="gsap-ghost-card-2 absolute -left-3 -top-2.5 w-64 sm:w-72 h-32 rounded-2xl bg-white/40 border border-[#E6E2D8] -rotate-3 pointer-events-none" />
-                  {/* Background Ghost Card 1 */}
-                  <div className="gsap-ghost-card-1 absolute -left-1.5 -top-1 w-64 sm:w-72 h-32 rounded-2xl bg-white/60 border border-[#E6E2D8] -rotate-1.5 pointer-events-none" />
-
-                  {/* Active Foreground Card */}
-                  <div
-                    ref={teamCardRef}
-                    className="gsap-float-card relative w-full max-w-sm rounded-2xl bg-white/95 backdrop-blur-xl border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] will-change-transform"
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <h4 className="text-xs font-bold text-[#141414] tracking-tight">
-                        INTERVIEW AGENT
-                      </h4>
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[10px] font-semibold text-emerald-700">Active</span>
-                      </div>
-                    </div>
-
-                    <p className="text-[11px] text-[#141414]/65 leading-relaxed">
-                      Conducts realistic technical rounds with code execution, speech analysis, and follow-up questioning.
-                    </p>
-
-                    <div className="flex items-center gap-1.5 mt-3 flex-wrap">
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75">
-                        VOICE
-                      </span>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75">
-                        LIVE IDE
-                      </span>
-                      <span className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75">
-                        RUBRIC
-                      </span>
-                    </div>
-                  </div>
-                </div>
+              {/* Floating AI Team Stack Card (Switchable Deck) */}
+              <div className="gsap-team-stack">
+                <SwitchableAiTeamStack />
               </div>
             </div>
 
