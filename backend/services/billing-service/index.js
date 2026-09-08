@@ -1,4 +1,9 @@
-import "dotenv/config";
+import dotenv from "dotenv"
+import path from "path"
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") })
+dotenv.config()
+
 import express from 'express'
 import dns from "dns"
 import { connectDb } from './configs/db.js'
@@ -14,7 +19,7 @@ app.use(express.json());
 
 
 
-const PORT = process.env.PORT || 6005
+const PORT = process.env.BILLING_PORT || process.env.PORT || 8005
 
 app.get("/", (req,res)=>{
     return res.send(`hello from Billing-server `)

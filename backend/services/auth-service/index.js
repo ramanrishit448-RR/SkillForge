@@ -1,10 +1,15 @@
-import express from "express";
 import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") });
+dotenv.config();
+
+import express from "express";
 import cookieParser from "cookie-parser";
 import { connectDb } from "./configs/db.js";
 import dns from 'dns'
 import authRouter from "./routes/auth.route.js";
-dotenv.config();
+
 dns.setServers([
       '1.1.1.1',
       '8.8.8.8'
@@ -16,7 +21,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-const PORT = process.env.PORT || 6001
+const PORT = process.env.AUTH_PORT || process.env.PORT || 8001
 
 app.use("/",authRouter);
 

@@ -1,6 +1,10 @@
-import express from 'express'
 import dotenv from "dotenv"
+import path from "path"
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") })
 dotenv.config()
+
+import express from 'express'
 import dns from "dns"
 import { connectDb } from './configs/db.js'
 
@@ -14,7 +18,7 @@ app.use(express.json());
 
 
 
-const PORT = process.env.PORT || 6002
+const PORT = process.env.INTERVIEW_PORT || process.env.PORT || 8002
 
 app.get("/", (req,res)=>{
     return res.send(`hello from interview-server `)

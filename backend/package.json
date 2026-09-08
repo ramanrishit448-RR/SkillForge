@@ -11,6 +11,7 @@
     "redis": "docker compose up -d"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "ioredis": "^5.11.1"
   },
   "workspaces": [

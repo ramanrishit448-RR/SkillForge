@@ -1,6 +1,10 @@
-import express from 'express'
 import dotenv from "dotenv"
+import path from "path"
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") })
 dotenv.config()
+
+import express from 'express'
 import dns from "dns"
 import { connectDb } from './configs/db.js'
 import roadmapRouter from './routes/roadmap.route.js'
@@ -12,7 +16,7 @@ dns.setServers([
 const app = express()
 app.use(express.json());
 
-const PORT = process.env.PORT || 6004
+const PORT = process.env.ROADMAP_PORT || process.env.PORT || 8004
 
 
 

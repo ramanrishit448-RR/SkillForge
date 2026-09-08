@@ -70,6 +70,7 @@ SkillForge/
    ```bash
    cd backend
    npm install
+   npm run dev
    ```
    *Note: Ensure you copy the `.env.example` file to `.env` inside each service and fill in your API keys.*
 

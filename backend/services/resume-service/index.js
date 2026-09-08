@@ -1,6 +1,10 @@
-import express from 'express'
 import dotenv from "dotenv"
+import path from "path"
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../.env") })
 dotenv.config()
+
+import express from 'express'
 import dns from "dns"
 import { connectDb } from './configs/db.js'
 import resumeRouter from './routes/resume.route.js'
@@ -14,7 +18,7 @@ app.use(express.json());
 
 
 
-const PORT = process.env.PORT || 6003
+const PORT = process.env.RESUME_PORT || process.env.PORT || 8003
 
 app.get("/", (req,res)=>{
     return res.send(`hello from resume-server `)

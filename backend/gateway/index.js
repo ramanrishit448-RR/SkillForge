@@ -1,6 +1,10 @@
 import express from 'express'
 import dotenv from "dotenv"
+import path from "path"
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../.env") })
 dotenv.config()
+
 import proxy from 'express-http-proxy'
 import dns from "dns"
 import cors from 'cors'
@@ -16,7 +20,7 @@ dns.setServers([
 const app = express()
 
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.GATEWAY_PORT || process.env.PORT || 8000
 app.use(express.json())
 
 app.use(

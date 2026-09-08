@@ -1,4 +1,7 @@
 import dotenv from "dotenv";
+import path from "path";
+
+dotenv.config({ path: path.resolve(import.meta.dirname, "../../../.env") });
 dotenv.config();
 
 import { ChatGroq } from "@langchain/groq";
