@@ -11,7 +11,7 @@ import { getResume } from "../api/resume.api";
 import { setResume } from "../redux/resumeSlice";
 
 import api from "../utils/axios";
-import { useCoins } from "../api/user.api";
+import { useCoins, refundCoins } from "../api/user.api";
 
 // ─── Score Ring ──────────────────────────────────────────────
 function ScoreRing({ score }) {
@@ -91,11 +91,17 @@ export default function Scorer({setUser , user}) {
 
   const uploadResume = async () => {
     if (!file) return alert("Please select a PDF");
+    let coinDeducted = false;
     try {
       setLoading(true);
 
-      const coinResponse = await useCoins( { coins: 10, action: "resume-score" })
-      
+      const coinResponse = await useCoins({ coins: 10, action: "resume-score" });
+      if (!coinResponse) {
+        alert("Insufficient interview coins or session expired.");
+        setLoading(false);
+        return;
+      }
+      coinDeducted = true;
 
       setUser((prev) => ({
         ...prev,
@@ -111,8 +117,18 @@ export default function Scorer({setUser , user}) {
       dispatch(setResume(response.data.data));
 
     } catch (err) {
-      alert(err.response?.data?.message || "Upload Failed");
       console.log(err);
+      if (coinDeducted) {
+        const refund = await refundCoins(10);
+        if (refund?.interviewCoin !== undefined) {
+          setUser((prev) => ({ ...prev, interviewCoin: refund.interviewCoin }));
+        }
+      }
+      const isRateLimit = err.response?.status === 429 || err.response?.data?.isRateLimit;
+      const msg = isRateLimit
+        ? "AI rate limit or quota exceeded. Your 10 coins have been refunded. Please wait a moment and try again."
+        : (err.response?.data?.message ? `${err.response.data.message} (10 coins refunded)` : "Upload Failed. Coins refunded.");
+      alert(msg);
     } finally {
       setLoading(false);
     }

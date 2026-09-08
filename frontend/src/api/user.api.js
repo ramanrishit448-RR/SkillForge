@@ -24,17 +24,22 @@ import api from "../utils/axios";
     };}
 
 
-    export const useCoins = async (data) => {
-        try {
-             const response = await api.post(
-          "/api/auth/use-interview-coins",data)
+export const useCoins = async (data) => {
+  try {
+    const response = await api.post("/api/auth/use-interview-coins", data);
+    return response.data;
+  } catch (error) {
+    console.log(error.response?.data || error.message);
+    return null;
+  }
+};
 
-          return response.data
-        } catch (error) {
-            console.log(
-          error.response?.data ||
-          error.message
-        );
-        return null
-        }
-    }
+export const refundCoins = async (coins) => {
+  try {
+    const response = await api.post("/api/auth/add-coins", { coins });
+    return response.data;
+  } catch (error) {
+    console.error("Coin refund failed:", error.response?.data || error.message);
+    return null;
+  }
+};

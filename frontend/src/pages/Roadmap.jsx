@@ -8,7 +8,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import RoadmapResult from "../components/roadmap/RoadmapResult";
 import api from "../utils/axios";
-import { useCoins } from "../api/user.api";
+import { useCoins, refundCoins } from "../api/user.api";
 
 
 
@@ -98,9 +98,17 @@ const getRoadmapById = async (id) => {
     if (!role.trim() || loading) return;
     setLoading(true);
     setError("");
+    let coinDeducted = false;
     try {
-       const coinResponse = await useCoins({ coins: 20, action: "resume-score" }) 
-            setUser((prev) => ({ ...prev, interviewCoin: coinResponse.interviewCoin }));
+      const coinResponse = await useCoins({ coins: 20, action: "roadmap" });
+      if (!coinResponse) {
+        setError("Insufficient interview coins or session expired. Please top up your coins.");
+        setLoading(false);
+        return;
+      }
+      coinDeducted = true;
+      setUser((prev) => ({ ...prev, interviewCoin: coinResponse.interviewCoin }));
+
       const { data } = await api.post(
         "/api/roadmap/generate",
         {
@@ -115,7 +123,17 @@ const getRoadmapById = async (id) => {
       getRoadmaps();
     } catch (err) {
       console.error("Failed to generate roadmap:", err);
-      setError("Something went wrong while generating your roadmap. Please try again.");
+      if (coinDeducted) {
+        const refund = await refundCoins(20);
+        if (refund?.interviewCoin !== undefined) {
+          setUser((prev) => ({ ...prev, interviewCoin: refund.interviewCoin }));
+        }
+      }
+      const isRateLimit = err.response?.status === 429 || err.response?.data?.isRateLimit;
+      const errorMsg = isRateLimit
+        ? "AI service rate limit or quota reached. Your 20 coins have been refunded. Please wait a moment and try again."
+        : (err.response?.data?.message ? `${err.response.data.message} (20 coins refunded)` : "Something went wrong while generating your roadmap. 20 coins have been refunded.");
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

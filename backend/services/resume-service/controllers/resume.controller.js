@@ -3,8 +3,8 @@ import fs from "fs/promises";
 import Resume from "../model/resume.model.js";
 import extractPdfText from "../configs/pdf.js";
 import resumeAgent from "../agents/resume.agent.js";
-
 import redis from "../../../shared/redis/redis.js";
+import { handleAiError } from "../../../shared/utils/aiErrorHandler.js";
 
 
 export const uploadResume = async (req, res) => {
@@ -98,20 +98,13 @@ export const uploadResume = async (req, res) => {
     });
 
   } catch (error) {
-
-    console.log(error);
-
     if (req.file) {
       try {
         await fs.unlink(req.file.path);
       } catch {}
     }
 
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
-
+    return handleAiError(error, res, "Failed to analyze resume due to an AI processing issue.");
   }
 };
 

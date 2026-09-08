@@ -1,6 +1,7 @@
 import Interview from "../model/interview.model.js";
 import graph from "../graph/graph.js";
 import redis from "../../../shared/redis/redis.js";
+import { handleAiError } from "../../../shared/utils/aiErrorHandler.js";
 export const startInterview = async (req, res) => {
   try {
 
@@ -95,17 +96,7 @@ export const startInterview = async (req, res) => {
     });
 
   } catch (error) {
-
-    console.log(error);
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
-
+    return handleAiError(error, res, "Failed to start interview due to an AI processing issue.");
   }
 };
 
@@ -277,17 +268,7 @@ export const submitAnswer = async (req, res) => {
     });
 
   } catch (error) {
-
-    console.log(error);
-
-    return res.status(500).json({
-
-      success: false,
-
-      message: error.message,
-
-    });
-
+    return handleAiError(error, res, "Failed to evaluate answer due to an AI processing issue.");
   }
 };
 

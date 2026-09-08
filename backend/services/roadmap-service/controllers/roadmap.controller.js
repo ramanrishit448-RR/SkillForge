@@ -1,4 +1,5 @@
 import redis from "../../../shared/redis/redis.js";
+import { handleAiError } from "../../../shared/utils/aiErrorHandler.js";
 import graph from "../graph/roadmap.graph.js";
 
 import Roadmap from "../model/roadmap.model.js";
@@ -60,12 +61,7 @@ await redis.del(`userRoadmaps:${userId}`);
       data: roadmap,
     });
   } catch (error) {
-    console.log(error);
-
-    return res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+    return handleAiError(error, res, "Failed to generate roadmap due to an AI processing issue.");
   }
 };
 

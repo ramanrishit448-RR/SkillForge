@@ -18,7 +18,7 @@ import { setResume } from "../../redux/resumeSlice";
 import { useNavigate } from "react-router-dom";
 import api from "../../utils/axios";
 import { startInterview } from "../../api/interview.api";
-import { useCoins } from "../../api/user.api";
+import { useCoins, refundCoins } from "../../api/user.api";
 
 function Step1SetUp({ user, setUser }) {
   const dispatch = useDispatch();
@@ -40,10 +40,16 @@ function Step1SetUp({ user, setUser }) {
 
   const uploadResume = async () => {
     if (!file) return;
+    let coinDeducted = false;
     try {
       setUploading(true);
-      const coinResponse = await useCoins({ coins: 10, action: "resume-score" })
-      
+      const coinResponse = await useCoins({ coins: 10, action: "resume-score" });
+      if (!coinResponse) {
+        alert("Insufficient interview coins or session expired.");
+        setUploading(false);
+        return;
+      }
+      coinDeducted = true;
       setUser((prev) => ({ ...prev, interviewCoin: coinResponse.interviewCoin }));
       const formData = new FormData();
       formData.append("resume", file);
@@ -52,27 +58,56 @@ function Step1SetUp({ user, setUser }) {
       setUploading(false);
     } catch (error) {
       console.log(error);
+      if (coinDeducted) {
+        const refund = await refundCoins(10);
+        if (refund?.interviewCoin !== undefined) {
+          setUser((prev) => ({ ...prev, interviewCoin: refund.interviewCoin }));
+        }
+      }
+      const isRateLimit = error.response?.status === 429 || error.response?.data?.isRateLimit;
+      alert(isRateLimit 
+        ? "AI rate limit or quota reached. Your 10 coins have been refunded." 
+        : (error.response?.data?.message ? `${error.response.data.message} (10 coins refunded)` : "Failed to analyze resume. Coins refunded.")
+      );
       setUploading(false);
     }
   };
 
   const start = async () => {
-   
+    if (!role.trim()) {
+      alert("Please enter or select a target role");
+      return;
+    }
+
+    if (!user?.interviewCoin || user.interviewCoin < 50) {
+      alert("You need at least 50 interview coins to start an interview. Please top up your coins.");
+      return;
+    }
+
+    try {
       setStarting(true);
-      const response = await startInterview({ role, type, useResume, resume })
+      const response = await startInterview({ role, type, useResume, resume });
        
-       
-      
-      if (response) {
-        const coinResponse = await useCoins({ coins: 50, action: "interview" })
-        
-    
-        setUser((prev) => ({ ...prev, interviewCoin: coinResponse.interviewCoin }));
+      if (response && response.interviewId) {
+        const coinResponse = await useCoins({ coins: 50, action: "interview" });
+        if (coinResponse?.interviewCoin !== undefined) {
+          setUser((prev) => ({ ...prev, interviewCoin: coinResponse.interviewCoin }));
+        }
+        setStarting(false);
+        navigate(`/interview/${response.interviewId}`);
+      } else {
+        alert("Failed to start interview. Please try again.");
+        setStarting(false);
       }
+    } catch (error) {
+      console.log(error);
+      const isRateLimit = error.response?.status === 429 || error.response?.data?.isRateLimit;
+      alert(isRateLimit 
+        ? "AI service rate limit or quota reached. No coins were charged. Please wait a moment and try again." 
+        : (error.response?.data?.message || "Failed to start interview. No coins were charged.")
+      );
       setStarting(false);
-      navigate(`/interview/${response.interviewId}`);
-    
-    
+    }
   };
 
   return (
