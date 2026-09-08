@@ -40,6 +40,16 @@ export const uploadResume = async (req, res) => {
 
     const resumeData = JSON.parse(aiResponse);
 
+    // Sanitize: ensure all array fields contain only strings (LLMs sometimes return objects)
+    const arrayFields = ["skills", "projects", "education", "experience", "strengths", "weaknesses", "missingSkills", "recommendations"];
+    for (const field of arrayFields) {
+      if (Array.isArray(resumeData[field])) {
+        resumeData[field] = resumeData[field].map((item) =>
+          typeof item === "string" ? item : JSON.stringify(item)
+        );
+      }
+    }
+
     // -----------------------
     // MongoDB
     // -----------------------

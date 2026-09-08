@@ -25,7 +25,7 @@ export default function Home({ user, setUser }) {
             <GiArtificialHive size={15} color="white" />
           </div>
           <span className="font-extrabold text-base tracking-tight text-[#0A0A0A]">
-            Fresher.AI
+            SkillForge
           </span>
         </div>
 
@@ -78,7 +78,7 @@ export default function Home({ user, setUser }) {
             transition={{ duration: 0.55, delay: 0.2 }}
             className="text-black/45 text-sm leading-relaxed max-w-md mx-auto mb-6 [text-shadow:0_2px_10px_rgba(0,0,0,0.06)]"
           >
-            Fresher.AI is an innovative AI-powered interview preparation platform
+            SkillForge is an innovative AI-powered interview preparation platform
             designed to help job seekers excel in their interviews.
           </motion.p>
 
@@ -137,7 +137,7 @@ export default function Home({ user, setUser }) {
             </h2>
 
             <p className="text-black/40 text-sm max-w-2xl mx-auto mt-4 leading-relaxed">
-              Fresher.AI combines multiple AI agents that work together
+              SkillForge combines multiple AI agents that work together
               to help you build your resume, practice interviews,
               receive detailed feedback, and follow a personalized roadmap
               to land your dream job.
@@ -205,9 +205,9 @@ export default function Home({ user, setUser }) {
           <div className="w-5 h-5 rounded-md bg-[#0A0A0A] flex items-center justify-center">
             <GiArtificialHive size={11} color="white" />
           </div>
-          <span className="font-bold text-xs text-[#0A0A0A]/70">Fresher.AI</span>
+          <span className="font-bold text-xs text-[#0A0A0A]/70">SkillForge</span>
         </div>
-        <div className="text-black/30 text-xs">© {new Date().getFullYear()} Fresher.AI · All rights reserved</div>
+        <div className="text-black/30 text-xs">© {new Date().getFullYear()} SkillForge · All rights reserved</div>
       </footer>
 
     </div>

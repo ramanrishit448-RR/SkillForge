@@ -75,7 +75,7 @@ SkillForge/
 
 3. **Frontend Setup**
    ```bash
-   cd ../frontend
+   cd frontend
    npm install
    npm run dev
    ```

@@ -55,7 +55,7 @@ export default function ResumeBuilder({user , setUser}) {
           >
             
             <span className="text-base font-extrabold tracking-tight">
-              Fresher.AI
+              SkillForge
             </span>
 
             <span className="hidden rounded bg-black/5 px-1.5 py-0.5 text-[10px] text-black/50 sm:block">

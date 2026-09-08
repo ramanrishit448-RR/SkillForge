@@ -25,7 +25,7 @@ function Navbar({ onHistoryClick }) {
           onClick={() => navigate("/dashboard")}
           className="flex cursor-pointer items-center gap-1.5"
         >
-          <span className="text-sm sm:text-base font-extrabold text-[#0A0A0A]">Fresher.AI</span>
+          <span className="text-sm sm:text-base font-extrabold text-[#0A0A0A]">SkillForge</span>
           <span className="hidden sm:block rounded bg-black/5 px-1.5 py-0.5 text-[10px] text-black/50">
             Roadmap Generator
           </span>

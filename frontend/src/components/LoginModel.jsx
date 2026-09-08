@@ -67,7 +67,7 @@ export function LoginModal({ onClose, setUser }) {
           ">
             Sign in to{" "}
             <span className="font-extrabold text-lg tracking-tight text-white">
-              Fresher.AI
+              SkillForge
             </span>
           </h2>
 

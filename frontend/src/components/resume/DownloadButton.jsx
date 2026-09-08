@@ -14,7 +14,7 @@ export default function DownloadButton({
 
   const handlePrint = useReactToPrint({
     contentRef: resumeRef,
-    documentTitle: "Fresher.AI",
+    documentTitle: "SkillForge",
   });
 
   const handleDownload = async () => {

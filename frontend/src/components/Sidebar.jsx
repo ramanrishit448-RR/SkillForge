@@ -63,7 +63,7 @@ export default function Sidebar({
                 transition={{ duration: 0.15 }}
                 className="font-extrabold text-sm tracking-tight text-[#0A0A0A] whitespace-nowrap"
               >
-                Fresher.AI
+                SkillForge
               </motion.span>
             </>
           )}

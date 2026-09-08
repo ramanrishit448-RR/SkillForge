@@ -65,7 +65,7 @@ export default function Pricing({ user, setUser }) {
                 key: import.meta.env.VITE_RAZORPAY_KEY_ID,
                 amount: result.data.order.amount,
                 currency: result.data.order.currency,
-                name: "Fresher.AI",
+                name: "SkillForge",
                 description: `${plan.title} - ${plan.coins} Interview Coins`,
                 order_id: result.data.order.id,
 
@@ -124,7 +124,7 @@ export default function Pricing({ user, setUser }) {
                         className="flex cursor-pointer items-center gap-1.5"
                     >
                         <span className="text-base font-extrabold tracking-tight text-[#0A0A0A]">
-                            Fresher.AI
+                            SkillForge
                         </span>
 
                         <span className="hidden rounded bg-black/5 px-1.5 py-0.5 text-[10px] text-black/50 sm:block">

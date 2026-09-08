@@ -7,7 +7,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently -n gateway,auth,interview,resume,roadmap,billing -c cyan,blue,green,yellow,magenta,red \"npm run dev --workspace=gateway\" \"npm run dev --workspace=services/auth-service\" \"npm run dev --workspace=services/interview-service\" \"npm run dev --workspace=services/resume-service\" \"npm run dev --workspace=services/roadmap-service\" \"npm run dev --workspace=services/billing-service\"",
+    "redis": "docker compose up -d"
   },
   "dependencies": {
     "ioredis": "^5.11.1"
@@ -16,5 +17,8 @@
     "gateway",
     "services/*",
     "shared"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^10.0.5"
+  }
 }

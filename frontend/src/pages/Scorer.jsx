@@ -70,7 +70,7 @@ function Navbar({ label }) {
           className="flex cursor-pointer items-center gap-1.5"
         >
           <span className="text-sm font-extrabold sm:text-base text-[#0A0A0A]">
-            Fresher.AI
+            SkillForge
           </span>
           <span className="hidden rounded bg-black/5 px-1.5 py-0.5 text-[10px] text-black/50 sm:block">
             {label}
