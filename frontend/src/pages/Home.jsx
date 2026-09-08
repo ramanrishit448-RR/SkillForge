@@ -219,11 +219,10 @@ function SwitchableAiTeamStack() {
         <div
           ref={backCardRef}
           onClick={() => shuffleTo((activeIdx + 2) % AI_TEAM_MEMBERS.length)}
-          className="absolute top-0 left-0 w-full rounded-2xl bg-[#FAF8F3] border border-[#E6E2D8] p-4 sm:p-5 shadow-xs cursor-pointer transition-colors hover:bg-white/80"
+          className="absolute top-0 left-0 w-full rounded-2xl bg-[#F6F4ED] border border-[#E6E2D8] p-4 sm:p-5 shadow-xs cursor-pointer transition-colors hover:bg-white"
           style={{
             transform: "translate(-12px, -10px) rotate(-4deg)",
             zIndex: 10,
-            opacity: 0.65,
           }}
           title={`Click to switch to ${next2.name}`}
         >
@@ -239,11 +238,10 @@ function SwitchableAiTeamStack() {
         <div
           ref={midCardRef}
           onClick={() => shuffleTo((activeIdx + 1) % AI_TEAM_MEMBERS.length)}
-          className="absolute top-0 left-0 w-full rounded-2xl bg-white/85 backdrop-blur-md border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-white/95"
+          className="absolute top-0 left-0 w-full rounded-2xl bg-[#FDFBF7] border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-white"
           style={{
             transform: "translate(-6px, -5px) rotate(-2deg)",
             zIndex: 20,
-            opacity: 0.85,
           }}
           title={`Click to switch to ${next1.name}`}
         >
@@ -265,7 +263,7 @@ function SwitchableAiTeamStack() {
         <div
           ref={frontCardRef}
           onClick={shuffleNext}
-          className="relative w-full rounded-2xl bg-white/95 backdrop-blur-xl border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.05)] cursor-pointer group hover:border-[#141414]/35 transition-colors"
+          className="relative w-full rounded-2xl bg-white border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.06)] cursor-pointer group hover:border-[#141414]/35 transition-colors"
           style={{ zIndex: 30 }}
         >
           <div className="flex items-center justify-between mb-1.5">
