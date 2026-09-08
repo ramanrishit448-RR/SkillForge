@@ -59,6 +59,51 @@ const AI_TEAM_MEMBERS = [
   },
 ];
 
+const FEATURE_ITEMS = [
+  {
+    tag: "01 / SIMULATION",
+    badge: "Live Monaco Code",
+    title: "Realistic Live Code Proctored Environment",
+    desc: "Move beyond multiple-choice tests. Write real code in an embedded Monaco Editor evaluated turn-by-turn by Groq and LangGraph.",
+    subtext: "Groq LPU · Sub-second Evaluation",
+  },
+  {
+    tag: "02 / VECTOR SEARCH",
+    badge: "Qdrant Semantic",
+    title: "Contextual ATS Vector Matching",
+    desc: "Traditional platforms use simple keyword regex. SkillForge maps your project descriptions semantically against target tech stacks.",
+    subtext: "1,200+ Live Tech Job Profiles",
+  },
+  {
+    tag: "03 / TRANSPARENT",
+    badge: "Pay-As-You-Go",
+    title: "Usage-Based Coin Economics",
+    desc: "Zero recurring subscription locks. Pay only for the interviews, roadmaps, and resume analyses you actually use.",
+    subtext: "150 Coins Free On Signup",
+  },
+  {
+    tag: "04 / AGENTIC ROADMAPS",
+    badge: "Adaptive Curricula",
+    title: "Dynamic Skill Gap Curricula",
+    desc: "Continuous skill gap analysis maps curated video tutorials, real-world milestones, and architectural repos directly into your learning tree.",
+    subtext: "Curated YouTube & Web Sources",
+  },
+  {
+    tag: "05 / RUBRIC DIAGNOSTICS",
+    badge: "Granular Scoring",
+    title: "Algorithmic & Speech Diagnostics",
+    desc: "In-depth post-session diagnostics evaluating algorithmic edge cases, architectural tradeoffs, and vocal articulation clarity.",
+    subtext: "Detailed Turn-by-Turn Breakdown",
+  },
+  {
+    tag: "06 / REAL-TIME VOICE",
+    badge: "Speech Simulator",
+    title: "Conversational Tech & HR Proctors",
+    desc: "Engage with conversational HR and Senior Staff engineer personas that challenge your answers with contextual dynamic follow-ups.",
+    subtext: "Natural Speech Synthesis",
+  },
+];
+
 function SwitchableAiTeamStack() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -329,6 +374,131 @@ function SwitchableAiTeamStack() {
   );
 }
 
+function CollapsibleNavbar({ onLoginClick, onGetStartedClick }) {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const leaveTimerRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 60) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+    // Graceful delay before collapsing so it doesn't snap shut instantly
+    leaveTimerRef.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 380);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+    };
+  }, []);
+
+  const isExpanded = !isScrolled || isHovered;
+
+  return (
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="fixed top-4 sm:top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] select-none"
+    >
+      <div
+        className={`bg-white border border-[#E6E2D8] shadow-[0_12px_36px_rgba(0,0,0,0.08)] flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden ${
+          isExpanded
+            ? "w-[92vw] max-w-4xl h-12 sm:h-13 rounded-full px-4 sm:px-6"
+            : "w-12 h-12 rounded-full p-0 justify-center cursor-pointer hover:shadow-lg hover:border-[#141414]/30 hover:scale-105"
+        }`}
+        title={!isExpanded ? "Hover to expand menu" : ""}
+      >
+        {/* Brand / Logo (Centered when collapsed, left-aligned when expanded) */}
+        <div className={`flex items-center gap-2.5 shrink-0 ${!isExpanded ? "justify-center w-full" : ""}`}>
+          <div className="flex items-center -space-x-1.5">
+            <span className="w-3.5 h-3.5 rounded-full bg-[#141414]" />
+            <span className="w-3.5 h-3.5 rounded-full bg-[#141414]/75" />
+          </div>
+          {isExpanded && (
+            <span className="font-extrabold text-sm sm:text-base tracking-tight text-[#141414] whitespace-nowrap transition-opacity duration-500 delay-150">
+              SkillForge
+            </span>
+          )}
+        </div>
+
+        {/* Nav Links (Visible only when expanded) */}
+        {isExpanded && (
+          <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-[#141414]/70 whitespace-nowrap transition-opacity duration-500 delay-200">
+            <a
+              href="#platform"
+              className="hover:text-[#141414] transition-colors flex items-center gap-1"
+            >
+              For Candidates <span className="text-[10px] text-black/40">▾</span>
+            </a>
+            <a
+              href="#agents"
+              className="hover:text-[#141414] transition-colors flex items-center gap-1"
+            >
+              AI Agents <span className="text-[10px] text-black/40">▾</span>
+            </a>
+            <a
+              href="#features"
+              className="hover:text-[#141414] transition-colors"
+            >
+              How It Works
+            </a>
+            <a
+              href="#pricing"
+              onClick={(e) => {
+                e.preventDefault();
+                onLoginClick();
+              }}
+              className="hover:text-[#141414] transition-colors"
+            >
+              Interview Coins
+            </a>
+          </nav>
+        )}
+
+        {/* Action Buttons (Visible only when expanded) */}
+        {isExpanded && (
+          <div className="flex items-center gap-2 shrink-0 transition-opacity duration-500 delay-200">
+            <button
+              onClick={onLoginClick}
+              className="px-3.5 py-1.5 rounded-full border border-[#DCD7CB] text-xs font-medium text-[#141414] hover:border-[#141414]/40 hover:bg-[#FAF9F5] transition-all cursor-pointer whitespace-nowrap"
+            >
+              Login
+            </button>
+            <button
+              onClick={onGetStartedClick}
+              className="px-4 py-1.5 rounded-full bg-[#141414] text-white text-xs font-semibold hover:bg-black/90 shadow-xs transition-all cursor-pointer whitespace-nowrap"
+            >
+              Get Started
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function Home({ user, setUser }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
@@ -399,29 +569,89 @@ export default function Home({ user, setUser }) {
           "-=0.7"
         );
 
-      // ── 2. STUDIO DASHBOARD PREVIEW SCROLLTRIGGER ──
-      gsap.from(".gsap-studio-container", {
+      // ── 2. SCROLL PROGRESS BAR SCROLLTRIGGER ──
+      gsap.to(".gsap-scroll-progress", {
         scrollTrigger: {
-          trigger: ".gsap-studio-container",
-          start: "top 85%",
-          toggleActions: "play none none none",
+          trigger: containerRef.current,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 0.2,
         },
-        y: 60,
-        opacity: 0,
-        scale: 0.97,
-        duration: 1.0,
-        ease: "power3.out",
+        width: "100%",
+        ease: "none",
       });
 
-      // ── 4. MULTI-AGENT FLEET SCROLLTRIGGER ──
+      // ── 3. HERO CONTENT PARALLAX SCROLLTRIGGER ──
+      gsap.to(".gsap-hero-left", {
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.2,
+        },
+        y: -40,
+        opacity: 0.75,
+        ease: "none",
+      });
+
+      // ── 4. ORBIT TRACK PARALLAX SCROLLTRIGGER ──
+      gsap.to(".gsap-orbit-wrapper", {
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1.4,
+        },
+        y: 60,
+        ease: "none",
+      });
+
+      // ── 5. CANDIDATE STUDIO DASHBOARD SCROLLTRIGGER ──
+      gsap.fromTo(
+        ".gsap-studio-container",
+        {
+          y: 75,
+          scale: 0.93,
+          rotateX: 8,
+          transformPerspective: 1200,
+          transformOrigin: "center top",
+        },
+        {
+          scrollTrigger: {
+            trigger: ".gsap-studio-container",
+            start: "top 95%",
+            end: "top 45%",
+            scrub: 1.2,
+          },
+          y: 0,
+          scale: 1,
+          rotateX: 0,
+          ease: "power2.out",
+        }
+      );
+
+      gsap.from(".gsap-candidate-card", {
+        scrollTrigger: {
+          trigger: ".gsap-studio-container",
+          start: "top 80%",
+          toggleActions: "play none none none",
+        },
+        y: 22,
+        stagger: 0.12,
+        duration: 0.65,
+        ease: "power2.out",
+      });
+
+      // ── 6. MULTI-AGENT FLEET SCROLLTRIGGER ──
       gsap.from(".gsap-agent-header", {
         scrollTrigger: {
           trigger: "#agents",
           start: "top 80%",
+          toggleActions: "play none none none",
         },
-        y: 30,
+        y: 40,
         opacity: 0,
-        duration: 0.7,
+        duration: 0.8,
         ease: "power3.out",
       });
 
@@ -429,38 +659,40 @@ export default function Home({ user, setUser }) {
         scrollTrigger: {
           trigger: "#agents",
           start: "top 75%",
+          toggleActions: "play none none none",
         },
-        y: 45,
+        y: 60,
         opacity: 0,
-        scale: 0.96,
-        stagger: 0.1,
-        duration: 0.65,
-        ease: "power3.out",
+        scale: 0.93,
+        stagger: 0.12,
+        duration: 0.75,
+        ease: "back.out(1.3)",
       });
 
-      // ── 5. ARCHITECTURAL FEATURES SCROLLTRIGGER ──
-      gsap.from(".gsap-feature-col", {
+      // ── 7. ARCHITECTURAL FEATURES SCROLLTRIGGER ──
+      gsap.from(".gsap-feature-header", {
         scrollTrigger: {
           trigger: "#features",
           start: "top 80%",
+          toggleActions: "play none none none",
         },
         y: 35,
         opacity: 0,
-        stagger: 0.15,
         duration: 0.75,
         ease: "power3.out",
       });
 
-      // ── 6. CTA SECTION SCROLLTRIGGER ──
+      // ── 8. CTA SECTION SCROLLTRIGGER ──
       gsap.from(".gsap-cta-content", {
         scrollTrigger: {
           trigger: ".gsap-cta-section",
           start: "top 85%",
+          toggleActions: "play none none none",
         },
-        y: 40,
-        scale: 0.97,
+        y: 50,
+        scale: 0.94,
         opacity: 0,
-        duration: 0.8,
+        duration: 0.85,
         ease: "power3.out",
       });
     }, containerRef);
@@ -473,109 +705,59 @@ export default function Home({ user, setUser }) {
       ref={containerRef}
       className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen overflow-x-hidden selection:bg-[#141414] selection:text-white"
     >
+      {/* ── HAIRLINE SCROLL PROGRESS INDICATOR ── */}
+      <div
+        className="gsap-scroll-progress fixed top-0 left-0 h-[2.5px] bg-[#E55734] z-[60] will-change-[width] pointer-events-none"
+        style={{ width: "0%" }}
+      />
+
+      {/* ── TOP COLLAPSIBLE FLOATING NAVBAR (SCROLL-COLLAPSIBLE & HOVER-EXPANDING) ── */}
+      <CollapsibleNavbar
+        onLoginClick={() => setShowLoginModal(true)}
+        onGetStartedClick={() => setShowLoginModal(true)}
+      />
+
       {/* ── TOP ARCHITECTURAL GRID GUIDE ── */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-8">
         {/* Crosshair Top-Left */}
-        <div className="hidden lg:flex absolute top-[68px] left-4 -translate-x-1/2 -translate-y-1/2 text-black/35 text-xs font-mono select-none pointer-events-none z-20">
+        <div className="hidden lg:flex absolute top-[28px] left-4 -translate-x-1/2 -translate-y-1/2 text-black/35 text-xs font-mono select-none pointer-events-none z-20">
           +
         </div>
         {/* Crosshair Top-Right */}
-        <div className="hidden lg:flex absolute top-[68px] right-4 translate-x-1/2 -translate-y-1/2 text-black/35 text-xs font-mono select-none pointer-events-none z-20">
+        <div className="hidden lg:flex absolute top-[28px] right-4 translate-x-1/2 -translate-y-1/2 text-black/35 text-xs font-mono select-none pointer-events-none z-20">
           +
         </div>
-
-        {/* ── TOP NAVIGATION ── */}
-        <header className="relative z-30 pt-6 pb-4 border-b border-[#E6E2D8] flex items-center justify-between">
-          {/* Brand */}
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-center -space-x-1.5">
-              <span className="w-3.5 h-3.5 rounded-full bg-[#141414]" />
-              <span className="w-3.5 h-3.5 rounded-full bg-[#141414]/75" />
-            </div>
-            <span className="font-extrabold text-lg tracking-tight text-[#141414]">
-              SkillForge
-            </span>
-          </div>
-
-          {/* Nav Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-[#141414]/70">
-            <a
-              href="#platform"
-              className="hover:text-[#141414] transition-colors flex items-center gap-1"
-            >
-              For Candidates <span className="text-[10px] text-black/40">▾</span>
-            </a>
-            <a
-              href="#agents"
-              className="hover:text-[#141414] transition-colors flex items-center gap-1"
-            >
-              AI Agents <span className="text-[10px] text-black/40">▾</span>
-            </a>
-            <a
-              href="#features"
-              className="hover:text-[#141414] transition-colors"
-            >
-              How It Works
-            </a>
-            <a
-              href="#pricing"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowLoginModal(true);
-              }}
-              className="hover:text-[#141414] transition-colors"
-            >
-              Interview Coins
-            </a>
-          </nav>
-
-          {/* Action Buttons */}
-          <div className="flex items-center gap-2.5">
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="px-3.5 py-1.5 rounded-md border border-[#DCD7CB] text-xs font-medium text-[#141414] hover:border-[#141414]/40 hover:bg-white/60 transition-all cursor-pointer"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => setShowLoginModal(true)}
-              className="px-4 py-1.5 rounded-md bg-[#141414] text-white text-xs font-semibold hover:bg-black/90 shadow-sm transition-all cursor-pointer"
-            >
-              Get Started
-            </button>
-          </div>
-        </header>
 
         {/* ── HERO SECTION WITH ROTATING ORBITAL TRACK ── */}
         <section
           ref={heroRef}
-          className="relative pt-8 sm:pt-12 pb-6 sm:pb-10 overflow-visible"
+          className="relative pt-20 sm:pt-28 pb-6 sm:pb-10 overflow-visible"
         >
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-end min-h-[580px]">
             {/* Left Editorial Content */}
-            <div className="lg:col-span-6 z-20 text-left pb-6">
+            <div className="gsap-hero-left lg:col-span-6 z-20 text-left pb-6">
               {/* Eyebrow Pill Tag */}
               <div className="gsap-hero-pill inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FBDCD0] bg-[#FFF2ED] text-[#E05A3E] text-[11px] font-bold tracking-wider uppercase mb-5">
-                <span>FROM PREPARATION TO OFFER</span>
+                <span>PREPARATION TO SENIOR OFFER</span>
               </div>
 
               {/* Main Headline with Clean Overflow Reveal */}
               <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-extrabold tracking-tight text-[#141414] leading-[1.05]">
                 <div className="overflow-hidden">
                   <span className="gsap-title-line inline-block">
-                    AI Workforce.
+                    Forge Your Career.
                   </span>
                 </div>
                 <div className="overflow-hidden">
                   <span className="gsap-title-line inline-block">
-                    Built for Tech Careers.
+                    Land Top-Tier Offers.
                   </span>
                 </div>
               </h1>
 
               {/* Subtitle */}
               <p className="gsap-hero-sub mt-4 text-xs sm:text-sm text-[#141414]/65 max-w-lg leading-relaxed font-normal">
-                They simulate, evaluate and guide across live technical interviews, ATS resume audits, and customized engineering roadmaps so you land top-tier tech offers.
+                Master live technical rounds with proctored AI interviewers, optimize your ATS resume with semantic vector search, and follow structured roadmaps designed for engineering excellence.
               </p>
 
               {/* Action Buttons */}
@@ -685,13 +867,13 @@ export default function Home({ user, setUser }) {
               {/* Main App Canvas */}
               <main className="p-4 sm:p-6 space-y-4 bg-[#FBFBFC]">
                 {/* Panel 1: Upcoming Interview */}
-                <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 sm:p-5 shadow-xs transition-all hover:border-[#141414]/30">
+                <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] bg-white p-4 sm:p-5 shadow-xs transition-all hover:border-[#141414]/30">
                   <div className="flex items-center justify-between border-b border-[#F0ECE4] pb-3 mb-3">
                     <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
                       <FiVideo size={14} className="text-black/70" />
                       <span>Upcoming Proctored Interview</span>
                     </div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                    <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       Live AI Simulator
                     </span>
                   </div>
@@ -705,7 +887,7 @@ export default function Home({ user, setUser }) {
                         <h4 className="font-bold text-xs text-[#141414]">
                           Alex Morgan
                         </h4>
-                        <p className="text-[11px] text-black/45">
+                        <p className="text-[11px] text-[#141414]/65">
                           Senior Full-Stack Engineer · React & Node.js
                         </p>
                       </div>
@@ -733,21 +915,21 @@ export default function Home({ user, setUser }) {
                 {/* Panel 2: Resume & Roadmap Twin Cards */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   {/* ATS Resume Scorer */}
-                  <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 shadow-xs hover:border-[#141414]/30 transition-all">
+                  <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] bg-white p-4.5 shadow-xs hover:border-[#141414]/30 transition-all">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
                         <FiFileText size={13} className="text-black/70" />
                         <span>ATS Vector Scorer</span>
                       </div>
-                      <span className="text-[11px] font-bold text-emerald-600">
+                      <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                         88/100 Strong
                       </span>
                     </div>
-                    <p className="text-xs text-black/50 leading-relaxed mb-3">
+                    <p className="text-xs text-[#141414]/70 leading-relaxed mb-3">
                       Semantic match against 1,200+ industry job descriptions using Qdrant vector index.
                     </p>
                     <div className="flex items-center justify-between pt-2 border-t border-[#F0ECE4] text-[11px]">
-                      <span className="text-black/45">Missing: GraphQL, K8s</span>
+                      <span className="text-[#141414]/60 font-medium">Missing: GraphQL, K8s</span>
                       <button
                         onClick={() => setShowLoginModal(true)}
                         className="font-medium text-[#141414] hover:underline cursor-pointer"
@@ -758,21 +940,21 @@ export default function Home({ user, setUser }) {
                   </div>
 
                   {/* AI Learning Roadmap */}
-                  <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 shadow-xs hover:border-[#141414]/30 transition-all">
+                  <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] bg-white p-4.5 shadow-xs hover:border-[#141414]/30 transition-all">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
                         <FiMap size={13} className="text-black/70" />
                         <span>Dynamic Roadmap</span>
                       </div>
-                      <span className="text-[11px] font-semibold text-black/70">
+                      <span className="text-[11px] font-semibold text-black/80 bg-[#FAF9F5] px-2 py-0.5 rounded-full border border-[#E6E2D8]">
                         65% Completed
                       </span>
                     </div>
-                    <p className="text-xs text-black/50 leading-relaxed mb-3">
+                    <p className="text-xs text-[#141414]/70 leading-relaxed mb-3">
                       Current module: <strong className="text-black">Microservices & Distributed Redis</strong> with direct video tutorials.
                     </p>
                     <div className="flex items-center justify-between pt-2 border-t border-[#F0ECE4] text-[11px]">
-                      <span className="text-black/45">12 Modules · 4 Weeks</span>
+                      <span className="text-[#141414]/60 font-medium">12 Modules · 4 Weeks</span>
                       <button
                         onClick={() => setShowLoginModal(true)}
                         className="font-medium text-[#141414] hover:underline cursor-pointer"
@@ -871,48 +1053,63 @@ export default function Home({ user, setUser }) {
           </div>
         </section>
 
-        {/* ── ARCHITECTURAL ADVANTAGES (WHY SKILLFORGE) ── */}
+        {/* ── ARCHITECTURAL ADVANTAGES INFINITE SCROLL MARQUEE ── */}
         <section
           id="features"
-          className="py-20 border-t border-[#E6E2D8] bg-[#F5F3EC]/50 -mx-4 sm:-mx-8 px-4 sm:px-8"
+          className="py-20 border-t border-[#E6E2D8] bg-[#F5F3EC]/60 -mx-4 sm:-mx-8 overflow-hidden"
         >
-          <div className="max-w-5xl mx-auto">
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="gsap-feature-col space-y-2">
-                <span className="text-[11px] font-mono uppercase text-black/40 tracking-wider">
-                  01 / Simulation
+          <div className="max-w-5xl mx-auto px-4 sm:px-8 mb-9">
+            <div className="gsap-feature-header flex flex-col md:flex-row md:items-end justify-between gap-4">
+              <div>
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#141414]/45 font-bold block mb-1.5">
+                  Continuous Innovation · Architectural Advantages
                 </span>
-                <h3 className="text-base font-bold text-[#141414]">
-                  Realistic Live Code Proctored Environment
-                </h3>
-                <p className="text-xs text-black/60 leading-relaxed">
-                  Move beyond multiple-choice tests. Write real code in an embedded Monaco Editor evaluated turn-by-turn by Groq and LangGraph.
-                </p>
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#141414]">
+                  Engineered For Senior Engineering Standards
+                </h2>
               </div>
+              <div className="flex items-center gap-2 text-xs text-[#141414]/50">
+                <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="font-mono text-[11px]">Hover card to pause stream</span>
+              </div>
+            </div>
+          </div>
 
-              <div className="gsap-feature-col space-y-2">
-                <span className="text-[11px] font-mono uppercase text-black/40 tracking-wider">
-                  02 / Vector Search
-                </span>
-                <h3 className="text-base font-bold text-[#141414]">
-                  Contextual ATS Vector Matching
-                </h3>
-                <p className="text-xs text-black/60 leading-relaxed">
-                  Traditional platforms use simple keyword regex. SkillForge maps your project descriptions semantically against target tech stacks.
-                </p>
-              </div>
+          {/* Marquee Carousel Container with Edge Fades */}
+          <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)] py-2">
+            <div className="animate-marquee-infinite flex items-stretch gap-6 pl-4">
+              {[...FEATURE_ITEMS, ...FEATURE_ITEMS].map((item, idx) => (
+                <div
+                  key={`feature-card-${idx}`}
+                  className="w-[340px] sm:w-[390px] shrink-0 rounded-2xl border border-[#E6E2D8] bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:border-[#141414]/40 hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] hover:-translate-y-1 transition-all duration-300 select-none group"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-[11px] font-mono uppercase font-bold text-[#141414]/50 tracking-wider">
+                        {item.tag}
+                      </span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#E8E4DA] text-[#141414]/70">
+                        {item.badge}
+                      </span>
+                    </div>
 
-              <div className="gsap-feature-col space-y-2">
-                <span className="text-[11px] font-mono uppercase text-black/40 tracking-wider">
-                  03 / Transparent
-                </span>
-                <h3 className="text-base font-bold text-[#141414]">
-                  Usage-Based Coin Economics
-                </h3>
-                <p className="text-xs text-black/60 leading-relaxed">
-                  Zero recurring subscription locks. Pay only for the interviews, roadmaps, and resume analyses you actually use.
-                </p>
-              </div>
+                    <h3 className="text-base sm:text-lg font-bold text-[#141414] leading-snug group-hover:text-black transition-colors mb-2.5">
+                      {item.title}
+                    </h3>
+
+                    <p className="text-xs sm:text-[13px] text-[#141414]/65 leading-relaxed">
+                      {item.desc}
+                    </p>
+                  </div>
+
+                  <div className="pt-4 mt-5 border-t border-[#F0ECE4] flex items-center justify-between text-[11px] text-[#141414]/40">
+                    <span className="font-mono text-[10px] text-black/50">{item.subtext}</span>
+                    <span className="text-[#E05A3E] font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                      Explore ↗
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </section>

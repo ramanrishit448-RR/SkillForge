@@ -33,3 +33,45 @@ body {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* Infinite Marquee Scroll Utilities */
+@keyframes marquee-scroll {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.animate-marquee-infinite {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 38s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-infinite:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-scroll-reverse {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-marquee-infinite-reverse {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll-reverse 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-infinite-reverse:hover {
+  animation-play-state: paused;
+}
+
