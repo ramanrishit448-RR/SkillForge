@@ -1,5 +1,5 @@
 import { BsStars } from "react-icons/bs";
-import { FiCheck } from "react-icons/fi";
+import { FiCheck, FiArrowRight } from "react-icons/fi";
 
 export default function PricingCard({
   title,
@@ -10,75 +10,123 @@ export default function PricingCard({
   popular,
   disabled,
   onBuy,
+  loading,
 }) {
   return (
     <div
-      className={`relative w-full max-w-[320px] rounded-2xl overflow-hidden border p-5 transition-all
-        ${popular
-          ? "border-violet-400/30 bg-[#000000]/90 backdrop-blur-2xl shadow-[0_8px_40px_rgba(124,58,237,0.2)]"
-          : "border-white/10 bg-[#000000]/90 backdrop-blur-2xl shadow-[0_8px_32px_rgba(0,0,0,0.25)]"
-        }`}
+      className={`w-full max-w-sm rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 relative ${
+        popular
+          ? "bg-[#141414] text-white border border-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.12)] scale-[1.02]"
+          : "bg-white text-[#141414] border border-[#E6E2D8] shadow-sm hover:border-[#141414]/30"
+      }`}
     >
-      {/* glass sheen */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-
-      {/* Popular glow */}
-      {popular && (
-        <div className="absolute -top-8 -right-8 w-28 h-28 bg-violet-500/20 rounded-full blur-3xl pointer-events-none" />
-      )}
-
-      {popular && (
-        <div className="absolute right-3 top-3 rounded-full bg-violet-600 px-2 py-0.5 text-[10px] font-semibold text-white z-10">
-          Popular
-        </div>
-      )}
-
-      <h2 className="relative text-base font-bold text-white">{title}</h2>
-
-      <div className="relative mt-2.5 flex items-end gap-1.5">
-        <span className="text-3xl font-extrabold text-white">
-          {price}
-        </span>
-        {price !== "Free" && (
-          <span className="pb-1 text-xs text-white/40">
-            INR
-          </span>
-        )}
-      </div>
-
-      <div className="relative mt-3.5 flex items-center gap-1.5 rounded-lg bg-white/5 border border-white/8 p-2.5">
-        <BsStars className="text-yellow-400" size={14} />
-        <span className="text-sm font-semibold text-white">
-          {coins} Interview Coins
-        </span>
-      </div>
-
-      <div className="relative mt-3.5 space-y-1.5">
-        {features.map((item) => (
-          <div
-            key={item}
-            className="flex items-center gap-2 text-xs text-white/60"
+      {/* Top Header & Tag */}
+      <div>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <span
+            className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${
+              popular
+                ? "bg-amber-400/20 text-amber-300 border-amber-400/30"
+                : "bg-[#FAF9F5] text-[#141414]/60 border-[#E6E2D8]"
+            }`}
           >
-            <FiCheck className="text-green-400 shrink-0" size={13} />
-            <span>{item}</span>
+            {popular ? "Most Popular · Best Value" : "Default Starter Allocation"}
+          </span>
+
+          {popular && (
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+          )}
+        </div>
+
+        <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">
+          {title} Pack
+        </h2>
+
+        {/* Price display */}
+        <div className="mt-4 flex items-baseline gap-1.5 pb-4 border-b border-current/10">
+          <span className="text-4xl font-extrabold tracking-tight">
+            {price === "Free" ? "₹0" : `₹${price}`}
+          </span>
+          <span className={`text-xs ${popular ? "text-white/50" : "text-[#141414]/45"}`}>
+            {price === "Free" ? "forever on registration" : "one-time · no recurring charges"}
+          </span>
+        </div>
+
+        {/* Coins Pill */}
+        <div
+          className={`mt-5 flex items-center justify-between p-3 rounded-2xl border ${
+            popular
+              ? "bg-white/10 border-white/15 text-white"
+              : "bg-[#FAF9F5] border-[#E6E2D8] text-[#141414]"
+          }`}
+        >
+          <div className="flex items-center gap-2">
+            <BsStars className={popular ? "text-amber-300" : "text-amber-500"} size={16} />
+            <span className="text-sm font-bold tracking-tight">
+              {coins} Interview Coins
+            </span>
           </div>
-        ))}
+          <span className={`text-[10px] font-semibold uppercase tracking-wider ${popular ? "text-white/60" : "text-[#141414]/50"}`}>
+            {price === "Free" ? "Included" : "Instant Credit"}
+          </span>
+        </div>
+
+        {/* Feature List */}
+        <div className="mt-6 space-y-2.5">
+          <p className={`text-[10px] font-bold uppercase tracking-wider ${popular ? "text-white/40" : "text-[#141414]/40"}`}>
+            What you can do with this:
+          </p>
+          {features.map((item, idx) => (
+            <div key={idx} className="flex items-start gap-2.5 text-xs sm:text-sm">
+              <div
+                className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
+                  popular
+                    ? "bg-white/15 text-white"
+                    : "bg-[#141414] text-white"
+                }`}
+              >
+                <FiCheck size={10} />
+              </div>
+              <span className={popular ? "text-white/85" : "text-[#141414]/80"}>
+                {item}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
-     <button
-  disabled={disabled}
-  onClick={onBuy}
-  className={`relative mt-5 w-full rounded-lg py-2 text-sm font-semibold transition
-    ${
-      disabled
-        ? "cursor-not-allowed bg-gray-700 text-gray-400"
-        : popular
-        ? "bg-violet-600 hover:bg-violet-700 text-white shadow-[0_4px_14px_rgba(124,58,237,0.35)]"
-        : "bg-white/8 border border-white/15 text-white hover:border-white/30 hover:bg-white/12"
-    }`}
->
-  {button}
-</button>
+      {/* CTA Button */}
+      <div className="mt-8 pt-4 border-t border-current/10">
+        <button
+          disabled={disabled || loading}
+          onClick={onBuy}
+          className={`w-full h-12 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
+            disabled
+              ? "bg-[#FAF9F5] text-[#141414]/40 border border-[#E6E2D8] cursor-default"
+              : popular
+              ? "bg-white text-[#141414] hover:bg-neutral-100 shadow-md active:scale-[0.99]"
+              : "bg-[#141414] text-white hover:bg-black shadow-sm"
+          }`}
+        >
+          {loading ? (
+            <>
+              <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span>Opening Checkout…</span>
+            </>
+          ) : (
+            <>
+              <span>{button}</span>
+              {!disabled && <FiArrowRight size={14} />}
+            </>
+          )}
+        </button>
+
+        <p className={`text-[10px] text-center mt-2.5 ${popular ? "text-white/40" : "text-[#141414]/40"}`}>
+          {price === "Free"
+            ? "Already claimed automatically when your account was created."
+            : "Secured by Razorpay · Auto-refund protection on AI failure."}
+        </p>
+      </div>
     </div>
   );
 }

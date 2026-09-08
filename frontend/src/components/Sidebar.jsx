@@ -161,44 +161,40 @@ export default function Sidebar({
       </nav>
 
       {/* User Footer */}
-      <div className="border-t border-black/8 p-2.5 shrink-0">
+      <div className="border-t border-[#E6E2D8] p-2.5 shrink-0">
         {/* Coins */}
-        {/* Coins */}
-<AnimatePresence>
-  {!collapsed && (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      onClick={() => navigate("/pricing")}
-      className="group flex cursor-pointer items-center justify-between gap-2.5 rounded-lg border border-white/10 bg-[#000000]/90 backdrop-blur-2xl px-2.5 py-1.5 mb-2.5 transition-all hover:border-white/20 shadow-[0_8px_24px_rgba(0,0,0,0.2)]"
-    >
-      <div className="flex items-center gap-1.5">
-        <BsStars
-          size={13}
-          className="text-yellow-500 shrink-0"
-        />
+        {collapsed ? (
+          <div
+            onClick={() => navigate("/pricing")}
+            title={`${user?.interviewCoin ?? 0} Coins · Top up`}
+            className="flex items-center justify-center w-9 h-9 mx-auto mb-2.5 rounded-xl bg-white border border-[#E6E2D8] text-amber-500 hover:text-amber-600 hover:border-[#141414]/30 cursor-pointer transition-all shadow-sm"
+          >
+            <BsStars size={15} />
+          </div>
+        ) : (
+          <div
+            onClick={() => navigate("/pricing")}
+            className="group flex cursor-pointer items-center justify-between gap-2 rounded-xl border border-[#E6E2D8] bg-white px-3 py-2 mb-2.5 transition-all hover:border-[#141414]/40 shadow-sm"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-lg bg-[#FAF9F5] border border-[#E6E2D8] flex items-center justify-center text-amber-500">
+                <BsStars size={12} />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[9px] uppercase tracking-wider text-[#141414]/45 font-bold">
+                  Coins
+                </span>
+                <span className="text-xs font-extrabold text-[#141414] leading-tight">
+                  {user?.interviewCoin ?? 0}
+                </span>
+              </div>
+            </div>
 
-        <div className="flex flex-col">
-          <span className="text-[9px] uppercase tracking-wider text-white/40 font-medium">
-            Interview Coins
-          </span>
-
-          <span className="text-xs font-bold text-white">
-            {user?.interviewCoin ?? 50}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex items-center justify-center">
-        <BsPlusCircleFill
-          size={16}
-          className="text-white/70 transition-transform duration-200 group-hover:scale-110"
-        />
-      </div>
-    </motion.div>
-  )}
-</AnimatePresence>
+            <span className="text-[10px] font-semibold bg-[#FAF9F5] text-[#141414]/75 px-2 py-0.5 rounded-md border border-[#E6E2D8] group-hover:bg-[#141414] group-hover:text-white transition-all">
+              + Top up
+            </span>
+          </div>
+        )}
 
         {/* Avatar row */}
         <div className={`flex items-center gap-2 ${collapsed ? "justify-center" : ""}`}>

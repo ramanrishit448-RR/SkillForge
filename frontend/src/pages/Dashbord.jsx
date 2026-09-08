@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 
 import { FiPlay, FiSidebar } from "react-icons/fi";
+import { BsStars } from "react-icons/bs";
 
 import Sidebar from "../components/Sidebar";
 
@@ -171,7 +172,19 @@ export default function Dashboard({ user, setUser }) {
 
           </div>
 
-
+          {/* Right Action: Coins Pill */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => navigate("/pricing")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E6E2D8] bg-white text-xs font-bold text-[#141414] hover:border-[#141414]/40 cursor-pointer shadow-sm transition-all"
+            title="Interview Coins · Click to Top up"
+          >
+            <BsStars className="text-amber-500" size={13} />
+            <span>{user?.interviewCoin ?? 0} Coins</span>
+            <span className="text-[10px] font-medium text-[#141414]/50 ml-0.5 hidden sm:inline">+ Top up</span>
+          </motion.div>
 
         </div>
 

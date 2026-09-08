@@ -135,9 +135,14 @@ function Step1SetUp({ user, setUser }) {
         </button>
 
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-xs font-semibold text-[#141414]">
+          <div
+            onClick={() => navigate("/pricing")}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-xs font-semibold text-[#141414] hover:border-[#141414]/40 cursor-pointer transition-all shadow-sm"
+            title="Interview Coins · Click to Top up"
+          >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>{user?.interviewCoin || 0} Coins</span>
+            <span className="text-[10px] text-[#141414]/50 ml-0.5">+ Top up</span>
           </div>
         </div>
       </div>
@@ -348,6 +353,18 @@ function Step1SetUp({ user, setUser }) {
 
           {/* Action CTA Button */}
           <div className="pt-4 border-t border-[#E6E2D8]">
+            {user && (user.interviewCoin || 0) < 50 && (
+              <div className="mb-3 p-3 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-between gap-2 text-xs text-amber-800">
+                <span>You have {user.interviewCoin || 0} coins (50 required to start).</span>
+                <button
+                  type="button"
+                  onClick={() => navigate("/pricing")}
+                  className="font-bold underline text-amber-900 hover:text-black whitespace-nowrap"
+                >
+                  Top up Coins →
+                </button>
+              </div>
+            )}
             <button
               disabled={!role.trim() || starting || (useResume && !resume)}
               onClick={start}

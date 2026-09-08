@@ -129,9 +129,14 @@ function ScorerNavbar({ user }) {
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-xs font-medium text-[#141414]">
+          <div
+            onClick={() => navigate("/pricing")}
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-xs font-semibold text-[#141414] hover:border-[#141414]/40 cursor-pointer transition-all shadow-sm"
+            title="Interview Coins · Click to Top up"
+          >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>{user?.interviewCoin || 0} Coins</span>
+            <span className="text-[10px] text-[#141414]/50 ml-0.5 hidden sm:inline">+ Top up</span>
           </div>
         </div>
       </div>
