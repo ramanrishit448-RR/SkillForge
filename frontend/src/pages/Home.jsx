@@ -1,30 +1,225 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { useState, useRef, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   FiVideo,
   FiFileText,
   FiMap,
   FiBarChart2,
-  FiCode,
   FiSearch,
   FiBell,
-  FiCheck,
-  FiArrowRight,
   FiLayers,
-  FiAward,
-  FiTrendingUp,
-  FiBookOpen,
+  FiArrowRight,
   FiCheckCircle,
+  FiCpu,
+  FiTerminal,
+  FiZap,
 } from "react-icons/fi";
 import { LoginModal } from "../components/LoginModel";
 import QuarterCircleOrbit from "../components/QuarterCircleOrbit";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Home({ user, setUser }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [activeTab, setActiveTab] = useState("overview");
 
+  const containerRef = useRef(null);
+  const heroRef = useRef(null);
+  const teamCardRef = useRef(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // ── 1. HERO ENTRANCE TIMELINE ──
+      const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
+
+      heroTl
+        .from(".gsap-hero-pill", {
+          opacity: 0,
+          y: 20,
+          scale: 0.9,
+          duration: 0.6,
+        })
+        .from(
+          ".gsap-title-line",
+          {
+            y: 45,
+            opacity: 0,
+            stagger: 0.12,
+            duration: 0.85,
+            ease: "power4.out",
+          },
+          "-=0.3"
+        )
+        .from(
+          ".gsap-hero-sub",
+          {
+            opacity: 0,
+            y: 20,
+            duration: 0.7,
+          },
+          "-=0.5"
+        )
+        .from(
+          ".gsap-hero-btn",
+          {
+            opacity: 0,
+            y: 16,
+            scale: 0.95,
+            stagger: 0.1,
+            duration: 0.55,
+          },
+          "-=0.4"
+        )
+        .from(
+          ".gsap-team-stack",
+          {
+            opacity: 0,
+            y: 30,
+            duration: 0.7,
+          },
+          "-=0.3"
+        )
+        .from(
+          ".gsap-orbit-wrapper",
+          {
+            opacity: 0,
+            scale: 0.96,
+            duration: 1.1,
+            ease: "power2.out",
+          },
+          "-=0.7"
+        );
+
+      // ── 2. CONTINUOUS FLOATING BOB ON AI TEAM STACK ──
+      gsap.to(".gsap-float-card", {
+        y: -7,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      gsap.to(".gsap-ghost-card-1", {
+        y: 4,
+        rotation: -0.5,
+        duration: 3.6,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      gsap.to(".gsap-ghost-card-2", {
+        y: -3,
+        rotation: -4,
+        duration: 4.2,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+      });
+
+      // ── 3. STUDIO DASHBOARD PREVIEW SCROLLTRIGGER ──
+      gsap.from(".gsap-studio-container", {
+        scrollTrigger: {
+          trigger: ".gsap-studio-container",
+          start: "top 85%",
+          toggleActions: "play none none none",
+        },
+        y: 60,
+        opacity: 0,
+        scale: 0.97,
+        duration: 1.0,
+        ease: "power3.out",
+      });
+
+      // ── 4. MULTI-AGENT FLEET SCROLLTRIGGER ──
+      gsap.from(".gsap-agent-header", {
+        scrollTrigger: {
+          trigger: "#agents",
+          start: "top 80%",
+        },
+        y: 30,
+        opacity: 0,
+        duration: 0.7,
+        ease: "power3.out",
+      });
+
+      gsap.from(".gsap-agent-card", {
+        scrollTrigger: {
+          trigger: "#agents",
+          start: "top 75%",
+        },
+        y: 45,
+        opacity: 0,
+        scale: 0.96,
+        stagger: 0.1,
+        duration: 0.65,
+        ease: "power3.out",
+      });
+
+      // ── 5. ARCHITECTURAL FEATURES SCROLLTRIGGER ──
+      gsap.from(".gsap-feature-col", {
+        scrollTrigger: {
+          trigger: "#features",
+          start: "top 80%",
+        },
+        y: 35,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 0.75,
+        ease: "power3.out",
+      });
+
+      // ── 6. CTA SECTION SCROLLTRIGGER ──
+      gsap.from(".gsap-cta-content", {
+        scrollTrigger: {
+          trigger: ".gsap-cta-section",
+          start: "top 85%",
+        },
+        y: 40,
+        scale: 0.97,
+        opacity: 0,
+        duration: 0.8,
+        ease: "power3.out",
+      });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  // ── MOUSE PARALLAX TILT ON HERO AI TEAM CARD ──
+  const handleHeroMouseMove = (e) => {
+    if (!teamCardRef.current) return;
+    const rect = teamCardRef.current.getBoundingClientRect();
+    const cardCenterX = rect.left + rect.width / 2;
+    const cardCenterY = rect.top + rect.height / 2;
+    const deltaX = (e.clientX - cardCenterX) / 28;
+    const deltaY = (e.clientY - cardCenterY) / 28;
+
+    gsap.to(teamCardRef.current, {
+      rotateX: -deltaY,
+      rotateY: deltaX,
+      transformPerspective: 800,
+      duration: 0.45,
+      ease: "power1.out",
+    });
+  };
+
+  const handleHeroMouseLeave = () => {
+    if (!teamCardRef.current) return;
+    gsap.to(teamCardRef.current, {
+      rotateX: 0,
+      rotateY: 0,
+      duration: 0.7,
+      ease: "power2.out",
+    });
+  };
+
   return (
-    <div className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen overflow-x-hidden selection:bg-[#141414] selection:text-white">
+    <div
+      ref={containerRef}
+      className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen overflow-x-hidden selection:bg-[#141414] selection:text-white"
+    >
       {/* ── TOP ARCHITECTURAL GRID GUIDE ── */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-8">
         {/* Crosshair Top-Left */}
@@ -40,7 +235,6 @@ export default function Home({ user, setUser }) {
         <header className="relative z-30 pt-6 pb-4 border-b border-[#E6E2D8] flex items-center justify-between">
           {/* Brand */}
           <div className="flex items-center gap-2.5">
-            {/* Minimalist modern dual pebble logo */}
             <div className="flex items-center -space-x-1.5">
               <span className="w-3.5 h-3.5 rounded-full bg-[#141414]" />
               <span className="w-3.5 h-3.5 rounded-full bg-[#141414]/75" />
@@ -100,81 +294,72 @@ export default function Home({ user, setUser }) {
         </header>
 
         {/* ── HERO SECTION WITH ROTATING ORBITAL TRACK ── */}
-        <section className="relative pt-8 sm:pt-12 pb-6 sm:pb-10 overflow-visible">
+        <section
+          ref={heroRef}
+          onMouseMove={handleHeroMouseMove}
+          onMouseLeave={handleHeroMouseLeave}
+          className="relative pt-8 sm:pt-12 pb-6 sm:pb-10 overflow-visible"
+        >
           <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-end min-h-[580px]">
             {/* Left Editorial Content */}
             <div className="lg:col-span-6 z-20 text-left pb-6">
               {/* Eyebrow Pill Tag */}
-              <motion.div
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FBDCD0] bg-[#FFF2ED] text-[#E05A3E] text-[11px] font-bold tracking-wider uppercase mb-5"
-              >
+              <div className="gsap-hero-pill inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FBDCD0] bg-[#FFF2ED] text-[#E05A3E] text-[11px] font-bold tracking-wider uppercase mb-5">
                 <span>FROM PREPARATION TO OFFER</span>
-              </motion.div>
+              </div>
 
-              {/* Main Headline */}
-              <motion.h1
-                initial={{ opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.05 }}
-                className="text-4xl sm:text-5xl lg:text-[60px] font-extrabold tracking-tight text-[#141414] leading-[1.05]"
-              >
-                AI Workforce.<br />
-                Built for Tech Careers.
-              </motion.h1>
+              {/* Main Headline with Clean Overflow Reveal */}
+              <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-extrabold tracking-tight text-[#141414] leading-[1.05]">
+                <div className="overflow-hidden">
+                  <span className="gsap-title-line inline-block">
+                    AI Workforce.
+                  </span>
+                </div>
+                <div className="overflow-hidden">
+                  <span className="gsap-title-line inline-block">
+                    Built for Tech Careers.
+                  </span>
+                </div>
+              </h1>
 
               {/* Subtitle */}
-              <motion.p
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.12 }}
-                className="mt-4 text-xs sm:text-sm text-[#141414]/65 max-w-lg leading-relaxed font-normal"
-              >
+              <p className="gsap-hero-sub mt-4 text-xs sm:text-sm text-[#141414]/65 max-w-lg leading-relaxed font-normal">
                 They simulate, evaluate and guide across live technical interviews, ATS resume audits, and customized engineering roadmaps so you land top-tier tech offers.
-              </motion.p>
+              </p>
 
               {/* Action Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.18 }}
-                className="mt-7 flex items-center gap-3"
-              >
+              <div className="mt-7 flex items-center gap-3">
                 <button
                   onClick={() => setShowLoginModal(true)}
-                  className="px-6 py-3 rounded-xl bg-[#E55734] hover:bg-[#D44725] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all cursor-pointer"
+                  className="gsap-hero-btn px-6 py-3 rounded-xl bg-[#E55734] hover:bg-[#D44725] text-white text-xs font-bold uppercase tracking-wider shadow-sm hover:shadow transition-all cursor-pointer"
                 >
                   Start Preparation
                 </button>
                 <a
                   href="#platform"
-                  className="px-5 py-3 rounded-xl border border-[#DCD7CB] bg-white text-[#141414] text-xs font-semibold hover:border-[#141414]/40 transition-all cursor-pointer"
+                  className="gsap-hero-btn px-5 py-3 rounded-xl border border-[#DCD7CB] bg-white text-[#141414] text-xs font-semibold hover:border-[#141414]/40 hover:bg-[#FAF9F5] transition-all cursor-pointer"
                 >
                   Explore Agents
                 </a>
-              </motion.div>
+              </div>
 
               {/* Floating AI Team Stack Card (Bottom Left) */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.25 }}
-                className="mt-10 pt-4"
-              >
+              <div className="gsap-team-stack mt-10 pt-4">
                 <p className="text-[10px] font-bold text-[#141414]/40 uppercase tracking-wider mb-2.5">
                   YOUR AI TEAM
                 </p>
 
                 <div className="relative">
                   {/* Background Ghost Card 2 */}
-                  <div className="absolute -left-3 -top-2.5 w-64 sm:w-72 h-32 rounded-2xl bg-white/40 border border-[#E6E2D8] -rotate-3 pointer-events-none" />
+                  <div className="gsap-ghost-card-2 absolute -left-3 -top-2.5 w-64 sm:w-72 h-32 rounded-2xl bg-white/40 border border-[#E6E2D8] -rotate-3 pointer-events-none" />
                   {/* Background Ghost Card 1 */}
-                  <div className="absolute -left-1.5 -top-1 w-64 sm:w-72 h-32 rounded-2xl bg-white/60 border border-[#E6E2D8] -rotate-1.5 pointer-events-none" />
+                  <div className="gsap-ghost-card-1 absolute -left-1.5 -top-1 w-64 sm:w-72 h-32 rounded-2xl bg-white/60 border border-[#E6E2D8] -rotate-1.5 pointer-events-none" />
 
                   {/* Active Foreground Card */}
-                  <div className="relative w-full max-w-sm rounded-2xl bg-white/95 backdrop-blur-xl border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+                  <div
+                    ref={teamCardRef}
+                    className="gsap-float-card relative w-full max-w-sm rounded-2xl bg-white/95 backdrop-blur-xl border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_8px_30px_rgba(0,0,0,0.04)] will-change-transform"
+                  >
                     <div className="flex items-center justify-between mb-1.5">
                       <h4 className="text-xs font-bold text-[#141414] tracking-tight">
                         INTERVIEW AGENT
@@ -202,21 +387,19 @@ export default function Home({ user, setUser }) {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             </div>
 
             {/* Right Orbital Quarter-Circle Animated Track */}
-            <div className="lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-visible">
+            <div className="gsap-orbit-wrapper lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-visible">
               <QuarterCircleOrbit className="translate-y-2 sm:translate-y-6" />
             </div>
           </div>
 
           {/* ── EMBEDDED DASHBOARD CONTAINER (MOCKUP LIKE SCREENSHOT) ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 35 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="mt-14 max-w-5xl mx-auto rounded-2xl border border-[#DCD7CB] bg-[#FAF9F5] shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden text-left"
+          <div
+            id="platform"
+            className="gsap-studio-container mt-14 max-w-5xl mx-auto rounded-2xl border border-[#DCD7CB] bg-[#FAF9F5] shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden text-left"
           >
             {/* Window Header */}
             <div className="border-b border-[#E6E2D8] bg-[#F5F3EC] px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
@@ -267,7 +450,7 @@ export default function Home({ user, setUser }) {
                       <li key={item.id}>
                         <button
                           onClick={() => setActiveTab(item.id)}
-                          className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors text-left ${
+                          className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors text-left cursor-pointer ${
                             activeTab === item.id
                               ? "bg-white text-[#141414] shadow-xs border border-[#E6E2D8]"
                               : "text-black/60 hover:text-[#141414] hover:bg-black/5"
@@ -292,7 +475,7 @@ export default function Home({ user, setUser }) {
               {/* Main App Canvas */}
               <main className="p-4 sm:p-6 space-y-4 bg-[#FBFBFC]">
                 {/* Panel 1: Upcoming Interview */}
-                <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 sm:p-5 shadow-xs transition-all hover:border-[#141414]/20">
+                <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 sm:p-5 shadow-xs transition-all hover:border-[#141414]/30">
                   <div className="flex items-center justify-between border-b border-[#F0ECE4] pb-3 mb-3">
                     <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
                       <FiVideo size={14} className="text-black/70" />
@@ -340,7 +523,7 @@ export default function Home({ user, setUser }) {
                 {/* Panel 2: Resume & Roadmap Twin Cards */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   {/* ATS Resume Scorer */}
-                  <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 shadow-xs">
+                  <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 shadow-xs hover:border-[#141414]/30 transition-all">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
                         <FiFileText size={13} className="text-black/70" />
@@ -357,7 +540,7 @@ export default function Home({ user, setUser }) {
                       <span className="text-black/45">Missing: GraphQL, K8s</span>
                       <button
                         onClick={() => setShowLoginModal(true)}
-                        className="font-medium text-[#141414] hover:underline"
+                        className="font-medium text-[#141414] hover:underline cursor-pointer"
                       >
                         View Report →
                       </button>
@@ -365,7 +548,7 @@ export default function Home({ user, setUser }) {
                   </div>
 
                   {/* AI Learning Roadmap */}
-                  <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 shadow-xs">
+                  <div className="rounded-xl border border-[#E8E4DA] bg-white p-4 shadow-xs hover:border-[#141414]/30 transition-all">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
                         <FiMap size={13} className="text-black/70" />
@@ -382,7 +565,7 @@ export default function Home({ user, setUser }) {
                       <span className="text-black/45">12 Modules · 4 Weeks</span>
                       <button
                         onClick={() => setShowLoginModal(true)}
-                        className="font-medium text-[#141414] hover:underline"
+                        className="font-medium text-[#141414] hover:underline cursor-pointer"
                       >
                         Continue Path →
                       </button>
@@ -391,13 +574,13 @@ export default function Home({ user, setUser }) {
                 </div>
               </main>
             </div>
-          </motion.div>
+          </div>
         </section>
 
         {/* ── MULTI-AGENT FLEET SECTION ── */}
         <section id="agents" className="py-20 border-t border-[#E6E2D8]">
           <div className="max-w-5xl mx-auto">
-            <div className="text-center max-w-xl mx-auto mb-14">
+            <div className="gsap-agent-header text-center max-w-xl mx-auto mb-14">
               <span className="text-[11px] font-mono uppercase tracking-widest text-black/40 block mb-2">
                 Multi-Agent Architecture
               </span>
@@ -435,15 +618,28 @@ export default function Home({ user, setUser }) {
                   badge: "Agentic Curricula",
                   desc: "Builds custom multi-week learning paths backed by real-time web verification and YouTube tutorials.",
                 },
-              ].map((agent, index) => (
-                <motion.div
+              ].map((agent) => (
+                <div
                   key={agent.name}
-                  initial={{ opacity: 0, y: 18 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.45, delay: index * 0.08 }}
-                  whileHover={{ y: -4 }}
-                  className="rounded-xl border border-[#DCD7CB] bg-white p-5 shadow-xs flex flex-col justify-between hover:border-[#141414]/40 transition-all"
+                  onMouseEnter={(e) => {
+                    gsap.to(e.currentTarget, {
+                      y: -6,
+                      borderColor: "rgba(20, 20, 20, 0.4)",
+                      boxShadow: "0 10px 25px -5px rgba(0,0,0,0.06)",
+                      duration: 0.25,
+                      ease: "power2.out",
+                    });
+                  }}
+                  onMouseLeave={(e) => {
+                    gsap.to(e.currentTarget, {
+                      y: 0,
+                      borderColor: "#DCD7CB",
+                      boxShadow: "0 1px 2px 0 rgba(0,0,0,0.05)",
+                      duration: 0.35,
+                      ease: "power2.out",
+                    });
+                  }}
+                  className="gsap-agent-card rounded-xl border border-[#DCD7CB] bg-white p-5 shadow-xs flex flex-col justify-between transition-colors cursor-default"
                 >
                   <div>
                     <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E6E2D8] flex items-center justify-center text-[#141414] mb-3.5">
@@ -459,17 +655,20 @@ export default function Home({ user, setUser }) {
                       {agent.desc}
                     </p>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           </div>
         </section>
 
         {/* ── ARCHITECTURAL ADVANTAGES (WHY SKILLFORGE) ── */}
-        <section id="features" className="py-20 border-t border-[#E6E2D8] bg-[#F5F3EC]/50 -mx-4 sm:-mx-8 px-4 sm:px-8">
+        <section
+          id="features"
+          className="py-20 border-t border-[#E6E2D8] bg-[#F5F3EC]/50 -mx-4 sm:-mx-8 px-4 sm:px-8"
+        >
           <div className="max-w-5xl mx-auto">
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="space-y-2">
+              <div className="gsap-feature-col space-y-2">
                 <span className="text-[11px] font-mono uppercase text-black/40 tracking-wider">
                   01 / Simulation
                 </span>
@@ -481,7 +680,7 @@ export default function Home({ user, setUser }) {
                 </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="gsap-feature-col space-y-2">
                 <span className="text-[11px] font-mono uppercase text-black/40 tracking-wider">
                   02 / Vector Search
                 </span>
@@ -493,7 +692,7 @@ export default function Home({ user, setUser }) {
                 </p>
               </div>
 
-              <div className="space-y-2">
+              <div className="gsap-feature-col space-y-2">
                 <span className="text-[11px] font-mono uppercase text-black/40 tracking-wider">
                   03 / Transparent
                 </span>
@@ -509,8 +708,8 @@ export default function Home({ user, setUser }) {
         </section>
 
         {/* ── CALL TO ACTION SECTION ── */}
-        <section className="py-20 border-t border-[#E6E2D8] text-center">
-          <div className="max-w-xl mx-auto">
+        <section className="gsap-cta-section py-20 border-t border-[#E6E2D8] text-center">
+          <div className="gsap-cta-content max-w-xl mx-auto">
             <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414]">
               Start Your Career Preparation Today
             </h2>
