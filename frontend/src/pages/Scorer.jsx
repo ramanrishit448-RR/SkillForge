@@ -1,80 +1,138 @@
-import React, { useState, useEffect } from "react";
-
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "motion/react";
 import {
-  FiUploadCloud, FiCheckCircle,
-  FiAlertCircle, FiTrendingUp, FiUser, FiZap
+  FiUploadCloud,
+  FiCheckCircle,
+  FiAlertCircle,
+  FiTrendingUp,
+  FiUser,
+  FiZap,
+  FiArrowLeft,
+  FiFileText,
+  FiRefreshCw,
+  FiAward,
+  FiCheck,
+  FiChevronRight,
 } from "react-icons/fi";
 import { RadialBarChart, RadialBar, PolarAngleAxis } from "recharts";
-import { getResume } from "../api/resume.api";
 import { setResume } from "../redux/resumeSlice";
-
 import api from "../utils/axios";
 import { useCoins, refundCoins } from "../api/user.api";
 
-// ─── Score Ring ──────────────────────────────────────────────
-function ScoreRing({ score }) {
-  const color = score >= 75 ? "#7c3aed" : score >= 50 ? "#f59e0b" : "#ef4444";
-  const label = score >= 75 ? "Strong" : score >= 50 ? "Average" : "Needs Work";
+// ─── Score Gauge ──────────────────────────────────────────────
+function ScoreGauge({ score }) {
+  const color = score >= 75 ? "#10B981" : score >= 50 ? "#F59E0B" : "#EF4444";
+  const label = score >= 75 ? "Excellent Match" : score >= 50 ? "Competitive" : "Needs Refinement";
 
   return (
-    <div className="relative flex items-center justify-center">
-      <RadialBarChart
-        width={110}
-        height={110}
-        cx={55}
-        cy={55}
-        innerRadius={40}
-        outerRadius={53}
-        startAngle={90}
-        endAngle={-270}
-        data={[{ value: score, fill: color }]}
-        barSize={8}
-      >
-        <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-        <RadialBar background={{ fill: "#e5e7eb" }} dataKey="value" cornerRadius={8} />
-      </RadialBarChart>
+    <div className="flex flex-col sm:flex-row items-center gap-6">
+      <div className="relative flex items-center justify-center">
+        <RadialBarChart
+          width={130}
+          height={130}
+          cx={65}
+          cy={65}
+          innerRadius={46}
+          outerRadius={60}
+          startAngle={90}
+          endAngle={-270}
+          data={[{ value: score, fill: color }]}
+          barSize={10}
+        >
+          <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+          <RadialBar background={{ fill: "#EAE6DC" }} dataKey="value" cornerRadius={10} />
+        </RadialBarChart>
 
-      <div className="absolute flex flex-col items-center">
-        <span className="text-lg font-bold text-white leading-none">{score}</span>
-        <span className="text-[9px] text-gray-200 mt-0.5">/ 100</span>
+        <div className="absolute flex flex-col items-center justify-center">
+          <span className="text-2xl font-extrabold text-[#141414] tracking-tight leading-none">
+            {score}
+          </span>
+          <span className="text-[10px] uppercase font-semibold text-[#141414]/40 mt-1">
+            out of 100
+          </span>
+        </div>
+      </div>
+
+      <div className="text-center sm:text-left">
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-semibold tracking-wide uppercase mb-1.5"
+          style={{
+            backgroundColor: score >= 75 ? "#ECFDF5" : score >= 50 ? "#FFFBEB" : "#FEF2F2",
+            color: color,
+          }}
+        >
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
+          {label}
+        </div>
+        <p className="text-xs text-[#141414]/60 max-w-xs leading-relaxed">
+          Evaluated against modern ATS algorithms, industry-standard skill taxonomies, and recruiter benchmarks.
+        </p>
       </div>
     </div>
   );
 }
 
-// ─── Tag ─────────────────────────────────────────────────────
-function Tag({ text, color }) {
+// ─── Clean Pill Tag ───────────────────────────────────────────
+function PillTag({ text, variant = "default" }) {
   const styles = {
-    purple: "bg-purple-50 text-purple-700 border-purple-200",
-    red:    "bg-red-50    text-red-700    border-red-200",
-    green:  "bg-green-50  text-green-700  border-green-200",
-    yellow: "bg-yellow-50 text-yellow-700 border-yellow-200",
+    green: "bg-[#ECFDF5] text-[#047857] border-[#A7F3D0]",
+    yellow: "bg-[#FFFBEB] text-[#B45309] border-[#FDE68A]",
+    red: "bg-[#FEF2F2] text-[#B91C1C] border-[#FECACA]",
+    default: "bg-[#FAF9F5] text-[#141414]/80 border-[#E6E2D8]",
   };
+
   return (
-    <span className={`text-[10px] px-1.5 py-1 rounded-md border font-medium ${styles[color]}`}>
+    <span
+      className={`inline-flex items-center text-xs font-medium px-3 py-1 rounded-lg border transition-all ${
+        styles[variant] || styles.default
+      }`}
+    >
       {text}
     </span>
   );
 }
 
-// ─── Navbar ───────────────────────────────────────────────────
-function Navbar({ label }) {
+// ─── Top Editorial Navbar ─────────────────────────────────────
+function ScorerNavbar({ user }) {
   const navigate = useNavigate();
+
   return (
-    <nav className="fixed inset-x-0 top-0 z-20 border-b border-black/8 bg-white/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-3 sm:px-5">
-        <div
-          onClick={() => navigate("/dashboard")}
-          className="flex cursor-pointer items-center gap-1.5"
-        >
-          <span className="text-sm font-extrabold sm:text-base text-[#0A0A0A]">
-            SkillForge
-          </span>
-          <span className="hidden rounded bg-black/5 px-1.5 py-0.5 text-[10px] text-black/50 sm:block">
-            {label}
-          </span>
+    <nav className="sticky top-0 z-40 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#E6E2D8]">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-1.5 text-xs font-medium text-[#141414]/60 hover:text-[#141414] transition-colors"
+          >
+            <FiArrowLeft size={14} />
+            <span className="hidden sm:inline">Dashboard</span>
+          </button>
+
+          <div className="h-4 w-px bg-[#E6E2D8] hidden sm:block" />
+
+          <div
+            onClick={() => navigate("/dashboard")}
+            className="flex items-center gap-2 cursor-pointer"
+          >
+            <div className="flex items-center -space-x-1">
+              <span className="w-3 h-3 rounded-full bg-[#141414]" />
+              <span className="w-3 h-3 rounded-full bg-[#141414]/70" />
+            </div>
+            <span className="font-extrabold text-sm tracking-tight text-[#141414]">
+              SkillForge
+            </span>
+            <span className="rounded-full bg-[#F4F1EA] border border-[#E6E2D8] px-2 py-0.5 text-[10px] font-medium text-[#141414]/60">
+              Resume Scorer
+            </span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-xs font-medium text-[#141414]">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>{user?.interviewCoin || 0} Coins</span>
+          </div>
         </div>
       </div>
     </nav>
@@ -82,22 +140,22 @@ function Navbar({ label }) {
 }
 
 // ─── Main Component ───────────────────────────────────────────
-export default function Scorer({setUser , user}) {
-  const [file, setFile]       = useState(null);
+export default function Scorer({ setUser, user }) {
+  const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
-  const dispatch  = useDispatch();
-  const { resume } = useSelector(s => s.resume);
-
+  const dispatch = useDispatch();
+  const { resume } = useSelector((s) => s.resume);
+  const navigate = useNavigate();
 
   const uploadResume = async () => {
-    if (!file) return alert("Please select a PDF");
+    if (!file) return alert("Please select a PDF file.");
     let coinDeducted = false;
     try {
       setLoading(true);
 
       const coinResponse = await useCoins({ coins: 10, action: "resume-score" });
       if (!coinResponse) {
-        alert("Insufficient interview coins or session expired.");
+        alert("Insufficient interview coins or session expired. Please recharge your coins.");
         setLoading(false);
         return;
       }
@@ -110,12 +168,8 @@ export default function Scorer({setUser , user}) {
 
       const formData = new FormData();
       formData.append("resume", file);
-      const response = await api.post(
-        "/api/resume/upload",
-        formData,
-      );
+      const response = await api.post("/api/resume/upload", formData);
       dispatch(setResume(response.data.data));
-
     } catch (err) {
       console.log(err);
       if (coinDeducted) {
@@ -127,168 +181,297 @@ export default function Scorer({setUser , user}) {
       const isRateLimit = err.response?.status === 429 || err.response?.data?.isRateLimit;
       const msg = isRateLimit
         ? "AI rate limit or quota exceeded. Your 10 coins have been refunded. Please wait a moment and try again."
-        : (err.response?.data?.message ? `${err.response.data.message} (10 coins refunded)` : "Upload Failed. Coins refunded.");
+        : err.response?.data?.message
+        ? `${err.response.data.message} (10 coins refunded)`
+        : "Upload Failed. 10 coins refunded.";
       alert(msg);
     } finally {
       setLoading(false);
     }
   };
 
-  // ── Step 2: Results ─────────────────────────────────────────
-  if (resume) return (
-    <div className="min-h-screen bg-white text-[#0A0A0A]">
-      <Navbar label="Resume Scorer" />
+  // ── Step 2: Results View ─────────────────────────────────────
+  if (resume) {
+    return (
+      <div className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen">
+        <ScorerNavbar user={user} />
 
-      <div className="max-w-6xl mx-auto px-3 pt-18 sm:pt-20 pb-8 space-y-3.5">
-
-        {/* Header */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-[10px] text-black/40 tracking-widest uppercase mb-0.5">
-              Resume Analysis
-            </p>
-            <h1 className="text-lg font-bold">{resume.name}</h1>
-          </div>
-          <button
-            onClick={() => dispatch(setResume(null))}
-            className="text-[10px] sm:text-xs text-black/50 hover:text-[#0A0A0A] border border-black/15 hover:border-black/35 px-2.5 py-1 rounded-lg transition-colors"
-          >
-            Re-upload
-          </button>
-        </div>
-
-        {/* Score Card */}
-        <div className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 flex flex-col items-center gap-4 sm:flex-row shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-          <div className="relative">
-            <ScoreRing score={resume.score}/>
-          </div>
-          <div className="relative">
-            <p className="text-white/50 text-xs mb-0.5">Resume Score</p>
-            <p className="text-lg sm:text-xl font-bold mb-1.5 text-white">
-              {resume.score >= 75 ? "Strong" : resume.score >= 50 ? "Average" : "Needs Work"}
-            </p>
-            <div className="flex items-center gap-1.5">
-              <FiUser className="text-purple-400 text-xs" />
-              <span className="text-xs text-purple-300">{resume.suggestedRole}</span>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6">
+          {/* Header Title & Actions */}
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 pb-6 border-b border-[#E6E2D8]">
+            <div>
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-[11px] font-semibold text-[#141414]/70 uppercase tracking-wider mb-2">
+                <FiAward size={13} className="text-[#141414]" />
+                ATS Verification Complete
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#141414]">
+                {resume.name || "Candidate Resume"}
+              </h1>
+              <p className="text-xs sm:text-sm text-[#141414]/60 mt-1">
+                Synthesized evaluation based on resume structure, bullet point impact, and role alignment.
+              </p>
             </div>
-          </div>
-        </div>
 
-        {/* Strengths & Weaknesses */}
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <div className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-            <div className="relative flex items-center gap-1.5 mb-2.5">
-              <FiCheckCircle className="text-green-400" size={14} />
-              <p className="text-xs font-semibold text-white">Strengths</p>
-            </div>
-            <div className="relative flex flex-wrap gap-1.5">
-              {resume.strengths?.map(s => <Tag key={s} text={s} color="green" />)}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => dispatch(setResume(null))}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-[#E6E2D8] bg-white text-xs font-semibold text-[#141414] hover:border-[#141414]/40 transition-all shadow-sm"
+              >
+                <FiRefreshCw size={13} />
+                Re-upload Resume
+              </button>
+              <button
+                onClick={() => navigate("/interview")}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#141414] text-white text-xs font-semibold hover:bg-black transition-all shadow-sm"
+              >
+                Practice Interview
+                <FiChevronRight size={14} />
+              </button>
             </div>
           </div>
 
-          <div className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-            <div className="relative flex items-center gap-1.5 mb-2.5">
-              <FiAlertCircle className="text-yellow-400" size={14} />
-              <p className="text-xs font-semibold text-white">Weaknesses</p>
+          {/* Primary Score & Suggested Role Cockpit */}
+          <div className="bg-white border border-[#E6E2D8] rounded-2xl p-6 sm:p-8 shadow-[0_2px_16px_rgba(0,0,0,0.03)] grid md:grid-cols-[55%_45%] gap-6 items-center">
+            <div>
+              <p className="text-[10px] uppercase font-bold text-[#141414]/40 tracking-wider mb-3">
+                Overall Compatibility Score
+              </p>
+              <ScoreGauge score={resume.score || 0} />
             </div>
-            <div className="relative flex flex-wrap gap-1.5">
-              {resume.weaknesses?.map(w => <Tag key={w} text={w} color="yellow" />)}
+
+            <div className="md:border-l md:border-[#E6E2D8] md:pl-8 flex flex-col justify-center space-y-3">
+              <p className="text-[10px] uppercase font-bold text-[#141414]/40 tracking-wider">
+                Predicted Role Fit
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8] flex items-center justify-center text-[#141414] shrink-0">
+                  <FiUser size={18} />
+                </div>
+                <div>
+                  <h3 className="text-base font-bold text-[#141414] leading-snug">
+                    {resume.suggestedRole || "Software Engineer"}
+                  </h3>
+                  <p className="text-xs text-[#141414]/50">
+                    Highest confidence match based on extracted competencies
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Strengths & Weaknesses Grid */}
+          <div className="grid md:grid-cols-2 gap-5">
+            {/* Strengths */}
+            <div className="bg-white border border-[#E6E2D8] rounded-2xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col">
+              <div className="flex items-center gap-2 pb-3 mb-4 border-b border-[#E6E2D8]">
+                <div className="w-7 h-7 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                  <FiCheckCircle size={15} />
+                </div>
+                <h3 className="text-sm font-bold text-[#141414]">
+                  Key Strengths & Highlights
+                </h3>
+              </div>
+
+              <div className="flex flex-wrap gap-2 flex-1">
+                {resume.strengths && resume.strengths.length > 0 ? (
+                  resume.strengths.map((s, idx) => (
+                    <PillTag key={idx} text={s} variant="green" />
+                  ))
+                ) : (
+                  <p className="text-xs text-[#141414]/40">No specific strengths detected.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Weaknesses */}
+            <div className="bg-white border border-[#E6E2D8] rounded-2xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)] flex flex-col">
+              <div className="flex items-center gap-2 pb-3 mb-4 border-b border-[#E6E2D8]">
+                <div className="w-7 h-7 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center">
+                  <FiAlertCircle size={15} />
+                </div>
+                <h3 className="text-sm font-bold text-[#141414]">
+                  Areas for Improvement
+                </h3>
+              </div>
+
+              <div className="flex flex-wrap gap-2 flex-1">
+                {resume.weaknesses && resume.weaknesses.length > 0 ? (
+                  resume.weaknesses.map((w, idx) => (
+                    <PillTag key={idx} text={w} variant="yellow" />
+                  ))
+                ) : (
+                  <p className="text-xs text-[#141414]/40">No immediate red flags detected.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Missing Skills */}
+          <div className="bg-white border border-[#E6E2D8] rounded-2xl p-6 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center gap-2 pb-3 mb-4 border-b border-[#E6E2D8]">
+              <div className="w-7 h-7 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
+                <FiZap size={15} />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-[#141414]">
+                  Missing Target Skills & Keywords
+                </h3>
+                <p className="text-[11px] text-[#141414]/50">
+                  Adding these tools or paradigms will significantly boost your recruiter keyword match.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2">
+              {resume.missingSkills && resume.missingSkills.length > 0 ? (
+                resume.missingSkills.map((s, idx) => (
+                  <PillTag key={idx} text={s} variant="red" />
+                ))
+              ) : (
+                <p className="text-xs text-[#141414]/40">No missing skills detected for this profile.</p>
+              )}
+            </div>
+          </div>
+
+          {/* Strategic Recommendations */}
+          <div className="bg-white border border-[#E6E2D8] rounded-2xl p-6 sm:p-8 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+            <div className="flex items-center gap-2 pb-3 mb-5 border-b border-[#E6E2D8]">
+              <div className="w-7 h-7 rounded-lg bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414] flex items-center justify-center">
+                <FiTrendingUp size={15} />
+              </div>
+              <h3 className="text-sm font-bold text-[#141414]">
+                Actionable Next Steps & Revisions
+              </h3>
+            </div>
+
+            <div className="space-y-3">
+              {resume.recommendations && resume.recommendations.length > 0 ? (
+                resume.recommendations.map((rec, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-3 p-3.5 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8]/80 text-xs sm:text-sm text-[#141414]/80 leading-relaxed"
+                  >
+                    <span className="w-5 h-5 rounded-md bg-[#141414] text-white text-[11px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                      {i + 1}
+                    </span>
+                    <p>{rec}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-[#141414]/40">No pending recommendations.</p>
+              )}
             </div>
           </div>
         </div>
-
-        {/* Missing Skills */}
-        <div className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-          <div className="relative flex items-center gap-1.5 mb-2.5">
-            <FiZap className="text-red-400" size={14} />
-            <p className="text-xs font-semibold text-white">Missing Skills</p>
-          </div>
-          <div className="relative flex flex-wrap gap-1.5 overflow-hidden">
-            {resume.missingSkills?.map(s => <Tag key={s} text={s} color="red" />)}
-          </div>
-        </div>
-
-        {/* Recommendations */}
-        <div className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 shadow-[0_8px_32px_rgba(0,0,0,0.2)]">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-          <div className="relative flex items-center gap-1.5 mb-2.5">
-            <FiTrendingUp className="text-purple-400" size={14} />
-            <p className="text-xs font-semibold text-white">Recommendations</p>
-          </div>
-          <ul className="relative space-y-2">
-            {resume.recommendations?.map((r, i) => (
-              <li key={i} className="flex items-start gap-2.5 text-xs sm:text-sm text-white/60">
-                <span className="mt-0.5 w-4 h-4 rounded-full bg-white/10 border border-white/15 text-white/80 text-[10px] flex items-center justify-center shrink-0 font-semibold">
-                  {i + 1}
-                </span>
-                {r}
-              </li>
-            ))}
-          </ul>
-        </div>
-
       </div>
-    </div>
-  );
+    );
+  }
 
-  // ── Step 1: Upload ──────────────────────────────────────────
+  // ── Step 1: Upload View ──────────────────────────────────────
   return (
-    <div className="min-h-screen bg-white text-[#0A0A0A]">
-      <Navbar label="Resume Scorer" />
+    <div className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col">
+      <ScorerNavbar user={user} />
 
-      <div className="flex min-h-screen items-center justify-center px-3 pt-18 pb-6">
-        <div className="relative w-full max-w-sm rounded-3xl overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 p-4 shadow-[0_8px_32px_rgba(0,0,0,0.25)] sm:p-6">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
-
-          {/* Progress */}
-          <p className="relative text-[10px] text-white/40 tracking-widest uppercase mb-1.5">
-            Step 1 of 2
-          </p>
-          <div className="relative w-full h-1 bg-white/10 rounded-full mb-4">
-            <div className="h-1 bg-white rounded-full w-1/2" />
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-xl">
+          {/* Architectural Crosshair Top Note */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-[11px] font-semibold text-[#141414]/75 uppercase tracking-wider mb-3">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#141414]" />
+              AI Resume Scorer · 10 Coins
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#141414]">
+              How Does Your Resume Rate?
+            </h1>
+            <p className="text-xs sm:text-sm text-[#141414]/60 max-w-md mx-auto mt-2">
+              Upload your PDF resume to receive a comprehensive ATS compatibility grade, detected skills overview, and high-impact improvement tips.
+            </p>
           </div>
 
-          <h1 className="relative text-lg font-bold mb-1 text-white">Upload Your Resume</h1>
-          <p className="relative text-white/45 text-xs mb-4">
-            We'll score it and give you actionable feedback
-          </p>
+          {/* Main Card */}
+          <div className="bg-white border border-[#E6E2D8] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.03)] relative overflow-hidden">
+            {/* Step Counter */}
+            <div className="flex items-center justify-between pb-4 mb-5 border-b border-[#E6E2D8]">
+              <span className="text-[11px] font-semibold tracking-wider text-[#141414]/40 uppercase">
+                Step 01 / 02
+              </span>
+              <span className="text-[11px] font-medium text-[#141414]/60">
+                PDF Document Required
+              </span>
+            </div>
 
-          {/* Drop Zone */}
-          <label
-            className={`relative flex flex-col items-center justify-center w-full h-40 sm:h-48 rounded-2xl border-2 border-dashed cursor-pointer transition-colors
-              ${file
-                ? "border-white/40 bg-white/[0.06]"
-                : "border-white/15 bg-white/[0.03] hover:border-white/30"
+            {/* Drop Zone */}
+            <label
+              className={`flex flex-col items-center justify-center w-full min-h-[220px] rounded-2xl border-2 border-dashed cursor-pointer transition-all p-6 text-center ${
+                file
+                  ? "border-[#141414] bg-[#FAF9F5]"
+                  : "border-[#DCD7CB] hover:border-[#141414] bg-[#FAF9F5]/50 hover:bg-[#FAF9F5]"
               }`}
-          >
-            <FiUploadCloud className={`text-4xl sm:text-5xl mb-2.5 ${file ? "text-white" : "text-white/30"}`} />
-            <p className="text-xs font-medium text-white/80">
-              {file ? file.name : "Click or drag PDF here"}
-            </p>
-            <p className="text-[10px] text-white/35 mt-1">PDF only · Max 20MB</p>
-            <input
-              type="file"
-              accept=".pdf"
-              className="hidden"
-              onChange={e => setFile(e.target.files[0])}
-            />
-          </label>
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white border border-[#E6E2D8] shadow-sm flex items-center justify-center text-[#141414] mb-3">
+                {file ? <FiFileText size={22} /> : <FiUploadCloud size={24} />}
+              </div>
 
-          {/* Submit */}
-          <button
-            onClick={uploadResume}
-            disabled={loading || !file}
-            className="relative mt-4 w-full h-10 rounded-xl font-semibold text-xs bg-white text-[#0A0A0A] shadow-[0_4px_14px_rgba(255,255,255,0.15)] hover:bg-white/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-          >
-            {loading ? "Analyzing..." : "Analyze Resume →"}
-          </button>
+              {file ? (
+                <div>
+                  <p className="text-sm font-bold text-[#141414] truncate max-w-xs sm:max-w-md">
+                    {file.name}
+                  </p>
+                  <p className="text-[11px] text-[#141414]/50 mt-1">
+                    {(file.size / (1024 * 1024)).toFixed(2)} MB · Ready for Analysis
+                  </p>
+                  <span className="inline-block mt-3 text-[11px] font-medium text-[#141414] underline underline-offset-2">
+                    Click to choose a different PDF
+                  </span>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-sm font-semibold text-[#141414]">
+                    Click or drag your resume PDF here
+                  </p>
+                  <p className="text-[11px] text-[#141414]/45 mt-1">
+                    Supports .pdf files up to 20MB
+                  </p>
+                </div>
+              )}
 
+              <input
+                type="file"
+                accept=".pdf"
+                className="hidden"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+              />
+            </label>
+
+            {/* Pricing / Guarantee Note */}
+            <div className="flex items-center justify-between mt-4 px-1 text-[11px] text-[#141414]/50">
+              <span className="flex items-center gap-1">
+                <FiCheck size={12} className="text-emerald-600" /> Auto-refund on AI error
+              </span>
+              <span>10 Coins per audit</span>
+            </div>
+
+            {/* Action Button */}
+            <button
+              onClick={uploadResume}
+              disabled={loading || !file}
+              className="mt-5 w-full h-11 rounded-xl font-semibold text-xs bg-[#141414] text-white hover:bg-black disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-sm flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <>
+                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <span>Analyzing Resume with AI…</span>
+                </>
+              ) : (
+                <>
+                  <span>Analyze Resume & Calculate Score</span>
+                  <FiChevronRight size={14} />
+                </>
+              )}
+            </button>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

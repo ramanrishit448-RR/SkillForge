@@ -1,29 +1,28 @@
 import { useState } from "react";
-import { FiArrowLeft, FiArrowRight, FiEye } from "react-icons/fi";
+import { FiArrowLeft, FiArrowRight, FiEye, FiCheck } from "react-icons/fi";
 import ResumePreview from "../components/resume/ResumePreview";
 import ResumeForm from "../components/resume/ResumeForm";
 import initialData from "../components/resume/initialData";
 import { useNavigate } from "react-router-dom";
 
-
-// Step config — title + subtitle for each step
 const STEPS = [
-  { step: 1, title: "Personal Information", subtitle: "Your basic contact details" },
-  { step: 2, title: "Professional Summary", subtitle: "A quick intro about yourself" },
-  { step: 3, title: "Skills", subtitle: "Your technical skills" },
-  { step: 4, title: "Work Experience", subtitle: "Your past jobs & internships" },
-  { step: 5, title: "Projects", subtitle: "Projects you have built" },
-  { step: 6, title: "Education", subtitle: "Your academic background" },
+  { step: 1, label: "Contact", title: "Personal Contact Information", subtitle: "Your primary contact details for recruiters" },
+  { step: 2, label: "Summary", title: "Executive Professional Summary", subtitle: "A concise 2-3 sentence overview of your technical background" },
+  { step: 3, label: "Skills", title: "Technical Skills & Competencies", subtitle: "Languages, frameworks, databases, and development tools" },
+  { step: 4, label: "Experience", title: "Professional Work Experience", subtitle: "Past full-time positions, internships, or freelance engagements" },
+  { step: 5, label: "Projects", title: "Featured Technical Projects", subtitle: "Highlight applications, open-source repositories, and key metrics" },
+  { step: 6, label: "Education", title: "Academic Background", subtitle: "Degrees, university credentials, and graduation timelines" },
 ];
 
 const TOTAL_STEPS = STEPS.length;
 
-export default function ResumeBuilder({user , setUser}) {
+export default function ResumeBuilder({ user, setUser }) {
   const [data, setData] = useState(initialData);
   const [currentStep, setCurrentStep] = useState(1);
   const [showPreview, setShowPreview] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const goNext = () => {
     if (currentStep < TOTAL_STEPS) setCurrentStep(currentStep + 1);
   };
@@ -34,147 +33,156 @@ export default function ResumeBuilder({user , setUser}) {
 
   const isLastStep = currentStep === TOTAL_STEPS;
   const progressPct = ((currentStep - 1) / (TOTAL_STEPS - 1)) * 100;
+  const activeStep = STEPS.find((s) => s.step === currentStep) || STEPS[0];
 
-  const activeStep = STEPS.find((s) => s.step === currentStep);
-
-  // ── Show Preview Page ──────────────────────────────────────────────────────
+  // ── Show Preview Mode ──────────────────────────────────────────────────────
   if (showPreview) {
-    return <ResumePreview data={data} user={user} setUser={setUser}  onBack={() => setShowPreview(false)} />;
+    return (
+      <ResumePreview
+        data={data}
+        user={user}
+        setUser={setUser}
+        onBack={() => setShowPreview(false)}
+      />
+    );
   }
 
-  // ── Show Form ──────────────────────────────────────────────────────────────
+  // ── Show Form Mode ─────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-white text-[#0A0A0A] flex flex-col">
+    <div className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col selection:bg-[#141414] selection:text-white">
+      {/* Sticky Editorial Navbar */}
+      <nav className="sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#E6E2D8]">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-1.5 text-xs font-medium text-[#141414]/60 hover:text-[#141414] transition-colors"
+            >
+              <FiArrowLeft size={14} />
+              <span className="hidden sm:inline">Dashboard</span>
+            </button>
 
-      {/* Navbar */}
-      <nav className="sticky top-0 z-20 border-b border-black/8 bg-white/80 backdrop-blur-xl">
-        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-3 sm:px-5">
-          <div
-            onClick={() => navigate("/dashboard")}
-            className="flex cursor-pointer items-center gap-1.5"
-          >
-            
-            <span className="text-base font-extrabold tracking-tight">
-              SkillForge
-            </span>
+            <div className="h-4 w-px bg-[#E6E2D8] hidden sm:block" />
 
-            <span className="hidden rounded bg-black/5 px-1.5 py-0.5 text-[10px] text-black/50 sm:block">
-              Resume Builder
-            </span>
+            <div
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <div className="flex items-center -space-x-1">
+                <span className="w-3 h-3 rounded-full bg-[#141414]" />
+                <span className="w-3 h-3 rounded-full bg-[#141414]/70" />
+              </div>
+              <span className="font-extrabold text-sm tracking-tight text-[#141414]">
+                SkillForge
+              </span>
+              <span className="rounded-full bg-[#F4F1EA] border border-[#E6E2D8] px-2 py-0.5 text-[10px] font-medium text-[#141414]/60">
+                Resume Architect
+              </span>
+            </div>
           </div>
 
           <button
             onClick={() => setShowPreview(true)}
-            className="flex h-8 items-center justify-center gap-2 rounded-lg border border-black/15 text-black/60 transition px-2 hover:border-[#0A0A0A] hover:text-[#0A0A0A]"
+            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-[#E6E2D8] bg-white text-[#141414] hover:border-[#141414]/40 transition-all shadow-sm"
           >
             <FiEye size={13} />
-            
+            <span>Preview ATS Resume</span>
           </button>
         </div>
       </nav>
 
       {/* Main Content */}
-      <div className="flex-1 px-3 py-4 sm:px-6 sm:py-8">
-        <div className="mx-auto w-full max-w-2xl">
-
-          {/* Step Info */}
-          <div className="mb-4">
-            <div className="flex items-center justify-between mb-1.5">
-              <p className="text-[10px] text-black/40 font-medium">
-                STEP {currentStep} OF {TOTAL_STEPS}
-              </p>
-              <p className="hidden text-[10px] text-black/40 sm:block">{Math.round(progressPct)}% complete</p>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="w-full h-1 bg-black/8 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-[#0A0A0A] rounded-full transition-all duration-300"
-                style={{ width: `${progressPct}%` }}
-              />
-            </div>
-
-            {/* Step Title */}
-            <div className="mt-3">
-              <h1 className="text-xl font-bold sm:text-2xl">{activeStep.title}</h1>
-              <p className="mt-1 text-xs text-black/45 sm:text-sm">{activeStep.subtitle}</p>
-            </div>
+      <main className="flex-1 max-w-3xl mx-auto w-full px-4 sm:px-6 py-8">
+        {/* Step Progress Header */}
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold text-[#141414]/45 uppercase tracking-wider">
+              Step 0{currentStep} of 0{TOTAL_STEPS}
+            </span>
+            <span className="text-[11px] font-medium text-[#141414]/55">
+              {Math.round(progressPct)}% Completed
+            </span>
           </div>
 
-          {/* Divider */}
-          <div className="border-t border-black/8 mb-4" />
+          {/* Minimalist Progress Line */}
+          <div className="w-full h-1 bg-[#E6E2D8] rounded-full overflow-hidden mb-6">
+            <div
+              className="h-full bg-[#141414] rounded-full transition-all duration-300"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
 
-          {/* Form */}
+          {/* Quick Step Switcher Bar */}
+          <div className="grid grid-cols-6 gap-1.5 mb-6">
+            {STEPS.map((s) => (
+              <button
+                key={s.step}
+                type="button"
+                onClick={() => setCurrentStep(s.step)}
+                className={`py-1.5 px-1 rounded-lg text-center transition-all text-[11px] font-medium truncate ${
+                  s.step === currentStep
+                    ? "bg-[#141414] text-white shadow-sm"
+                    : s.step < currentStep
+                    ? "bg-white border border-[#E6E2D8] text-[#141414]/80 hover:border-[#141414]/30"
+                    : "bg-[#FAF9F5] border border-transparent text-[#141414]/40 hover:text-[#141414]/70"
+                }`}
+              >
+                {s.step < currentStep ? "✓ " : `${s.step}. `}
+                {s.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Step Title Header */}
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#141414]">
+              {activeStep.title}
+            </h1>
+            <p className="mt-1 text-xs sm:text-sm text-[#141414]/60">
+              {activeStep.subtitle}
+            </p>
+          </div>
+        </div>
+
+        {/* Form Container Card */}
+        <div className="bg-white border border-[#E6E2D8] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
           <ResumeForm step={currentStep} data={data} setData={setData} />
 
-          {/* Divider */}
-          <div className="border-t border-black/8 mt-6 mb-4" />
-
-          {/* Navigation Buttons */}
-          <div className="flex items-center justify-between">
-
-            {/* Previous Button */}
+          {/* Action Button Navigation */}
+          <div className="flex items-center justify-between pt-6 mt-8 border-t border-[#E6E2D8]">
             <button
               onClick={goPrev}
               disabled={currentStep === 1}
-              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-medium border transition-all
-                ${currentStep === 1
-                  ? "border-black/8 text-black/25 cursor-not-allowed"
-                  : "border-black/20 text-black/60 hover:border-black/40 hover:text-[#0A0A0A]"
-                }`}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
+                currentStep === 1
+                  ? "border-[#E6E2D8] text-[#141414]/25 cursor-not-allowed bg-transparent"
+                  : "border-[#E6E2D8] bg-white text-[#141414] hover:border-[#141414]/40 shadow-sm"
+              }`}
             >
-              <FiArrowLeft size={15} />
-              <span className="hidden sm:block">
-                Previous
-              </span>
+              <FiArrowLeft size={14} />
+              <span>Previous Step</span>
             </button>
 
-            {/* Step Dots */}
-            <div className="flex items-center gap-1.5">
-              {STEPS.map((s) => (
-                <button
-                  key={s.step}
-                  onClick={() => setCurrentStep(s.step)}
-                  className={`rounded-full transition-all ${s.step === currentStep
-                    ? "w-4 h-1.5 bg-[#0A0A0A]"
-                    : s.step < currentStep
-                      ? "w-1.5 h-1.5 bg-black/35"
-                      : "w-1.5 h-1.5 bg-black/12"
-                    }`}
-                />
-              ))}
-            </div>
-
-            {/* Next or Preview Button */}
             {isLastStep ? (
               <button
                 onClick={() => setShowPreview(true)}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#000000]/90 backdrop-blur-2xl border border-white/10 text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] hover:border-white/20 transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#141414] text-white hover:bg-black transition-all shadow-sm"
               >
-                <FiEye size={15} />
-
-                <span className="hidden sm:block">
-                  Preview Resume
-                </span>
+                <span>Final ATS Preview</span>
+                <FiEye size={14} />
               </button>
             ) : (
               <button
                 onClick={goNext}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-semibold bg-[#000000]/90 backdrop-blur-2xl border border-white/10 text-white shadow-[0_8px_24px_rgba(0,0,0,0.25)] hover:border-white/20 transition-all"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#141414] text-white hover:bg-black transition-all shadow-sm"
               >
-                <span className="hidden sm:block">
-                  Next
-                </span>
-
-                <FiArrowRight size={15} />
+                <span>Continue</span>
+                <FiArrowRight size={14} />
               </button>
             )}
-
           </div>
-
         </div>
-      </div>
-
+      </main>
     </div>
   );
 }

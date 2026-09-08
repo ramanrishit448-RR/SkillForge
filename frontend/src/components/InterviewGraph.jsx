@@ -1,70 +1,86 @@
 import { motion } from "motion/react";
 import {
-  Radar, RadarChart, PolarGrid,
-  PolarAngleAxis, ResponsiveContainer, Tooltip,
+  Radar,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts";
-
-
 
 function CustomTooltip({ active, payload }) {
   if (active && payload?.length) {
     return (
-      <div className="bg-[#0A0A0A]/95 backdrop-blur-xl border border-white/10 rounded-lg px-2.5 py-1.5 text-[11px] text-white shadow-2xl">
-        <p className="text-white/40 mb-0.5">{payload[0]?.payload?.skill}</p>
-        <p className="font-bold text-white">{payload[0]?.value}%</p>
+      <div className="bg-[#141414] text-white border border-[#141414] rounded-xl px-3 py-1.5 text-xs shadow-xl">
+        <p className="text-white/60 text-[10px] mb-0.5">{payload[0]?.payload?.skill}</p>
+        <p className="font-bold">{payload[0]?.value}%</p>
       </div>
     );
   }
   return null;
 }
 
-function RadarCard({ title, data, color, index }) {
+function RadarCard({ title, data, color = "#141414", index }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, delay: 0.2 + index * 0.1 }}
-      whileHover={{ y: -4 }}
-      className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-xl p-3 md:p-4
-                 flex flex-col shadow-[0_8px_32px_rgba(0,0,0,0.18)] hover:border-white/20 hover:shadow-[0_12px_40px_rgba(0,0,0,0.28)] transition-all"
+      transition={{ duration: 0.35, delay: 0.15 + index * 0.08 }}
+      whileHover={{ y: -2 }}
+      className="bg-white border border-[#E6E2D8] rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#141414]/30 transition-all"
     >
-      {/* glass sheen */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent pointer-events-none" />
+      <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#E6E2D8]/60">
+        <h3 className="text-xs sm:text-sm font-bold text-[#141414]">{title}</h3>
+        <span className="text-[10px] font-semibold text-[#141414]/50 bg-[#F4F1EA] px-2 py-0.5 rounded border border-[#E6E2D8]">
+          Competency Radar
+        </span>
+      </div>
 
-      <div className="relative">
-        <ResponsiveContainer width="100%" height={180}>
+      <div className="w-full">
+        <ResponsiveContainer width="100%" height={200}>
           <RadarChart data={data} cx="50%" cy="50%" outerRadius="68%">
-            <PolarGrid stroke="rgba(255,255,255,0.08)" gridType="circle" />
+            <PolarGrid stroke="#E6E2D8" gridType="circle" />
             <PolarAngleAxis
               dataKey="skill"
-              tick={{ fill: "rgba(255,255,255,0.35)", fontSize: 9, fontWeight: 500 }}
+              tick={{ fill: "#141414", fontSize: 10, fontWeight: 500 }}
             />
             <Radar
               name={title}
               dataKey="score"
               stroke={color}
               fill={color}
-              fillOpacity={0.15}
+              fillOpacity={0.12}
               strokeWidth={2}
-              dot={{ r: 2.5, fill: color, strokeWidth: 0 }}
+              dot={{ r: 3, fill: color, strokeWidth: 0 }}
             />
             <Tooltip content={<CustomTooltip />} />
           </RadarChart>
         </ResponsiveContainer>
-        <p className="text-white font-semibold text-xs text-center mt-2">{title}</p>
       </div>
     </motion.div>
   );
 }
 
-export default function InterviewGraph({ technicalData, behaviouralData , technicalCount , hrCount }) {
-  const techData = technicalData;
-  const behData  = behaviouralData ;
-
+export default function InterviewGraph({
+  technicalData,
+  behaviouralData,
+  technicalCount,
+  hrCount,
+}) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-      <RadarCard title={`Technical Interviews (${technicalCount})`}   data={techData} color="rgba(255,255,255,0.85)" index={0} />
-      <RadarCard title={`HR Interviews (${hrCount})`} data={behData}  color="rgba(180,180,180,0.85)" index={1} />
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <RadarCard
+        title={`Technical Performance (${technicalCount || 0})`}
+        data={technicalData}
+        color="#141414"
+        index={0}
+      />
+      <RadarCard
+        title={`HR & Behavioral Performance (${hrCount || 0})`}
+        data={behaviouralData}
+        color="#4B5563"
+        index={1}
+      />
     </div>
   );
 }

@@ -46,26 +46,20 @@ export default function Sidebar({
 
       {/* Logo + Toggle */}
       <div
-        className={`px-3 h-[52px] border-b border-black/8 shrink-0 flex items-center ${collapsed ? "justify-center" : "justify-between"
+        className={`px-3 h-[52px] border-b border-[#E6E2D8] shrink-0 flex items-center ${collapsed ? "justify-center" : "justify-between"
           }`}
       >
         <div className="flex items-center gap-2.5">
           {!collapsed && (
-            <>
-              <div className="w-7 h-7 rounded-lg bg-[#000000] flex items-center justify-center shrink-0 shadow-[0_4px_14px_rgba(0,0,0,0.25)]">
-                <GiArtificialHive size={19} color="white" />
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/dashboard")}>
+              <div className="flex items-center -space-x-1 shrink-0">
+                <span className="w-3 h-3 rounded-full bg-[#141414]" />
+                <span className="w-3 h-3 rounded-full bg-[#141414]/70" />
               </div>
-
-              <motion.span
-                initial={{ opacity: 0, x: -6 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -6 }}
-                transition={{ duration: 0.15 }}
-                className="font-extrabold text-sm tracking-tight text-[#0A0A0A] whitespace-nowrap"
-              >
+              <span className="font-extrabold text-sm tracking-tight text-[#141414] whitespace-nowrap">
                 SkillForge
-              </motion.span>
-            </>
+              </span>
+            </div>
           )}
         </div>
         <div className="flex items-center gap-1.5">
@@ -264,7 +258,7 @@ export default function Sidebar({
       <motion.aside
         animate={{ width: collapsed ? 72 : 260 }}
         transition={{ duration: 0.25, ease: "easeInOut" }}
-        className="hidden md:flex fixed top-0 left-0 h-screen bg-white border-r border-black/8 flex-col z-40 overflow-hidden"
+        className="hidden md:flex fixed top-0 left-0 h-screen bg-[#FDFBF7] border-r border-[#E6E2D8] flex-col z-40 overflow-hidden font-['Plus_Jakarta_Sans',sans-serif]"
       >
         {inner}
       </motion.aside>
@@ -290,7 +284,7 @@ export default function Sidebar({
             animate={{ x: 0 }}
             exit={{ x: -280 }}
             transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="fixed top-0 left-0 h-screen w-[280px] max-w-[85vw] bg-white border-r border-black/8 flex flex-col z-50 md:hidden overflow-hidden"
+            className="fixed top-0 left-0 h-screen w-[280px] max-w-[85vw] bg-[#FDFBF7] border-r border-[#E6E2D8] flex-col z-50 md:hidden overflow-hidden font-['Plus_Jakarta_Sans',sans-serif]"
           >
             {inner}
           </motion.aside>

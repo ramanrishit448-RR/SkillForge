@@ -1,60 +1,71 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
-  FiClock, FiChevronDown, FiChevronUp,
-  FiYoutube, FiBookOpen,
+  FiClock,
+  FiChevronDown,
+  FiChevronUp,
+  FiYoutube,
+  FiBookOpen,
 } from "react-icons/fi";
 
-const difficultyColor = { Easy: "#34d399", Medium: "#a78bfa", Hard: "#f87171" };
+const difficultyBadges = {
+  Easy: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  Medium: "bg-amber-50 text-amber-700 border-amber-200",
+  Hard: "bg-red-50 text-red-700 border-red-200",
+};
 
-const statusStyle = {
-  Completed:   "bg-emerald-500/20 text-emerald-400 border-emerald-500/30",
-  "In Progress": "bg-violet-500/20 text-violet-400 border-violet-500/30",
-  Pending:     "bg-white/5 text-white/35 border-white/10",
+const statusStyles = {
+  Completed: "bg-emerald-50 text-emerald-700 border-emerald-200",
+  "In Progress": "bg-indigo-50 text-indigo-700 border-indigo-200",
+  Pending: "bg-[#FAF9F5] text-[#141414]/50 border-[#E6E2D8]",
 };
 
 export default function ModuleCard({ mod, index }) {
   const [open, setOpen] = useState(false);
 
+  const formattedIndex = index < 9 ? `0${index + 1}` : `${index + 1}`;
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.06, duration: 0.35 }}
-      whileHover={{ y: -2 }}
+    <div
       onClick={() => setOpen(!open)}
-      className="relative overflow-hidden bg-[#000000]/90 backdrop-blur-2xl border border-white/10 rounded-xl cursor-pointer select-none shadow-[0_4px_18px_rgba(0,0,0,0.2)] hover:border-white/20 transition-all"
+      className="bg-white border border-[#E6E2D8] rounded-2xl cursor-pointer select-none shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#141414]/35 transition-all overflow-hidden"
     >
-      {/* glass sheen */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.07] via-transparent to-transparent pointer-events-none" />
+      <div className="flex items-center justify-between p-4 sm:p-5 gap-3">
+        <div className="flex items-center gap-3.5 min-w-0">
+          <div className="w-8 h-8 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8] flex items-center justify-center text-xs font-mono font-bold text-[#141414] shrink-0">
+            {formattedIndex}
+          </div>
 
-      <div className="relative flex items-center gap-3 p-4">
-        <div
-          className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold bg-white/5 border border-white/10"
-          style={{ color: difficultyColor[mod.difficulty] }}
-        >
-          {index + 1}
-        </div>
-
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-white truncate">{mod.title}</p>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <FiClock size={10} className="text-white/30" />
-            <span className="text-xs text-white/35">{mod.duration}</span>
+          <div className="min-w-0">
+            <h3 className="text-sm font-bold text-[#141414] truncate">{mod.title}</h3>
+            <div className="flex items-center gap-2 mt-0.5 text-xs text-[#141414]/50">
+              <span className="flex items-center gap-1">
+                <FiClock size={11} /> {mod.duration}
+              </span>
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <span className={`text-xs px-2 py-0.5 rounded-full border ${statusStyle[mod.status]}`}>
-            {mod.status}
+        <div className="flex items-center gap-2 shrink-0">
+          <span
+            className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${
+              statusStyles[mod.status] || statusStyles.Pending
+            }`}
+          >
+            {mod.status || "Planned"}
           </span>
-          <span className="text-xs font-medium hidden sm:block" style={{ color: difficultyColor[mod.difficulty] }}>
+
+          <span
+            className={`hidden sm:inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${
+              difficultyBadges[mod.difficulty] || difficultyBadges.Medium
+            }`}
+          >
             {mod.difficulty}
           </span>
-          {open
-            ? <FiChevronUp size={14} className="text-white/30" />
-            : <FiChevronDown size={14} className="text-white/30" />
-          }
+
+          <div className="w-7 h-7 rounded-lg border border-[#E6E2D8] flex items-center justify-center text-[#141414]/50">
+            {open ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
+          </div>
         </div>
       </div>
 
@@ -64,33 +75,53 @@ export default function ModuleCard({ mod, index }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.22 }}
-            className="overflow-hidden"
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden bg-[#FAF9F5]/60 border-t border-[#E6E2D8]"
           >
-            <div className="relative px-4 pb-4 pt-0 border-t border-white/8">
-              <p className="text-xs text-white/45 mt-3 mb-3 leading-relaxed">{mod.description}</p>
-              <div className="flex gap-2 flex-wrap">
-                <a href={mod.youtube} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-red-500/25 text-red-400 bg-red-500/10 hover:bg-red-500/20 transition-colors"
+            <div className="p-4 sm:p-5">
+              <p className="text-xs sm:text-sm text-[#141414]/75 leading-relaxed mb-4">
+                {mod.description}
+              </p>
+
+              <div className="flex items-center gap-2.5 flex-wrap">
+                {mod.youtube && (
+                  <a
+                    href={mod.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <FiYoutube size={12} /> Watch Tutorial
-                  </motion.button>
-                </a>
-                <a href={mod.article} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-                  <motion.button
-                    whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
-                    className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg border border-white/10 text-white/45 bg-white/5 hover:bg-white/10 transition-colors"
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 font-semibold transition-all shadow-sm"
+                    >
+                      <FiYoutube size={14} className="text-red-600" />
+                      <span>Watch Tutorial</span>
+                    </button>
+                  </a>
+                )}
+
+                {mod.article && (
+                  <a
+                    href={mod.article}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
                   >
-                    <FiBookOpen size={12} /> Read Article
-                  </motion.button>
-                </a>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl border border-[#E6E2D8] text-[#141414] bg-white hover:bg-[#FAF9F5] font-semibold transition-all shadow-sm"
+                    >
+                      <FiBookOpen size={14} />
+                      <span>Read Documentation</span>
+                    </button>
+                  </a>
+                )}
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

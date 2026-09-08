@@ -94,7 +94,7 @@ export default function Dashboard({ user, setUser }) {
   };
   return (
 
-    <div className="bg-white min-h-screen text-[#0A0A0A] font-sans flex">
+    <div className="bg-[#FAF9F5] min-h-screen text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] flex selection:bg-[#141414] selection:text-white">
       <Sidebar
 
         user={user}
@@ -179,7 +179,7 @@ export default function Dashboard({ user, setUser }) {
 
         {/* Divider */}
 
-        <div className="h-px bg-black/8 mb-5 md:mb-6" />
+        <div className="h-px bg-[#E6E2D8] mb-5 md:mb-6" />
 
 
 
