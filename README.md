@@ -328,17 +328,12 @@ GROQ_API_KEY="gsk_your_groq_api_key"
 # ==========================================
 RESUME_PORT=8003
 RESUME_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/Resume"
-GEMINI_API_KEY="your_google_gemini_api_key"
-QDRANT_URL="https://your-cluster.qdrant.tech"
-QDRANT_API_KEY="your_qdrant_api_key"
 
 # ==========================================
 # ROADMAP SERVICE
 # ==========================================
 ROADMAP_PORT=8004
 ROADMAP_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/Roadmaps"
-YOUTUBE_API_KEY="your_youtube_data_api_v3_key"
-TAVILY_API_KEY="tvly-your_tavily_api_key"
 
 # ==========================================
 # BILLING SERVICE
