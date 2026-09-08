@@ -311,6 +311,12 @@ BILLING_SERVICE_URL=http://localhost:8005
 REDIS_URL="rediss://default:your_password@your-upstash-redis.upstash.io:6379"
 
 # ==========================================
+# SHARED AI & LLM CONFIGURATION
+# (Shared across Interview, Resume, & Roadmap Services)
+# ==========================================
+GROQ_API_KEY="your_groq_api_key"
+
+# ==========================================
 # AUTH SERVICE
 # ==========================================
 AUTH_PORT=8001
@@ -321,7 +327,6 @@ AUTH_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=C
 # ==========================================
 INTERVIEW_PORT=8002
 INTERVIEW_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/interviewStart"
-GROQ_API_KEY="gsk_your_groq_api_key"
 
 # ==========================================
 # RESUME SERVICE
