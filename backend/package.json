@@ -7,8 +7,9 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently -n gateway,auth,interview,resume,roadmap,billing -c cyan,blue,green,yellow,magenta,red \"node --max-old-space-size=80 gateway/index.js\" \"node --max-old-space-size=80 services/auth-service/index.js\" \"node --max-old-space-size=80 services/interview-service/index.js\" \"node --max-old-space-size=80 services/resume-service/index.js\" \"node --max-old-space-size=80 services/roadmap-service/index.js\" \"node --max-old-space-size=80 services/billing-service/index.js\"",
-    "dev": "concurrently -n gateway,auth,interview,resume,roadmap,billing -c cyan,blue,green,yellow,magenta,red \"npm run dev --workspace=gateway\" \"npm run dev --workspace=services/auth-service\" \"npm run dev --workspace=services/interview-service\" \"npm run dev --workspace=services/resume-service\" \"npm run dev --workspace=services/roadmap-service\" \"npm run dev --workspace=services/billing-service\"",
+    "start": "node --max-old-space-size=60 gateway/index.js",
+    "dev": "node --watch gateway/index.js",
+    "dev:micro": "concurrently -n gateway,auth,interview,resume,roadmap,billing -c cyan,blue,green,yellow,magenta,red \"npm run dev --workspace=gateway\" \"npm run dev --workspace=services/auth-service\" \"npm run dev --workspace=services/interview-service\" \"npm run dev --workspace=services/resume-service\" \"npm run dev --workspace=services/roadmap-service\" \"npm run dev --workspace=services/billing-service\"",
     "redis": "docker compose up -d"
   },
   "dependencies": {
