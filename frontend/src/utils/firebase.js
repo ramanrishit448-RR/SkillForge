@@ -3,11 +3,11 @@ import { initializeApp } from "firebase/app";
 import {getAuth, GoogleAuthProvider} from "firebase/auth"
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_APIKEY,
-  authDomain: "skillforge-505b7.firebaseapp.com",
-  projectId: "skillforge-505b7",
-  storageBucket: "skillforge-505b7.firebasestorage.app",
-  messagingSenderId: "361889714950",
-  appId: "1:361889714950:web:cbd09b63d11d15e5c48487"
+  authDomain: "skillforge-505b7-f8829.firebaseapp.com",
+  projectId: "skillforge-505b7-f8829",
+  storageBucket: "skillforge-505b7-f8829.firebasestorage.app",
+  messagingSenderId: "707199638445",
+  appId: "1:707199638445:web:4199f54e4903b258361f24"
 };
 
 // Initialize Firebase
