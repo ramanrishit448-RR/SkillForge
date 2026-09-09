@@ -878,7 +878,7 @@ export default function Home({ user, setUser }) {
             </div>
 
             {/* Right Orbital Quarter-Circle Animated Track */}
-            <div className="gsap-orbit-wrapper lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-hidden max-w-full">
+            <div className="gsap-orbit-wrapper lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-hidden w-full max-w-full">
               <QuarterCircleOrbit className="translate-y-2 sm:translate-y-6" />
             </div>
           </div>

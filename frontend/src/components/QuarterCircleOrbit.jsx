@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
+import { useTheme } from "../context/ThemeContext";
 
 export default function QuarterCircleOrbit({ className = "" }) {
   const canvasRef = useRef(null);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -11,24 +13,19 @@ export default function QuarterCircleOrbit({ className = "" }) {
 
     let animId;
 
-    // Fixed virtual canvas dimensions — enlarged vertically and horizontally
+    // Fixed virtual canvas coordinate space
     const V_WIDTH = 720;
     const V_HEIGHT = 740;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    canvas.width = V_WIDTH * dpr;
-    canvas.height = V_HEIGHT * dpr;
-    ctx.scale(dpr, dpr);
-
-    // Arc geometry constants — enlarged radius for massive vertical reach
+    // Arc geometry constants — wide commanding quarter circle
     const CX = 535;
     const CY = 520;
-    const RADIUS = 430; // Increased radius to arch much higher vertically
-    const TRACK_WIDTH = 96; // Bold, commanding track
+    const RADIUS = 430;
+    const TRACK_WIDTH = 96;
 
     // Arc spans from ~147° (sweeping right down to the bottom border) to ~294° (upper-right)
-    const START_ANGLE = Math.PI * 0.815; // ~146.7° (bottom taskbar edge)
-    const END_ANGLE = Math.PI * 1.635;   // ~294.3° (sweeping across top-right)
+    const START_ANGLE = Math.PI * 0.815;
+    const END_ANGLE = Math.PI * 1.635;
     const SPAN = END_ANGLE - START_ANGLE;
 
     // 3 Particles with icons
@@ -39,9 +36,9 @@ export default function QuarterCircleOrbit({ className = "" }) {
     ];
 
     let progress = 0;
-    const SPEED = 0.0012; // Butter-smooth continuous clockwise speed
+    const SPEED = 0.0012;
 
-    // Icon draw helpers scaled to match larger pucks
+    // Icon draw helpers scaled to match pucks
     const drawIcon = (ctx, x, y, type) => {
       ctx.save();
       ctx.translate(x, y);
@@ -75,16 +72,53 @@ export default function QuarterCircleOrbit({ className = "" }) {
       ctx.restore();
     };
 
-    const render = () => {
-      ctx.clearRect(0, 0, V_WIDTH, V_HEIGHT);
+    const updateCanvasResolution = () => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const displayW = Math.max(1, Math.round(rect.width));
+      const displayH = Math.max(1, Math.round(rect.height));
 
-      // ── 1. The Large Quarter-Circle Track (Arching High Vertically) ──
+      if (canvas.width !== displayW * dpr || canvas.height !== displayH * dpr) {
+        canvas.width = displayW * dpr;
+        canvas.height = displayH * dpr;
+      }
+    };
+
+    updateCanvasResolution();
+    window.addEventListener("resize", updateCanvasResolution);
+
+    const render = () => {
+      const rect = canvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const displayW = rect.width || V_WIDTH;
+      const displayH = rect.height || V_HEIGHT;
+
+      // Ensure bitmap matches element pixel size
+      if (canvas.width !== Math.round(displayW * dpr) || canvas.height !== Math.round(displayH * dpr)) {
+        canvas.width = Math.round(displayW * dpr);
+        canvas.height = Math.round(displayH * dpr);
+      }
+
+      // Proportional uniform scaling: NEVER distorts into an oval on mobile or desktop
+      const scale = Math.min(displayW / V_WIDTH, displayH / V_HEIGHT);
+      const offsetX = displayW - V_WIDTH * scale;
+      const offsetY = displayH - V_HEIGHT * scale;
+
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.scale(dpr, dpr);
+      ctx.translate(offsetX, offsetY);
+      ctx.scale(scale, scale);
+
+      // ── 1. The Large Quarter-Circle Track ──
       ctx.save();
       ctx.beginPath();
       ctx.arc(CX, CY, RADIUS, START_ANGLE, END_ANGLE, false);
       ctx.lineWidth = TRACK_WIDTH;
       ctx.lineCap = "round";
-      ctx.strokeStyle = "#E2DDD3"; // Warm cream track matching screenshot
+      ctx.strokeStyle = isDark ? "#222634" : "#E2DDD3";
       ctx.stroke();
       ctx.restore();
 
@@ -110,7 +144,7 @@ export default function QuarterCircleOrbit({ className = "" }) {
 
         // ── 2A. Seamless Curved Smoky Comet Trail ──
         const TRAIL_STEPS = 24;
-        const TRAIL_SPAN_RAD = 0.28; // Trail length in radians
+        const TRAIL_SPAN_RAD = 0.28;
 
         for (let i = TRAIL_STEPS; i >= 1; i--) {
           const t = i / TRAIL_STEPS;
@@ -121,13 +155,14 @@ export default function QuarterCircleOrbit({ className = "" }) {
           const tx = CX + RADIUS * Math.cos(trailAngle);
           const ty = CY + RADIUS * Math.sin(trailAngle);
 
-          // Trail radius gently expands and fades out toward tail end
           const trailRadius = 30 + t * 6;
           const trailAlpha = (1 - t) ** 1.9 * 0.35 * alpha;
 
           ctx.beginPath();
           ctx.arc(tx, ty, trailRadius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(26, 33, 49, ${trailAlpha})`;
+          ctx.fillStyle = isDark
+            ? `rgba(224, 90, 62, ${trailAlpha * 0.45})`
+            : `rgba(26, 33, 49, ${trailAlpha})`;
           ctx.fill();
         }
 
@@ -144,13 +179,13 @@ export default function QuarterCircleOrbit({ className = "" }) {
         // Puck circle body
         ctx.beginPath();
         ctx.arc(px, py, puckRadius, 0, Math.PI * 2);
-        ctx.fillStyle = "#1E2433"; // Sleek dark navy
+        ctx.fillStyle = isDark ? "#121622" : "#1E2433";
         ctx.fill();
 
         // Rim stroke
         ctx.shadowColor = "transparent";
         ctx.lineWidth = 2.4;
-        ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
+        ctx.strokeStyle = isDark ? "rgba(255, 255, 255, 0.38)" : "rgba(255, 255, 255, 0.28)";
         ctx.stroke();
 
         // Icon inside puck
@@ -159,6 +194,8 @@ export default function QuarterCircleOrbit({ className = "" }) {
         ctx.restore();
       });
 
+      ctx.restore();
+
       animId = requestAnimationFrame(render);
     };
 
@@ -166,49 +203,45 @@ export default function QuarterCircleOrbit({ className = "" }) {
 
     return () => {
       cancelAnimationFrame(animId);
+      window.removeEventListener("resize", updateCanvasResolution);
     };
-  }, []);
+  }, [isDark]);
 
   return (
     <div
-      className={`relative w-full max-w-[680px] h-[560px] sm:h-[650px] flex items-end justify-center select-none ${className}`}
+      className={`relative w-full max-w-[680px] aspect-[720/740] flex items-end justify-center select-none ${className}`}
     >
-      {/* High-performance, zero-lag 2D Canvas */}
+      {/* High-performance, zero-distortion 2D Canvas */}
       <canvas
         ref={canvasRef}
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "block",
-          pointerEvents: "none",
-        }}
+        className="w-full h-full block pointer-events-none"
       />
 
-      {/* ── Key Statistics (Nested cleanly inside the enlarged hollow curve) ── */}
-      <div className="absolute right-4 sm:right-14 bottom-8 sm:bottom-16 space-y-7 text-left z-10 pointer-events-none">
+      {/* ── Key Statistics (Nested cleanly inside the hollow curve) ── */}
+      <div className="absolute right-3 xs:right-6 sm:right-10 lg:right-14 bottom-4 xs:bottom-6 sm:bottom-10 lg:bottom-16 space-y-3 xs:space-y-4 sm:space-y-5 lg:space-y-7 text-left z-10 pointer-events-none">
         <div>
-          <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#141414] tracking-tight block leading-none">
+          <span className="text-2xl xs:text-3xl sm:text-4xl lg:text-6xl font-extrabold text-[#141414] dark:text-white tracking-tight block leading-none">
             100%
           </span>
-          <span className="text-xs sm:text-sm text-[#141414]/55 font-medium block mt-1">
+          <span className="text-[10px] xs:text-xs sm:text-sm text-[#141414]/55 dark:text-white/60 font-medium block mt-0.5 sm:mt-1">
             Response rate
           </span>
         </div>
 
         <div>
-          <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#141414] tracking-tight block leading-none">
+          <span className="text-2xl xs:text-3xl sm:text-4xl lg:text-6xl font-extrabold text-[#141414] dark:text-white tracking-tight block leading-none">
             120x
           </span>
-          <span className="text-xs sm:text-sm text-[#141414]/55 font-medium block mt-1">
+          <span className="text-[10px] xs:text-xs sm:text-sm text-[#141414]/55 dark:text-white/60 font-medium block mt-0.5 sm:mt-1">
             ROI
           </span>
         </div>
 
         <div>
-          <span className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-[#141414] tracking-tight block leading-none">
+          <span className="text-2xl xs:text-3xl sm:text-4xl lg:text-6xl font-extrabold text-[#141414] dark:text-white tracking-tight block leading-none">
             10x
           </span>
-          <span className="text-xs sm:text-sm text-[#141414]/55 font-medium block mt-1">
+          <span className="text-[10px] xs:text-xs sm:text-sm text-[#141414]/55 dark:text-white/60 font-medium block mt-0.5 sm:mt-1">
             Cost reduction
           </span>
         </div>
