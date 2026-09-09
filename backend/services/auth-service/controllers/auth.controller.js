@@ -51,19 +51,20 @@ export const login = async (req, res) => {
 
       }),"EX", 60 * 60 * 24 * 7);
 
-    res.cookie( "session", sessionId,{
-        httpOnly: true,
-        secure: false,
-        sameSite: "strict",
-        maxAge:1000 * 60 * 60 * 24 * 7,
-      }
-    );
+    const isHttps = process.env.NODE_ENV === "production" || req.secure || req.headers["x-forwarded-proto"] === "https";
 
-    return res.json({ success:true,user});
+    res.cookie("session", sessionId, {
+      httpOnly: true,
+      secure: isHttps,
+      sameSite: isHttps ? "none" : "lax",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    });
+
+    return res.json({ success: true, user });
 
   } catch (error) {
 
-    return res.status(401).json({ message: error.message, });
+    return res.status(401).json({ message: error.message });
 
   }
 
@@ -78,10 +79,12 @@ export const logout = async (req, res) => {
       await redis.del(`session:${sessionId}`);
     }
 
+    const isHttps = process.env.NODE_ENV === "production" || req.secure || req.headers["x-forwarded-proto"] === "https";
+
     res.clearCookie("session", {
       httpOnly: true,
-      secure: false,
-      sameSite: "strict",
+      secure: isHttps,
+      sameSite: isHttps ? "none" : "lax",
     });
 
     return res.json({
