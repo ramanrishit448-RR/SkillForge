@@ -1,26 +1,46 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 import axios from "axios";
 import { auth, provider } from "../utils/firebase";
 import { FcGoogle } from "react-icons/fc";
-import { FiX } from "react-icons/fi";
+import { FiX, FiAlertCircle } from "react-icons/fi";
 import { BiBrain } from "react-icons/bi";
 import { SiKaios } from "react-icons/si";
 import api from "../utils/axios";
 
 export function LoginModal({ onClose, setUser }) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleGoogleLogin = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const result = await signInWithPopup(auth, provider);
       const token = await result.user.getIdToken();
       const response = await api.post(
        "/api/auth/login",
         { token }
       );
-      setUser(response.data.user);
-      onClose();
-    } catch (error) {
-      console.log(error);
+      if (response.data?.user) {
+        setUser(response.data.user);
+        onClose();
+        navigate("/dashboard");
+      } else {
+        throw new Error("No user data returned from server");
+      }
+    } catch (err) {
+      console.error("Login failed:", err);
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.error ||
+        err.message ||
+        "Login failed. Please try again.";
+      setError(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -79,10 +99,21 @@ export function LoginModal({ onClose, setUser }) {
             Continue your AI interview journey
           </p>
 
+          {/* Error Banner */}
+          {error && (
+            <div className="mt-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 flex items-start gap-2.5 text-left">
+              <FiAlertCircle className="text-red-400 mt-0.5 shrink-0" size={16} />
+              <p className="text-xs text-red-200 leading-relaxed font-sans">
+                {error}
+              </p>
+            </div>
+          )}
+
           {/* Google */}
-          <div className="mt-7">
+          <div className="mt-6">
             <button
               onClick={handleGoogleLogin}
+              disabled={loading}
               className="
                 w-full
                 flex items-center justify-center gap-3
@@ -92,17 +123,22 @@ export function LoginModal({ onClose, setUser }) {
                 bg-white/10 backdrop-blur-md
                 hover:border-white/25
                 hover:bg-white/[0.14]
+                disabled:opacity-50 disabled:cursor-not-allowed
                 shadow-inner
                 transition-all
+                cursor-pointer
               "
             >
-              <FcGoogle size={18} />
+              {loading ? (
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <FcGoogle size={18} />
+              )}
               <span className="text-white font-medium text-sm">
-                Continue with Google
+                {loading ? "Authenticating..." : "Continue with Google"}
               </span>
             </button>
           </div>
-
         </div>
 
         {/* Bottom */}

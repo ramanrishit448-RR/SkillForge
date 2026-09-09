@@ -63,21 +63,16 @@ export default function Dashboard({ user, setUser }) {
     
 
     const fetchInterviews = async () => {
-    
-       const response = await getAllInterviews();
-       
-        setStats(response.stats);
-
-        setTechnicalData(response.technicalData);
-
-        setBehaviouralData(response.behaviouralData);
-
-        setTechnicalCount(response.technicalCount);
-
-        setHrCount(response.hrCount);
-      
+      const response = await getAllInterviews();
+      if (response) {
+        if (response.stats) setStats(response.stats);
+        if (response.technicalData) setTechnicalData(response.technicalData);
+        if (response.behaviouralData) setBehaviouralData(response.behaviouralData);
+        if (response.technicalCount !== undefined) setTechnicalCount(response.technicalCount);
+        if (response.hrCount !== undefined) setHrCount(response.hrCount);
+      }
     };
-    fetchInterviews()
+    fetchInterviews();
     
   }, []);
 

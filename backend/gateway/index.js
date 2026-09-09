@@ -48,17 +48,31 @@ app.get("/", (req,res)=>{
 
 
 })
-app.use("/api/auth",proxy(process.env.AUTH_SERVICE_URL))
+const defaultProxyErrorHandler = (serviceName) => (err, res, next) => {
+  console.error(`[Gateway Proxy Error] Failed to reach ${serviceName}:`, err.message);
+  return res.status(503).json({
+    success: false,
+    message: `${serviceName} is currently unavailable or starting up. Please try again in a few seconds.`,
+    error: err.code || err.message,
+  });
+};
 
-app.get("/api/me",isAuth,getCurrentUser)
+app.use(
+  "/api/auth",
+  proxy(process.env.AUTH_SERVICE_URL || "http://localhost:8001", {
+    proxyErrorHandler: defaultProxyErrorHandler("Auth Service"),
+  })
+);
 
-app.use("/api/interview",isAuth,proxyWithUser(process.env.INTERVIEW_SERVICE_URL))
+app.get("/api/me", isAuth, getCurrentUser);
 
-app.use("/api/resume",isAuth,proxyWithUser(process.env.RESUME_SERVICE_URL))
+app.use("/api/interview", isAuth, proxyWithUser(process.env.INTERVIEW_SERVICE_URL || "http://localhost:8002", "Interview Service"));
 
-app.use("/api/roadmap",isAuth,proxyWithUser(process.env.ROADMAP_SERVICE_URL))
+app.use("/api/resume", isAuth, proxyWithUser(process.env.RESUME_SERVICE_URL || "http://localhost:8003", "Resume Service"));
 
-app.use("/api/billing",isAuth,proxyWithUser(process.env.BILLING_SERVICE_URL))
+app.use("/api/roadmap", isAuth, proxyWithUser(process.env.ROADMAP_SERVICE_URL || "http://localhost:8004", "Roadmap Service"));
+
+app.use("/api/billing", isAuth, proxyWithUser(process.env.BILLING_SERVICE_URL || "http://localhost:8005", "Billing Service"));
 
 app.listen(PORT,()=>{
     console.log(`Gateway Started on ${PORT}`)

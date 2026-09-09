@@ -51,7 +51,12 @@ export const login = async (req, res) => {
 
       }),"EX", 60 * 60 * 24 * 7);
 
-    const isHttps = process.env.NODE_ENV === "production" || req.secure || req.headers["x-forwarded-proto"] === "https";
+    const isHttps =
+      process.env.NODE_ENV === "production" ||
+      req.secure ||
+      req.headers["x-forwarded-proto"] === "https" ||
+      req.headers.origin?.includes("vercel.app") ||
+      req.headers.origin?.includes("onrender.com");
 
     res.cookie("session", sessionId, {
       httpOnly: true,
@@ -79,7 +84,12 @@ export const logout = async (req, res) => {
       await redis.del(`session:${sessionId}`);
     }
 
-    const isHttps = process.env.NODE_ENV === "production" || req.secure || req.headers["x-forwarded-proto"] === "https";
+    const isHttps =
+      process.env.NODE_ENV === "production" ||
+      req.secure ||
+      req.headers["x-forwarded-proto"] === "https" ||
+      req.headers.origin?.includes("vercel.app") ||
+      req.headers.origin?.includes("onrender.com");
 
     res.clearCookie("session", {
       httpOnly: true,
