@@ -290,7 +290,7 @@ function Step2Interview({ interviewData, user }) {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-3 sm:p-5">
+    <div className="min-h-screen bg-[#FAF9F5] dark:bg-[#090A0F] text-[#141414] dark:text-[#F9FAFB] flex items-center justify-center p-3 sm:p-5 transition-colors">
 
       {/* Code Editor Popup */}
       <CodeEditorPanel
@@ -303,7 +303,7 @@ function Step2Interview({ interviewData, user }) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
-        className="w-full max-w-5xl bg-[#0E1016] border border-white/10 rounded-2xl sm:rounded-[24px] overflow-hidden shadow-[0_0_60px_rgba(255,255,255,.03)] grid lg:grid-cols-[36%_64%]"
+        className="w-full max-w-5xl bg-[#0E1016] border border-white/10 rounded-2xl sm:rounded-[24px] overflow-hidden shadow-[0_0_60px_rgba(0,0,0,0.4)] grid lg:grid-cols-[36%_64%]"
       >
 
         {/* ── LEFT: AI Video + User Camera + Controls ── */}

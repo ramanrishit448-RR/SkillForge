@@ -28,17 +28,17 @@ export default function ModuleCard({ mod, index }) {
   return (
     <div
       onClick={() => setOpen(!open)}
-      className="bg-white border border-[#E6E2D8] rounded-2xl cursor-pointer select-none shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#141414]/35 transition-all overflow-hidden"
+      className="bg-white dark:bg-[#141722] border border-[#E6E2D8] dark:border-[#222634] rounded-2xl cursor-pointer select-none shadow-[0_2px_10px_rgba(0,0,0,0.02)] hover:border-[#141414]/35 dark:hover:border-white/20 transition-all overflow-hidden"
     >
       <div className="flex items-center justify-between p-4 sm:p-5 gap-3">
         <div className="flex items-center gap-3.5 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-[#FAF9F5] border border-[#E6E2D8] flex items-center justify-center text-xs font-mono font-bold text-[#141414] shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-[#FAF9F5] dark:bg-[#1E2230] border border-[#E6E2D8] dark:border-[#282E40] flex items-center justify-center text-xs font-mono font-bold text-[#141414] dark:text-white shrink-0">
             {formattedIndex}
           </div>
 
           <div className="min-w-0">
-            <h3 className="text-sm font-bold text-[#141414] truncate">{mod.title}</h3>
-            <div className="flex items-center gap-2 mt-0.5 text-xs text-[#141414]/50">
+            <h3 className="text-sm font-bold text-[#141414] dark:text-white truncate">{mod.title}</h3>
+            <div className="flex items-center gap-2 mt-0.5 text-xs text-[#141414]/50 dark:text-white/50">
               <span className="flex items-center gap-1">
                 <FiClock size={11} /> {mod.duration}
               </span>
@@ -49,7 +49,7 @@ export default function ModuleCard({ mod, index }) {
         <div className="flex items-center gap-2 shrink-0">
           <span
             className={`text-[10px] font-semibold px-2.5 py-0.5 rounded-full border ${
-              statusStyles[mod.status] || statusStyles.Pending
+              statusStyles[mod.status] || "bg-[#FAF9F5] dark:bg-[#1C202C] text-[#141414]/60 dark:text-white/60 border-[#E6E2D8] dark:border-[#282E40]"
             }`}
           >
             {mod.status || "Planned"}
@@ -63,7 +63,7 @@ export default function ModuleCard({ mod, index }) {
             {mod.difficulty}
           </span>
 
-          <div className="w-7 h-7 rounded-lg border border-[#E6E2D8] flex items-center justify-center text-[#141414]/50">
+          <div className="w-7 h-7 rounded-lg border border-[#E6E2D8] dark:border-[#282E40] flex items-center justify-center text-[#141414]/50 dark:text-white/50">
             {open ? <FiChevronUp size={14} /> : <FiChevronDown size={14} />}
           </div>
         </div>
@@ -76,10 +76,10 @@ export default function ModuleCard({ mod, index }) {
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden bg-[#FAF9F5]/60 border-t border-[#E6E2D8]"
+            className="overflow-hidden bg-[#FAF9F5]/60 dark:bg-[#0E1017]/60 border-t border-[#E6E2D8] dark:border-[#222634]"
           >
             <div className="p-4 sm:p-5">
-              <p className="text-xs sm:text-sm text-[#141414]/75 leading-relaxed mb-4">
+              <p className="text-xs sm:text-sm text-[#141414]/75 dark:text-white/75 leading-relaxed mb-4">
                 {mod.description}
               </p>
 
@@ -93,9 +93,9 @@ export default function ModuleCard({ mod, index }) {
                   >
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl border border-red-200 text-red-700 bg-red-50 hover:bg-red-100 font-semibold transition-all shadow-sm"
+                      className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl border border-red-200 dark:border-red-900/50 text-red-700 dark:text-red-400 bg-red-50 dark:bg-red-950/30 hover:bg-red-100 dark:hover:bg-red-950/50 font-semibold transition-all shadow-sm"
                     >
-                      <FiYoutube size={14} className="text-red-600" />
+                      <FiYoutube size={14} className="text-red-600 dark:text-red-400" />
                       <span>Watch Tutorial</span>
                     </button>
                   </a>
@@ -110,7 +110,7 @@ export default function ModuleCard({ mod, index }) {
                   >
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl border border-[#E6E2D8] text-[#141414] bg-white hover:bg-[#FAF9F5] font-semibold transition-all shadow-sm"
+                      className="inline-flex items-center gap-1.5 text-xs px-3.5 py-2 rounded-xl border border-[#E6E2D8] dark:border-[#282E40] text-[#141414] dark:text-white bg-white dark:bg-[#1A1E2B] hover:bg-[#FAF9F5] dark:hover:bg-[#222635] font-semibold transition-all shadow-sm"
                     >
                       <FiBookOpen size={14} />
                       <span>Read Documentation</span>

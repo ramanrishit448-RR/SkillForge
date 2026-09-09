@@ -1,14 +1,13 @@
 import React, { useRef } from "react";
 import { motion } from "motion/react";
-
 import {
-    FiArrowLeft,
+  FiArrowLeft,
   FiAward,
   FiTarget,
   FiTrendingUp,
 } from "react-icons/fi";
-
 import DownloadButton from "../resume/DownloadButton";
+import ThemeToggle from "../ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
 function Step3Report({
@@ -16,81 +15,56 @@ function Step3Report({
   user,
   setUser,
 }) {
-
   const reportRef = useRef(null);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-
-    <div className="min-h-screen bg-white flex items-center justify-center md:p-5">
-
+    <div className="min-h-screen bg-[#FAF9F5] dark:bg-[#090A0F] text-[#141414] dark:text-[#F9FAFB] flex items-center justify-center p-3 sm:p-5 transition-colors">
       <motion.div
-
         initial={{ opacity: 0, y: 20 }}
-
         animate={{ opacity: 1, y: 0 }}
-
-        className="w-full max-w-5xl rounded-[24px] bg-gray-50 border border-white/10 overflow-hidden"
-
+        className="w-full max-w-5xl rounded-2xl sm:rounded-[24px] bg-white dark:bg-[#12141C] border border-[#E6E2D8] dark:border-[#222634] overflow-hidden shadow-xl transition-colors"
       >
-
-        <div >
-
+        <div>
           {/* Header */}
-
-          <div className="border-b border-white/10 px-8 py-6 flex items-center justify-between">
-
+          <div className="border-b border-[#E6E2D8] dark:border-[#222634] px-4 sm:px-8 py-5 sm:py-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
+              <div className="flex items-center gap-2 mb-2">
+                <button
+                  onClick={() => navigate("/dashboard")}
+                  className="inline-flex items-center gap-1.5 text-white dark:text-black rounded-full border border-black dark:border-white bg-[#141414] dark:bg-white px-3 py-1.5 hover:opacity-90 transition-all text-xs font-semibold"
+                >
+                  <FiArrowLeft size={13} />
+                  <span>Dashboard</span>
+                </button>
+                <ThemeToggle compact={true} />
+              </div>
 
-               <div onClick={()=>navigate("/dashboard")} className="inline-flex items-center gap-2 text-white rounded-full border border-black/20 bg-black px-3 py-1.5">
-               <FiArrowLeft size={14} />
-                           
-               
-                              
-               
-                             <span className="text-xs text-zinc-100">
-                               Back
-                             </span>
-               
-                           </div>
-
-              <h1 className="text-2xl font-bold text-black mt-2">
-
-                Interview Report
-
+              <h1 className="text-xl sm:text-2xl font-bold text-[#141414] dark:text-white">
+                Interview Performance Report
               </h1>
 
-              <p className="text-xs mb-2 text-zinc-500 mt-1.5">
-
-                AI Generated Performance Analysis
-
+              <p className="text-xs text-[#141414]/60 dark:text-white/60 mt-1 mb-3">
+                AI Synthesized Performance Analysis & Question Rubric
               </p>
 
-               <DownloadButton
+              <DownloadButton
                 resumeRef={reportRef}
                 user={user}
                 setUser={setUser}
               />
-
             </div>
 
-            <div className="hidden md:flex items-center gap-2.5 rounded-2xl border border-black/34 bg-black px-4 py-2.5">
-
-              <FiAward className="text-yellow-400" size={16} />
-
-              <span className="text-sm text-white">
-
-                Completed
-
+            <div className="flex items-center gap-2.5 self-start sm:self-auto rounded-2xl border border-emerald-300 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/40 px-3 sm:px-4 py-2">
+              <FiAward className="text-emerald-600 dark:text-emerald-400" size={16} />
+              <span className="text-xs sm:text-sm font-semibold text-emerald-800 dark:text-emerald-300">
+                Evaluation Complete
               </span>
-
             </div>
-
           </div>
 
           {/* Body */}
-
-          <div className="p-8" ref={reportRef}>
+          <div className="p-4 sm:p-8" ref={reportRef}>
 
             {/* Overall Score */}
 

@@ -16,8 +16,8 @@ export default function PricingCard({
     <div
       className={`w-full max-w-sm rounded-3xl p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 relative ${
         popular
-          ? "bg-[#141414] text-white border border-[#141414] shadow-[0_16px_40px_rgba(0,0,0,0.12)] scale-[1.02]"
-          : "bg-white text-[#141414] border border-[#E6E2D8] shadow-sm hover:border-[#141414]/30"
+          ? "bg-[#141414] dark:bg-[#1A1D28] text-white border border-[#141414] dark:border-white/20 shadow-[0_16px_40px_rgba(0,0,0,0.12)] md:scale-[1.02]"
+          : "bg-white dark:bg-[#12141C] text-[#141414] dark:text-white border border-[#E6E2D8] dark:border-[#222634] shadow-sm hover:border-[#141414]/30 dark:hover:border-white/20"
       }`}
     >
       {/* Top Header & Tag */}
@@ -27,7 +27,7 @@ export default function PricingCard({
             className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border ${
               popular
                 ? "bg-amber-400/20 text-amber-300 border-amber-400/30"
-                : "bg-[#FAF9F5] text-[#141414]/60 border-[#E6E2D8]"
+                : "bg-[#FAF9F5] dark:bg-[#1A1E2B] text-[#141414]/60 dark:text-white/60 border-[#E6E2D8] dark:border-[#222634]"
             }`}
           >
             {popular ? "Most Popular · Best Value" : "Default Starter Allocation"}
@@ -47,7 +47,7 @@ export default function PricingCard({
           <span className="text-4xl font-extrabold tracking-tight">
             {price === "Free" ? "₹0" : `₹${price}`}
           </span>
-          <span className={`text-xs ${popular ? "text-white/50" : "text-[#141414]/45"}`}>
+          <span className={`text-xs ${popular ? "text-white/50" : "text-[#141414]/45 dark:text-white/45"}`}>
             {price === "Free" ? "forever on registration" : "one-time · no recurring charges"}
           </span>
         </div>
@@ -57,7 +57,7 @@ export default function PricingCard({
           className={`mt-5 flex items-center justify-between p-3 rounded-2xl border ${
             popular
               ? "bg-white/10 border-white/15 text-white"
-              : "bg-[#FAF9F5] border-[#E6E2D8] text-[#141414]"
+              : "bg-[#FAF9F5] dark:bg-[#1A1E2B] border-[#E6E2D8] dark:border-[#222634] text-[#141414] dark:text-white"
           }`}
         >
           <div className="flex items-center gap-2">
@@ -66,14 +66,14 @@ export default function PricingCard({
               {coins} Interview Coins
             </span>
           </div>
-          <span className={`text-[10px] font-semibold uppercase tracking-wider ${popular ? "text-white/60" : "text-[#141414]/50"}`}>
+          <span className={`text-[10px] font-semibold uppercase tracking-wider ${popular ? "text-white/60" : "text-[#141414]/50 dark:text-white/50"}`}>
             {price === "Free" ? "Included" : "Instant Credit"}
           </span>
         </div>
 
         {/* Feature List */}
         <div className="mt-6 space-y-2.5">
-          <p className={`text-[10px] font-bold uppercase tracking-wider ${popular ? "text-white/40" : "text-[#141414]/40"}`}>
+          <p className={`text-[10px] font-bold uppercase tracking-wider ${popular ? "text-white/40" : "text-[#141414]/40 dark:text-white/40"}`}>
             What you can do with this:
           </p>
           {features.map((item, idx) => (
@@ -82,12 +82,12 @@ export default function PricingCard({
                 className={`w-4 h-4 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                   popular
                     ? "bg-white/15 text-white"
-                    : "bg-[#141414] text-white"
+                    : "bg-[#141414] dark:bg-white text-white dark:text-[#090A0F]"
                 }`}
               >
                 <FiCheck size={10} />
               </div>
-              <span className={popular ? "text-white/85" : "text-[#141414]/80"}>
+              <span className={popular ? "text-white/85" : "text-[#141414]/80 dark:text-white/80"}>
                 {item}
               </span>
             </div>
@@ -102,10 +102,10 @@ export default function PricingCard({
           onClick={onBuy}
           className={`w-full h-12 rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all ${
             disabled
-              ? "bg-[#FAF9F5] text-[#141414]/40 border border-[#E6E2D8] cursor-default"
+              ? "bg-[#FAF9F5] dark:bg-[#1E2230] text-[#141414]/40 dark:text-white/40 border border-[#E6E2D8] dark:border-[#222634] cursor-default"
               : popular
               ? "bg-white text-[#141414] hover:bg-neutral-100 shadow-md active:scale-[0.99]"
-              : "bg-[#141414] text-white hover:bg-black shadow-sm"
+              : "bg-[#141414] dark:bg-white text-white dark:text-[#090A0F] hover:bg-black dark:hover:bg-neutral-200 shadow-sm"
           }`}
         >
           {loading ? (
@@ -121,7 +121,7 @@ export default function PricingCard({
           )}
         </button>
 
-        <p className={`text-[10px] text-center mt-2.5 ${popular ? "text-white/40" : "text-[#141414]/40"}`}>
+        <p className={`text-[10px] text-center mt-2.5 ${popular ? "text-white/40" : "text-[#141414]/40 dark:text-white/40"}`}>
           {price === "Free"
             ? "Already claimed automatically when your account was created."
             : "Secured by Razorpay · Auto-refund protection on AI failure."}
@@ -130,3 +130,4 @@ export default function PricingCard({
     </div>
   );
 }
+

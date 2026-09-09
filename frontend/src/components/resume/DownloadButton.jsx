@@ -42,10 +42,11 @@ export default function DownloadButton({
   return (
     <button
       onClick={handleDownload}
-      className="inline-flex items-center gap-2 rounded-xl bg-[#141414] hover:bg-black px-4 py-2 text-xs font-semibold text-white shadow-sm transition-all"
+      className="inline-flex items-center gap-1.5 sm:gap-2 rounded-xl bg-[#141414] dark:bg-white hover:bg-black dark:hover:bg-slate-200 px-3 sm:px-4 py-2 text-xs font-semibold text-white dark:text-[#141414] shadow-sm transition-all whitespace-nowrap"
     >
       <FiDownload size={14} />
-      <span>Download PDF (10 Coins)</span>
+      <span className="hidden sm:inline">Download PDF (10 Coins)</span>
+      <span className="sm:hidden">PDF (10 Coins)</span>
     </button>
   );
 }

@@ -16,6 +16,8 @@ const STEPS = [
 
 const TOTAL_STEPS = STEPS.length;
 
+import ThemeToggle from "../components/ThemeToggle";
+
 export default function ResumeBuilder({ user, setUser }) {
   const [data, setData] = useState(initialData);
   const [currentStep, setCurrentStep] = useState(1);
@@ -49,45 +51,50 @@ export default function ResumeBuilder({ user, setUser }) {
 
   // ── Show Form Mode ─────────────────────────────────────────────────────────
   return (
-    <div className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col selection:bg-[#141414] selection:text-white">
+    <div className="bg-[#FAF9F5] dark:bg-[#090A0F] text-[#141414] dark:text-[#F9FAFB] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col selection:bg-[#141414] selection:text-white transition-colors">
       {/* Sticky Editorial Navbar */}
-      <nav className="sticky top-0 z-30 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#E6E2D8]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <nav className="sticky top-0 z-30 bg-[#FAF9F5]/90 dark:bg-[#090A0F]/90 backdrop-blur-md border-b border-[#E6E2D8] dark:border-[#222634] transition-colors">
+        <div className="max-w-5xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between">
+          <div className="flex items-center gap-2 sm:gap-4">
             <button
               onClick={() => navigate("/dashboard")}
-              className="flex items-center gap-1.5 text-xs font-medium text-[#141414]/60 hover:text-[#141414] transition-colors"
+              className="flex items-center gap-1.5 text-xs font-medium text-[#141414]/60 dark:text-white/60 hover:text-[#141414] dark:hover:text-white transition-colors"
             >
               <FiArrowLeft size={14} />
               <span className="hidden sm:inline">Dashboard</span>
             </button>
 
-            <div className="h-4 w-px bg-[#E6E2D8] hidden sm:block" />
+            <div className="h-4 w-px bg-[#E6E2D8] dark:bg-[#222634] hidden sm:block" />
 
             <div
               onClick={() => navigate("/dashboard")}
               className="flex items-center gap-2 cursor-pointer"
             >
               <div className="flex items-center -space-x-1">
-                <span className="w-3 h-3 rounded-full bg-[#141414]" />
-                <span className="w-3 h-3 rounded-full bg-[#141414]/70" />
+                <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#141414] dark:bg-white" />
+                <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#141414]/70 dark:bg-white/60" />
               </div>
-              <span className="font-extrabold text-sm tracking-tight text-[#141414]">
+              <span className="font-extrabold text-xs sm:text-sm tracking-tight text-[#141414] dark:text-white">
                 SkillForge
               </span>
-              <span className="rounded-full bg-[#F4F1EA] border border-[#E6E2D8] px-2 py-0.5 text-[10px] font-medium text-[#141414]/60">
+              <span className="hidden md:inline-flex rounded-full bg-[#F4F1EA] dark:bg-[#1A1D29] border border-[#E6E2D8] dark:border-[#222634] px-2 py-0.5 text-[10px] font-medium text-[#141414]/60 dark:text-white/60">
                 Resume Architect
               </span>
             </div>
           </div>
 
-          <button
-            onClick={() => setShowPreview(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold px-3.5 py-1.5 rounded-full border border-[#E6E2D8] bg-white text-[#141414] hover:border-[#141414]/40 transition-all shadow-sm"
-          >
-            <FiEye size={13} />
-            <span>Preview ATS Resume</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle compact={true} />
+
+            <button
+              onClick={() => setShowPreview(true)}
+              className="flex items-center gap-1.5 text-xs font-semibold px-3 sm:px-3.5 py-1.5 rounded-full border border-[#E6E2D8] dark:border-[#222634] bg-white dark:bg-[#12141C] text-[#141414] dark:text-white hover:border-[#141414]/40 dark:hover:border-white/40 transition-all shadow-sm"
+            >
+              <FiEye size={13} />
+              <span className="hidden sm:inline">Preview ATS Resume</span>
+              <span className="sm:hidden">Preview</span>
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -96,18 +103,18 @@ export default function ResumeBuilder({ user, setUser }) {
         {/* Step Progress Header */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-[11px] font-bold text-[#141414]/45 uppercase tracking-wider">
+            <span className="text-[11px] font-bold text-[#141414]/45 dark:text-white/45 uppercase tracking-wider">
               Step 0{currentStep} of 0{TOTAL_STEPS}
             </span>
-            <span className="text-[11px] font-medium text-[#141414]/55">
+            <span className="text-[11px] font-medium text-[#141414]/55 dark:text-white/55">
               {Math.round(progressPct)}% Completed
             </span>
           </div>
 
           {/* Minimalist Progress Line */}
-          <div className="w-full h-1 bg-[#E6E2D8] rounded-full overflow-hidden mb-6">
+          <div className="w-full h-1 bg-[#E6E2D8] dark:bg-[#222634] rounded-full overflow-hidden mb-6">
             <div
-              className="h-full bg-[#141414] rounded-full transition-all duration-300"
+              className="h-full bg-[#141414] dark:bg-white rounded-full transition-all duration-300"
               style={{ width: `${progressPct}%` }}
             />
           </div>
@@ -121,10 +128,10 @@ export default function ResumeBuilder({ user, setUser }) {
                 onClick={() => setCurrentStep(s.step)}
                 className={`py-1.5 px-1 rounded-lg text-center transition-all text-[11px] font-medium truncate ${
                   s.step === currentStep
-                    ? "bg-[#141414] text-white shadow-sm"
+                    ? "bg-[#141414] dark:bg-white text-white dark:text-[#141414] shadow-sm font-bold"
                     : s.step < currentStep
-                    ? "bg-white border border-[#E6E2D8] text-[#141414]/80 hover:border-[#141414]/30"
-                    : "bg-[#FAF9F5] border border-transparent text-[#141414]/40 hover:text-[#141414]/70"
+                    ? "bg-white dark:bg-[#141722] border border-[#E6E2D8] dark:border-[#222634] text-[#141414]/80 dark:text-white/80 hover:border-[#141414]/30 dark:hover:border-white/30"
+                    : "bg-[#FAF9F5] dark:bg-[#12141C] border border-transparent text-[#141414]/40 dark:text-white/30 hover:text-[#141414]/70 dark:hover:text-white/70"
                 }`}
               >
                 {s.step < currentStep ? "✓ " : `${s.step}. `}
@@ -135,38 +142,38 @@ export default function ResumeBuilder({ user, setUser }) {
 
           {/* Step Title Header */}
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#141414]">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-[#141414] dark:text-white">
               {activeStep.title}
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-[#141414]/60">
+            <p className="mt-1 text-xs sm:text-sm text-[#141414]/60 dark:text-white/60">
               {activeStep.subtitle}
             </p>
           </div>
         </div>
 
         {/* Form Container Card */}
-        <div className="bg-white border border-[#E6E2D8] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.03)]">
+        <div className="bg-white dark:bg-[#12141C] border border-[#E6E2D8] dark:border-[#222634] rounded-3xl p-6 sm:p-8 shadow-[0_4px_24px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.3)] transition-colors">
           <ResumeForm step={currentStep} data={data} setData={setData} />
 
           {/* Action Button Navigation */}
-          <div className="flex items-center justify-between pt-6 mt-8 border-t border-[#E6E2D8]">
+          <div className="flex items-center justify-between pt-6 mt-8 border-t border-[#E6E2D8] dark:border-[#222634]">
             <button
               onClick={goPrev}
               disabled={currentStep === 1}
               className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
                 currentStep === 1
-                  ? "border-[#E6E2D8] text-[#141414]/25 cursor-not-allowed bg-transparent"
-                  : "border-[#E6E2D8] bg-white text-[#141414] hover:border-[#141414]/40 shadow-sm"
+                  ? "border-[#E6E2D8] dark:border-[#222634] text-[#141414]/25 dark:text-white/20 cursor-not-allowed bg-transparent"
+                  : "border-[#E6E2D8] dark:border-[#222634] bg-white dark:bg-[#141722] text-[#141414] dark:text-white hover:border-[#141414]/40 dark:hover:border-white/40 shadow-sm"
               }`}
             >
               <FiArrowLeft size={14} />
-              <span>Previous Step</span>
+              <span>Previous</span>
             </button>
 
             {isLastStep ? (
               <button
                 onClick={() => setShowPreview(true)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#141414] text-white hover:bg-black transition-all shadow-sm"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#141414] dark:bg-white text-white dark:text-[#141414] hover:bg-black dark:hover:bg-slate-200 transition-all shadow-sm"
               >
                 <span>Final ATS Preview</span>
                 <FiEye size={14} />
@@ -174,7 +181,7 @@ export default function ResumeBuilder({ user, setUser }) {
             ) : (
               <button
                 onClick={goNext}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#141414] text-white hover:bg-black transition-all shadow-sm"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#141414] dark:bg-white text-white dark:text-[#141414] hover:bg-black dark:hover:bg-slate-200 transition-all shadow-sm"
               >
                 <span>Continue</span>
                 <FiArrowRight size={14} />

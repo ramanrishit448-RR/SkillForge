@@ -14,11 +14,15 @@ import {
   FiCpu,
   FiTerminal,
   FiZap,
+  FiMenu,
+  FiX,
 } from "react-icons/fi";
 import { LoginModal } from "../components/LoginModel";
 import QuarterCircleOrbit from "../components/QuarterCircleOrbit";
+import ThemeToggle from "../components/ThemeToggle";
 
 gsap.registerPlugin(ScrollTrigger);
+
 
 const AI_TEAM_MEMBERS = [
   {
@@ -227,25 +231,25 @@ function SwitchableAiTeamStack() {
   }, []);
 
   return (
-    <div className="mt-10 pt-4">
+    <div className="mt-8 sm:mt-10 pt-4 pl-3 sm:pl-0">
       {/* Header controls with title and mini switcher */}
       <div className="flex items-center justify-between max-w-sm mb-2.5">
-        <p className="text-[10px] font-bold text-[#141414]/40 uppercase tracking-wider">
+        <p className="text-[10px] font-bold text-[#141414]/40 dark:text-white/40 uppercase tracking-wider">
           YOUR AI TEAM
         </p>
-        <div className="flex items-center gap-1.5 text-[10px] font-mono text-black/40">
+        <div className="flex items-center gap-1.5 text-[10px] font-mono text-black/40 dark:text-white/40">
           <span>{activeIdx + 1}/{AI_TEAM_MEMBERS.length}</span>
           <div className="flex items-center">
             <button
               onClick={shufflePrev}
-              className="w-5 h-5 rounded hover:bg-black/5 hover:text-black flex items-center justify-center transition-colors cursor-pointer"
+              className="w-5 h-5 rounded hover:bg-black/5 dark:hover:bg-white/10 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               title="Previous agent"
             >
               ‹
             </button>
             <button
               onClick={shuffleNext}
-              className="w-5 h-5 rounded hover:bg-black/5 hover:text-black flex items-center justify-center transition-colors cursor-pointer"
+              className="w-5 h-5 rounded hover:bg-black/5 dark:hover:bg-white/10 hover:text-black dark:hover:text-white flex items-center justify-center transition-colors cursor-pointer"
               title="Next agent"
             >
               ›
@@ -264,7 +268,7 @@ function SwitchableAiTeamStack() {
         <div
           ref={backCardRef}
           onClick={() => shuffleTo((activeIdx + 2) % AI_TEAM_MEMBERS.length)}
-          className="absolute top-0 left-0 w-full rounded-2xl bg-[#F6F4ED] border border-[#E6E2D8] p-4 sm:p-5 shadow-xs cursor-pointer transition-colors hover:bg-white"
+          className="absolute top-0 left-0 w-full rounded-2xl bg-[#F6F4ED] dark:bg-[#141722] border border-[#E6E2D8] dark:border-[#222634] p-4 sm:p-5 shadow-xs cursor-pointer transition-colors hover:bg-white dark:hover:bg-[#191D2B]"
           style={{
             transform: "translate(-12px, -10px) rotate(-4deg)",
             zIndex: 10,
@@ -272,7 +276,7 @@ function SwitchableAiTeamStack() {
           title={`Click to switch to ${next2.name}`}
         >
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-bold text-[#141414]/50 tracking-tight">
+            <span className="text-[11px] font-bold text-[#141414]/50 dark:text-white/50 tracking-tight">
               {next2.name}
             </span>
             <span className={`w-2 h-2 rounded-full ${next2.statusDot} opacity-50`} />
@@ -283,7 +287,7 @@ function SwitchableAiTeamStack() {
         <div
           ref={midCardRef}
           onClick={() => shuffleTo((activeIdx + 1) % AI_TEAM_MEMBERS.length)}
-          className="absolute top-0 left-0 w-full rounded-2xl bg-[#FDFBF7] border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-white"
+          className="absolute top-0 left-0 w-full rounded-2xl bg-[#FDFBF7] dark:bg-[#181B28] border border-[#E6E2D8] dark:border-[#222634] p-4 sm:p-5 shadow-[0_4px_16px_rgba(0,0,0,0.03)] cursor-pointer transition-colors hover:bg-white dark:hover:bg-[#1D2232]"
           style={{
             transform: "translate(-6px, -5px) rotate(-2deg)",
             zIndex: 20,
@@ -291,15 +295,15 @@ function SwitchableAiTeamStack() {
           title={`Click to switch to ${next1.name}`}
         >
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-bold text-[#141414]/75 tracking-tight">
+            <span className="text-xs font-bold text-[#141414]/75 dark:text-white/75 tracking-tight">
               {next1.name}
             </span>
             <div className="flex items-center gap-1.5">
               <span className={`w-2 h-2 rounded-full ${next1.statusDot} opacity-75`} />
-              <span className="text-[10px] font-semibold text-[#141414]/50">Next</span>
+              <span className="text-[10px] font-semibold text-[#141414]/50 dark:text-white/50">Next</span>
             </div>
           </div>
-          <p className="text-[11px] text-[#141414]/50 line-clamp-2 leading-relaxed">
+          <p className="text-[11px] text-[#141414]/50 dark:text-white/50 line-clamp-2 leading-relaxed">
             {next1.desc}
           </p>
         </div>
@@ -308,11 +312,11 @@ function SwitchableAiTeamStack() {
         <div
           ref={frontCardRef}
           onClick={shuffleNext}
-          className="relative w-full rounded-2xl bg-white border border-[#E6E2D8] p-4 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.06)] cursor-pointer group hover:border-[#141414]/35 transition-colors"
+          className="relative w-full rounded-2xl bg-white dark:bg-[#1B1E2B] border border-[#E6E2D8] dark:border-[#2B3042] p-4 sm:p-5 shadow-[0_12px_36px_rgba(0,0,0,0.06)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.4)] cursor-pointer group hover:border-[#141414]/35 dark:hover:border-white/30 transition-colors"
           style={{ zIndex: 30 }}
         >
           <div className="flex items-center justify-between mb-1.5">
-            <h4 className="text-xs font-bold text-[#141414] tracking-tight">
+            <h4 className="text-xs font-bold text-[#141414] dark:text-white tracking-tight">
               {current.name}
             </h4>
             <div className="flex items-center gap-2">
@@ -322,13 +326,13 @@ function SwitchableAiTeamStack() {
                   {current.status}
                 </span>
               </div>
-              <span className="text-[10px] font-mono text-black/35 group-hover:text-black/70 transition-colors">
+              <span className="text-[10px] font-mono text-black/35 dark:text-white/40 group-hover:text-black dark:group-hover:text-white transition-colors">
                 ↻
               </span>
             </div>
           </div>
 
-          <p className="text-[11px] text-[#141414]/65 leading-relaxed min-h-[34px]">
+          <p className="text-[11px] text-[#141414]/65 dark:text-white/70 leading-relaxed min-h-[34px]">
             {current.desc}
           </p>
 
@@ -337,20 +341,20 @@ function SwitchableAiTeamStack() {
               {current.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] border border-[#E6E2D8] text-[#141414]/75"
+                  className="text-[9px] font-bold px-2 py-0.5 rounded-md bg-[#FAF9F5] dark:bg-[#252A3D] border border-[#E6E2D8] dark:border-[#323850] text-[#141414]/75 dark:text-white/80"
                 >
                   {tag}
                 </span>
               ))}
             </div>
 
-            <span className="text-[10px] text-black/40 font-medium group-hover:text-[#E05A3E] transition-colors flex items-center gap-1">
+            <span className="text-[10px] text-black/40 dark:text-white/40 font-medium group-hover:text-[#E05A3E] dark:group-hover:text-[#F87171] transition-colors flex items-center gap-1">
               Switch card <FiArrowRight size={10} />
             </span>
           </div>
 
           {/* Mini progress dots */}
-          <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-[#F0ECE4]">
+          <div className="flex items-center gap-1.5 mt-3 pt-2 border-t border-[#F0ECE4] dark:border-[#252A3D]">
             {AI_TEAM_MEMBERS.map((m, idx) => (
               <button
                 key={m.id}
@@ -359,12 +363,14 @@ function SwitchableAiTeamStack() {
                   shuffleTo(idx);
                 }}
                 className={`h-1 rounded-full transition-all cursor-pointer ${
-                  activeIdx === idx ? "w-5 bg-[#141414]" : "w-2 bg-black/15 hover:bg-black/30"
+                  activeIdx === idx
+                    ? "w-5 bg-[#141414] dark:bg-white"
+                    : "w-2 bg-black/15 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/40"
                 }`}
                 title={`Switch to ${m.name}`}
               />
             ))}
-            <span className="text-[9px] font-mono text-black/30 ml-auto">
+            <span className="text-[9px] font-mono text-black/30 dark:text-white/30 ml-auto">
               Tap card to switch
             </span>
           </div>
@@ -377,6 +383,7 @@ function SwitchableAiTeamStack() {
 function CollapsibleNavbar({ onLoginClick, onGetStartedClick }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const leaveTimerRef = useRef(null);
 
   useEffect(() => {
@@ -402,7 +409,6 @@ function CollapsibleNavbar({ onLoginClick, onGetStartedClick }) {
 
   const handleMouseLeave = () => {
     if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
-    // Graceful delay before collapsing so it doesn't snap shut instantly
     leaveTimerRef.current = setTimeout(() => {
       setIsHovered(false);
     }, 380);
@@ -414,90 +420,179 @@ function CollapsibleNavbar({ onLoginClick, onGetStartedClick }) {
     };
   }, []);
 
-  const isExpanded = !isScrolled || isHovered;
+  const isExpandedDesktop = !isScrolled || isHovered;
 
   return (
-    <div
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="fixed top-4 sm:top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] select-none"
-    >
+    <>
+      {/* ── DESKTOP FLOATING PILL NAVBAR ── */}
       <div
-        className={`bg-white border border-[#E6E2D8] shadow-[0_12px_36px_rgba(0,0,0,0.08)] flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden ${
-          isExpanded
-            ? "w-[92vw] max-w-4xl h-12 sm:h-13 rounded-full px-4 sm:px-6"
-            : "w-12 h-12 rounded-full p-0 justify-center cursor-pointer hover:shadow-lg hover:border-[#141414]/30 hover:scale-105"
-        }`}
-        title={!isExpanded ? "Hover to expand menu" : ""}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        className="hidden md:block fixed top-4 sm:top-5 left-1/2 -translate-x-1/2 z-50 transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] select-none"
       >
-        {/* Brand / Logo (Centered when collapsed, left-aligned when expanded) */}
-        <div className={`flex items-center gap-2.5 shrink-0 ${!isExpanded ? "justify-center w-full" : ""}`}>
-          <div className="flex items-center -space-x-1.5">
-            <span className="w-3.5 h-3.5 rounded-full bg-[#141414]" />
-            <span className="w-3.5 h-3.5 rounded-full bg-[#141414]/75" />
+        <div
+          className={`bg-white/95 dark:bg-[#12141C]/95 backdrop-blur-md border border-[#E6E2D8] dark:border-[#222634] shadow-[0_12px_36px_rgba(0,0,0,0.08)] dark:shadow-[0_12px_36px_rgba(0,0,0,0.5)] flex items-center justify-between transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden ${
+            isExpandedDesktop
+              ? "w-[92vw] max-w-4xl h-13 rounded-full px-6"
+              : "w-13 h-13 rounded-full p-0 justify-center cursor-pointer hover:shadow-lg hover:border-[#141414]/30 dark:hover:border-white/30 hover:scale-105"
+          }`}
+          title={!isExpandedDesktop ? "Hover to expand menu" : ""}
+        >
+          {/* Brand */}
+          <div className={`flex items-center gap-2.5 shrink-0 ${!isExpandedDesktop ? "justify-center w-full" : ""}`}>
+            <div className="flex items-center -space-x-1.5">
+              <span className="w-3.5 h-3.5 rounded-full bg-[#141414] dark:bg-white" />
+              <span className="w-3.5 h-3.5 rounded-full bg-[#141414]/75 dark:bg-white/70" />
+            </div>
+            {isExpandedDesktop && (
+              <span className="font-extrabold text-base tracking-tight text-[#141414] dark:text-white whitespace-nowrap transition-opacity duration-500 delay-150">
+                SkillForge
+              </span>
+            )}
           </div>
-          {isExpanded && (
-            <span className="font-extrabold text-sm sm:text-base tracking-tight text-[#141414] whitespace-nowrap transition-opacity duration-500 delay-150">
-              SkillForge
-            </span>
+
+          {/* Links */}
+          {isExpandedDesktop && (
+            <nav className="flex items-center gap-6 text-xs font-medium text-[#141414]/75 dark:text-white/75 whitespace-nowrap transition-opacity duration-500 delay-200">
+              <a href="#platform" className="hover:text-[#141414] dark:hover:text-white transition-colors flex items-center gap-1">
+                For Candidates <span className="text-[10px] text-black/40 dark:text-white/40">▾</span>
+              </a>
+              <a href="#agents" className="hover:text-[#141414] dark:hover:text-white transition-colors flex items-center gap-1">
+                AI Agents <span className="text-[10px] text-black/40 dark:text-white/40">▾</span>
+              </a>
+              <a href="#features" className="hover:text-[#141414] dark:hover:text-white transition-colors">
+                How It Works
+              </a>
+              <a
+                href="#pricing"
+                onClick={(e) => {
+                  e.preventDefault();
+                  onLoginClick();
+                }}
+                className="hover:text-[#141414] dark:hover:text-white transition-colors"
+              >
+                Interview Coins
+              </a>
+            </nav>
+          )}
+
+          {/* Action Buttons */}
+          {isExpandedDesktop && (
+            <div className="flex items-center gap-2.5 shrink-0 transition-opacity duration-500 delay-200">
+              <ThemeToggle compact={true} />
+              <button
+                onClick={onLoginClick}
+                className="px-3.5 py-1.5 rounded-full border border-[#DCD7CB] dark:border-[#2A2E3D] text-xs font-medium text-[#141414] dark:text-white hover:border-[#141414]/40 dark:hover:border-white/30 hover:bg-[#FAF9F5] dark:hover:bg-white/5 transition-all cursor-pointer whitespace-nowrap"
+              >
+                Login
+              </button>
+              <button
+                onClick={onGetStartedClick}
+                className="px-4 py-1.5 rounded-full bg-[#141414] dark:bg-white text-white dark:text-[#090A0F] text-xs font-semibold hover:bg-black/90 dark:hover:bg-neutral-200 shadow-xs transition-all cursor-pointer whitespace-nowrap"
+              >
+                Get Started
+              </button>
+            </div>
           )}
         </div>
+      </div>
 
-        {/* Nav Links (Visible only when expanded) */}
-        {isExpanded && (
-          <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-[#141414]/70 whitespace-nowrap transition-opacity duration-500 delay-200">
-            <a
-              href="#platform"
-              className="hover:text-[#141414] transition-colors flex items-center gap-1"
-            >
-              For Candidates <span className="text-[10px] text-black/40">▾</span>
-            </a>
-            <a
-              href="#agents"
-              className="hover:text-[#141414] transition-colors flex items-center gap-1"
-            >
-              AI Agents <span className="text-[10px] text-black/40">▾</span>
-            </a>
-            <a
-              href="#features"
-              className="hover:text-[#141414] transition-colors"
-            >
-              How It Works
-            </a>
-            <a
-              href="#pricing"
-              onClick={(e) => {
-                e.preventDefault();
-                onLoginClick();
-              }}
-              className="hover:text-[#141414] transition-colors"
-            >
-              Interview Coins
-            </a>
-          </nav>
-        )}
+      {/* ── MOBILE RESPONSIVE NAVBAR (ACCESSIBLE, NEVER OVERFLOWS) ── */}
+      <div className="md:hidden fixed top-3 inset-x-3 z-50 select-none">
+        <div className="bg-white/95 dark:bg-[#12141C]/95 backdrop-blur-md border border-[#E6E2D8] dark:border-[#222634] shadow-[0_8px_30px_rgba(0,0,0,0.12)] rounded-full px-3.5 py-2 flex items-center justify-between">
+          {/* Left: Brand */}
+          <div
+            className="flex items-center gap-2 cursor-pointer"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
+            <div className="flex items-center -space-x-1 shrink-0">
+              <span className="w-3 h-3 rounded-full bg-[#141414] dark:bg-white" />
+              <span className="w-3 h-3 rounded-full bg-[#141414]/70 dark:bg-white/70" />
+            </div>
+            <span className="font-extrabold text-sm tracking-tight text-[#141414] dark:text-white">
+              SkillForge
+            </span>
+          </div>
 
-        {/* Action Buttons (Visible only when expanded) */}
-        {isExpanded && (
-          <div className="flex items-center gap-2 shrink-0 transition-opacity duration-500 delay-200">
+          {/* Right Controls */}
+          <div className="flex items-center gap-1.5">
+            <ThemeToggle compact={true} />
             <button
               onClick={onLoginClick}
-              className="px-3.5 py-1.5 rounded-full border border-[#DCD7CB] text-xs font-medium text-[#141414] hover:border-[#141414]/40 hover:bg-[#FAF9F5] transition-all cursor-pointer whitespace-nowrap"
+              className="px-3 py-1 rounded-full border border-[#DCD7CB] dark:border-[#2A2E3D] text-[11px] font-medium text-[#141414] dark:text-white hover:bg-black/5 dark:hover:bg-white/5"
             >
               Login
             </button>
             <button
-              onClick={onGetStartedClick}
-              className="px-4 py-1.5 rounded-full bg-[#141414] text-white text-xs font-semibold hover:bg-black/90 shadow-xs transition-all cursor-pointer whitespace-nowrap"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-[#141414] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              aria-label="Toggle Menu"
             >
-              Get Started
+              {mobileMenuOpen ? <FiX size={18} /> : <FiMenu size={18} />}
             </button>
+          </div>
+        </div>
+
+        {/* Mobile Dropdown Menu Drawer */}
+        {mobileMenuOpen && (
+          <div className="mt-2 p-4 rounded-2xl bg-white/98 dark:bg-[#12141C]/98 backdrop-blur-xl border border-[#E6E2D8] dark:border-[#222634] shadow-[0_16px_40px_rgba(0,0,0,0.18)] space-y-3 transition-all">
+            <nav className="flex flex-col space-y-1">
+              <a
+                href="#platform"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-xl text-xs font-medium text-[#141414] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-between"
+              >
+                <span>For Candidates</span>
+                <span className="text-[10px] text-black/40 dark:text-white/40">Explore →</span>
+              </a>
+              <a
+                href="#agents"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-xl text-xs font-medium text-[#141414] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-between"
+              >
+                <span>AI Agents</span>
+                <span className="text-[10px] text-black/40 dark:text-white/40">Fleet →</span>
+              </a>
+              <a
+                href="#features"
+                onClick={() => setMobileMenuOpen(false)}
+                className="px-3 py-2 rounded-xl text-xs font-medium text-[#141414] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-between"
+              >
+                <span>How It Works</span>
+                <span className="text-[10px] text-black/40 dark:text-white/40">Architecture →</span>
+              </a>
+              <a
+                href="#pricing"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setMobileMenuOpen(false);
+                  onLoginClick();
+                }}
+                className="px-3 py-2 rounded-xl text-xs font-medium text-[#141414] dark:text-white hover:bg-black/5 dark:hover:bg-white/5 flex items-center justify-between"
+              >
+                <span>Interview Coins & Pricing</span>
+                <span className="text-[10px] text-amber-500 font-semibold">Get Credits ✦</span>
+              </a>
+            </nav>
+
+            <div className="pt-2 border-t border-[#E6E2D8] dark:border-[#222634] space-y-2">
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onGetStartedClick();
+                }}
+                className="w-full py-2.5 rounded-xl bg-[#E55734] hover:bg-[#D44725] text-white text-xs font-bold uppercase tracking-wider shadow-sm transition-all text-center"
+              >
+                Get Started Free
+              </button>
+            </div>
           </div>
         )}
       </div>
-    </div>
+    </>
   );
 }
+
 
 export default function Home({ user, setUser }) {
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -703,7 +798,7 @@ export default function Home({ user, setUser }) {
   return (
     <div
       ref={containerRef}
-      className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen overflow-x-hidden selection:bg-[#141414] selection:text-white"
+      className="bg-[#FAF9F5] dark:bg-[#090A0F] text-[#141414] dark:text-white font-['Plus_Jakarta_Sans',sans-serif] min-h-screen overflow-x-hidden selection:bg-[#141414] dark:selection:bg-white selection:text-white dark:selection:text-[#090A0F] transition-colors"
     >
       {/* ── HAIRLINE SCROLL PROGRESS INDICATOR ── */}
       <div
@@ -711,7 +806,7 @@ export default function Home({ user, setUser }) {
         style={{ width: "0%" }}
       />
 
-      {/* ── TOP COLLAPSIBLE FLOATING NAVBAR (SCROLL-COLLAPSIBLE & HOVER-EXPANDING) ── */}
+      {/* ── TOP COLLAPSIBLE FLOATING NAVBAR ── */}
       <CollapsibleNavbar
         onLoginClick={() => setShowLoginModal(true)}
         onGetStartedClick={() => setShowLoginModal(true)}
@@ -720,29 +815,29 @@ export default function Home({ user, setUser }) {
       {/* ── TOP ARCHITECTURAL GRID GUIDE ── */}
       <div className="relative max-w-7xl mx-auto px-4 sm:px-8">
         {/* Crosshair Top-Left */}
-        <div className="hidden lg:flex absolute top-[28px] left-4 -translate-x-1/2 -translate-y-1/2 text-black/35 text-xs font-mono select-none pointer-events-none z-20">
+        <div className="hidden lg:flex absolute top-[28px] left-4 -translate-x-1/2 -translate-y-1/2 text-black/35 dark:text-white/35 text-xs font-mono select-none pointer-events-none z-20">
           +
         </div>
         {/* Crosshair Top-Right */}
-        <div className="hidden lg:flex absolute top-[28px] right-4 translate-x-1/2 -translate-y-1/2 text-black/35 text-xs font-mono select-none pointer-events-none z-20">
+        <div className="hidden lg:flex absolute top-[28px] right-4 translate-x-1/2 -translate-y-1/2 text-black/35 dark:text-white/35 text-xs font-mono select-none pointer-events-none z-20">
           +
         </div>
 
         {/* ── HERO SECTION WITH ROTATING ORBITAL TRACK ── */}
         <section
           ref={heroRef}
-          className="relative pt-20 sm:pt-28 pb-6 sm:pb-10 overflow-visible"
+          className="relative pt-18 sm:pt-28 pb-6 sm:pb-10 overflow-hidden"
         >
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-end min-h-[580px]">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-4 items-end min-h-[540px]">
             {/* Left Editorial Content */}
             <div className="gsap-hero-left lg:col-span-6 z-20 text-left pb-6">
               {/* Eyebrow Pill Tag */}
-              <div className="gsap-hero-pill inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FBDCD0] bg-[#FFF2ED] text-[#E05A3E] text-[11px] font-bold tracking-wider uppercase mb-5">
+              <div className="gsap-hero-pill inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#FBDCD0] dark:border-[#52251D] bg-[#FFF2ED] dark:bg-[#2A1612] text-[#E05A3E] dark:text-[#F87171] text-[11px] font-bold tracking-wider uppercase mb-5">
                 <span>PREPARATION TO SENIOR OFFER</span>
               </div>
 
               {/* Main Headline with Clean Overflow Reveal */}
-              <h1 className="text-4xl sm:text-5xl lg:text-[60px] font-extrabold tracking-tight text-[#141414] leading-[1.05]">
+              <h1 className="text-3xl sm:text-5xl lg:text-[60px] font-extrabold tracking-tight text-[#141414] dark:text-white leading-[1.05]">
                 <div className="overflow-hidden">
                   <span className="gsap-title-line inline-block">
                     Forge Your Career.
@@ -756,7 +851,7 @@ export default function Home({ user, setUser }) {
               </h1>
 
               {/* Subtitle */}
-              <p className="gsap-hero-sub mt-4 text-xs sm:text-sm text-[#141414]/65 max-w-lg leading-relaxed font-normal">
+              <p className="gsap-hero-sub mt-4 text-xs sm:text-sm text-[#141414]/65 dark:text-white/70 max-w-lg leading-relaxed font-normal">
                 Master live technical rounds with proctored AI interviewers, optimize your ATS resume with semantic vector search, and follow structured roadmaps designed for engineering excellence.
               </p>
 
@@ -770,7 +865,7 @@ export default function Home({ user, setUser }) {
                 </button>
                 <a
                   href="#platform"
-                  className="gsap-hero-btn px-5 py-3 rounded-xl border border-[#DCD7CB] bg-white text-[#141414] text-xs font-semibold hover:border-[#141414]/40 hover:bg-[#FAF9F5] transition-all cursor-pointer"
+                  className="gsap-hero-btn px-5 py-3 rounded-xl border border-[#DCD7CB] dark:border-[#2A2E3D] bg-white dark:bg-[#151822] text-[#141414] dark:text-white text-xs font-semibold hover:border-[#141414]/40 dark:hover:border-white/30 hover:bg-[#FAF9F5] dark:hover:bg-[#1A1E2B] transition-all cursor-pointer"
                 >
                   Explore Agents
                 </a>
@@ -783,7 +878,7 @@ export default function Home({ user, setUser }) {
             </div>
 
             {/* Right Orbital Quarter-Circle Animated Track */}
-            <div className="gsap-orbit-wrapper lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-visible">
+            <div className="gsap-orbit-wrapper lg:col-span-6 relative flex items-end justify-center lg:justify-end overflow-hidden max-w-full">
               <QuarterCircleOrbit className="translate-y-2 sm:translate-y-6" />
             </div>
           </div>
@@ -791,44 +886,44 @@ export default function Home({ user, setUser }) {
           {/* ── EMBEDDED DASHBOARD CONTAINER (MOCKUP LIKE SCREENSHOT) ── */}
           <div
             id="platform"
-            className="gsap-studio-container mt-14 max-w-5xl mx-auto rounded-2xl border border-[#DCD7CB] bg-[#FAF9F5] shadow-[0_12px_40px_rgba(0,0,0,0.06)] overflow-hidden text-left"
+            className="gsap-studio-container mt-14 max-w-5xl mx-auto rounded-2xl border border-[#DCD7CB] dark:border-[#222634] bg-[#FAF9F5] dark:bg-[#0E1017] shadow-[0_12px_40px_rgba(0,0,0,0.06)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.4)] overflow-hidden text-left"
           >
             {/* Window Header */}
-            <div className="border-b border-[#E6E2D8] bg-[#F5F3EC] px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+            <div className="border-b border-[#E6E2D8] dark:border-[#222634] bg-[#F5F3EC] dark:bg-[#151822] px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-xs">
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-2 font-bold text-xs tracking-tight text-[#141414]">
-                  <span className="w-2.5 h-2.5 rounded-full bg-[#141414]" />
+                <div className="flex items-center gap-2 font-bold text-xs tracking-tight text-[#141414] dark:text-white">
+                  <span className="w-2.5 h-2.5 rounded-full bg-[#141414] dark:bg-white" />
                   SkillForge Studio
                 </div>
-                <span className="text-[#141414]/30">|</span>
-                <span className="font-semibold text-xs text-[#141414]">
+                <span className="text-[#141414]/30 dark:text-white/30">|</span>
+                <span className="font-semibold text-xs text-[#141414] dark:text-white">
                   Hello, {user?.name || "Candidate"}
                 </span>
               </div>
 
               {/* Search Pill */}
-              <div className="hidden sm:flex items-center gap-2 bg-white/80 border border-[#E6E2D8] rounded-full px-3.5 py-1 text-xs text-[#141414]/50 w-64">
+              <div className="hidden sm:flex items-center gap-2 bg-white/80 dark:bg-[#1C2030] border border-[#E6E2D8] dark:border-[#282E40] rounded-full px-3.5 py-1 text-xs text-[#141414]/50 dark:text-white/50 w-64">
                 <FiSearch size={13} />
                 <span>Search roles, skills, or roadmaps...</span>
               </div>
 
               {/* Status Icons */}
               <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full border border-[#E6E2D8] flex items-center justify-center text-[#141414]/70 bg-white/50">
+                <div className="w-6 h-6 rounded-full border border-[#E6E2D8] dark:border-[#282E40] flex items-center justify-center text-[#141414]/70 dark:text-white/70 bg-white/50 dark:bg-white/10">
                   <FiBell size={12} />
                 </div>
-                <span className="px-2.5 py-0.5 rounded-full border border-black/15 bg-white text-[11px] font-medium text-[#141414]/80">
+                <span className="px-2.5 py-0.5 rounded-full border border-black/15 dark:border-white/15 bg-white dark:bg-white/10 text-[11px] font-medium text-[#141414]/80 dark:text-white/80">
                   Interview Ready
                 </span>
               </div>
             </div>
 
             {/* Window Body (Sidebar + Content Area) */}
-            <div className="grid md:grid-cols-[180px_1fr] bg-white min-h-[360px]">
+            <div className="grid md:grid-cols-[180px_1fr] bg-white dark:bg-[#0A0B10] min-h-[360px]">
               {/* Left Sidebar */}
-              <aside className="border-r border-[#EAE6DE] bg-[#F8F6F0] p-4 hidden md:flex flex-col justify-between text-xs">
+              <aside className="border-r border-[#EAE6DE] dark:border-[#222634] bg-[#F8F6F0] dark:bg-[#11131C] p-4 hidden md:flex flex-col justify-between text-xs">
                 <div className="space-y-4">
-                  <p className="text-[10px] uppercase font-bold text-black/40 tracking-wider">
+                  <p className="text-[10px] uppercase font-bold text-black/40 dark:text-white/40 tracking-wider">
                     Menu
                   </p>
                   <ul className="space-y-1">
@@ -844,8 +939,8 @@ export default function Home({ user, setUser }) {
                           onClick={() => setActiveTab(item.id)}
                           className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors text-left cursor-pointer ${
                             activeTab === item.id
-                              ? "bg-white text-[#141414] shadow-xs border border-[#E6E2D8]"
-                              : "text-black/60 hover:text-[#141414] hover:bg-black/5"
+                              ? "bg-white dark:bg-[#1C2030] text-[#141414] dark:text-white shadow-xs border border-[#E6E2D8] dark:border-[#282E40]"
+                              : "text-black/60 dark:text-white/60 hover:text-[#141414] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5"
                           }`}
                         >
                           {item.icon}
@@ -856,38 +951,38 @@ export default function Home({ user, setUser }) {
                   </ul>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-white border border-[#E6E2D8] text-[11px] text-black/60">
-                  <span className="font-bold text-[#141414] block mb-0.5">
+                <div className="p-2.5 rounded-xl bg-white dark:bg-[#161822] border border-[#E6E2D8] dark:border-[#222634] text-[11px] text-black/60 dark:text-white/60">
+                  <span className="font-bold text-[#141414] dark:text-white block mb-0.5">
                     Interview Coins
                   </span>
-                  Available: <span className="font-semibold text-black">150 Coins</span>
+                  Available: <span className="font-semibold text-black dark:text-white">150 Coins</span>
                 </div>
               </aside>
 
               {/* Main App Canvas */}
-              <main className="p-4 sm:p-6 space-y-4 bg-[#FBFBFC]">
+              <main className="p-4 sm:p-6 space-y-4 bg-[#FBFBFC] dark:bg-[#0A0B10]">
                 {/* Panel 1: Upcoming Interview */}
-                <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] bg-white p-4 sm:p-5 shadow-xs transition-all hover:border-[#141414]/30">
-                  <div className="flex items-center justify-between border-b border-[#F0ECE4] pb-3 mb-3">
-                    <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
-                      <FiVideo size={14} className="text-black/70" />
+                <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] dark:border-[#222634] bg-white dark:bg-[#141722] p-4 sm:p-5 shadow-xs transition-all hover:border-[#141414]/30 dark:hover:border-white/20">
+                  <div className="flex items-center justify-between border-b border-[#F0ECE4] dark:border-[#222634] pb-3 mb-3">
+                    <div className="flex items-center gap-2 font-bold text-xs text-[#141414] dark:text-white">
+                      <FiVideo size={14} className="text-black/70 dark:text-white/70" />
                       <span>Upcoming Proctored Interview</span>
                     </div>
-                    <span className="text-[10px] uppercase font-bold text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                    <span className="text-[10px] uppercase font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                       Live AI Simulator
                     </span>
                   </div>
 
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-full bg-[#141414] text-white font-bold flex items-center justify-center text-xs">
+                      <div className="w-9 h-9 rounded-full bg-[#141414] dark:bg-white text-white dark:text-[#090A0F] font-bold flex items-center justify-center text-xs">
                         AM
                       </div>
                       <div>
-                        <h4 className="font-bold text-xs text-[#141414]">
+                        <h4 className="font-bold text-xs text-[#141414] dark:text-white">
                           Alex Morgan
                         </h4>
-                        <p className="text-[11px] text-[#141414]/65">
+                        <p className="text-[11px] text-[#141414]/65 dark:text-white/65">
                           Senior Full-Stack Engineer · React & Node.js
                         </p>
                       </div>
@@ -895,16 +990,16 @@ export default function Home({ user, setUser }) {
 
                     <div className="flex items-center gap-6 text-xs">
                       <div>
-                        <span className="text-[10px] text-black/40 block">Duration</span>
-                        <span className="font-medium text-[#141414]">45 mins (Monaco Code)</span>
+                        <span className="text-[10px] text-black/40 dark:text-white/40 block">Duration</span>
+                        <span className="font-medium text-[#141414] dark:text-white">45 mins (Monaco Code)</span>
                       </div>
                       <div className="hidden lg:block">
-                        <span className="text-[10px] text-black/40 block">Focus Area</span>
-                        <span className="font-medium text-[#141414]">System Architecture & DSA</span>
+                        <span className="text-[10px] text-black/40 dark:text-white/40 block">Focus Area</span>
+                        <span className="font-medium text-[#141414] dark:text-white">System Architecture & DSA</span>
                       </div>
                       <button
                         onClick={() => setShowLoginModal(true)}
-                        className="px-3.5 py-1.5 rounded-md border border-[#DCD7CB] text-xs font-medium text-[#141414] hover:bg-black hover:text-white hover:border-black transition-all cursor-pointer"
+                        className="px-3.5 py-1.5 rounded-md border border-[#DCD7CB] dark:border-[#2A2E3D] text-xs font-medium text-[#141414] dark:text-white hover:bg-black dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-black dark:hover:border-white transition-all cursor-pointer"
                       >
                         Enter Session
                       </button>
@@ -915,24 +1010,24 @@ export default function Home({ user, setUser }) {
                 {/* Panel 2: Resume & Roadmap Twin Cards */}
                 <div className="grid sm:grid-cols-2 gap-4">
                   {/* ATS Resume Scorer */}
-                  <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] bg-white p-4.5 shadow-xs hover:border-[#141414]/30 transition-all">
+                  <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] dark:border-[#222634] bg-white dark:bg-[#141722] p-4.5 shadow-xs hover:border-[#141414]/30 dark:hover:border-white/20 transition-all">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
-                        <FiFileText size={13} className="text-black/70" />
+                      <div className="flex items-center gap-2 font-bold text-xs text-[#141414] dark:text-white">
+                        <FiFileText size={13} className="text-black/70 dark:text-white/70" />
                         <span>ATS Vector Scorer</span>
                       </div>
-                      <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                      <span className="text-[11px] font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
                         88/100 Strong
                       </span>
                     </div>
-                    <p className="text-xs text-[#141414]/70 leading-relaxed mb-3">
+                    <p className="text-xs text-[#141414]/70 dark:text-white/70 leading-relaxed mb-3">
                       Semantic match against 1,200+ industry job descriptions using Qdrant vector index.
                     </p>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#F0ECE4] text-[11px]">
-                      <span className="text-[#141414]/60 font-medium">Missing: GraphQL, K8s</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-[#F0ECE4] dark:border-[#222634] text-[11px]">
+                      <span className="text-[#141414]/60 dark:text-white/60 font-medium">Missing: GraphQL, K8s</span>
                       <button
                         onClick={() => setShowLoginModal(true)}
-                        className="font-medium text-[#141414] hover:underline cursor-pointer"
+                        className="font-medium text-[#141414] dark:text-white hover:underline cursor-pointer"
                       >
                         View Report →
                       </button>
@@ -940,24 +1035,24 @@ export default function Home({ user, setUser }) {
                   </div>
 
                   {/* AI Learning Roadmap */}
-                  <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] bg-white p-4.5 shadow-xs hover:border-[#141414]/30 transition-all">
+                  <div className="gsap-candidate-card rounded-xl border border-[#E8E4DA] dark:border-[#222634] bg-white dark:bg-[#141722] p-4.5 shadow-xs hover:border-[#141414]/30 dark:hover:border-white/20 transition-all">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
-                        <FiMap size={13} className="text-black/70" />
+                      <div className="flex items-center gap-2 font-bold text-xs text-[#141414] dark:text-white">
+                        <FiMap size={13} className="text-black/70 dark:text-white/70" />
                         <span>Dynamic Roadmap</span>
                       </div>
-                      <span className="text-[11px] font-semibold text-black/80 bg-[#FAF9F5] px-2 py-0.5 rounded-full border border-[#E6E2D8]">
+                      <span className="text-[11px] font-semibold text-black/80 dark:text-white/80 bg-[#FAF9F5] dark:bg-[#1C2030] px-2 py-0.5 rounded-full border border-[#E6E2D8] dark:border-[#282E40]">
                         65% Completed
                       </span>
                     </div>
-                    <p className="text-xs text-[#141414]/70 leading-relaxed mb-3">
-                      Current module: <strong className="text-black">Microservices & Distributed Redis</strong> with direct video tutorials.
+                    <p className="text-xs text-[#141414]/70 dark:text-white/70 leading-relaxed mb-3">
+                      Current module: <strong className="text-black dark:text-white">Microservices & Distributed Redis</strong> with direct video tutorials.
                     </p>
-                    <div className="flex items-center justify-between pt-2 border-t border-[#F0ECE4] text-[11px]">
-                      <span className="text-[#141414]/60 font-medium">12 Modules · 4 Weeks</span>
+                    <div className="flex items-center justify-between pt-2 border-t border-[#F0ECE4] dark:border-[#222634] text-[11px]">
+                      <span className="text-[#141414]/60 dark:text-white/60 font-medium">12 Modules · 4 Weeks</span>
                       <button
                         onClick={() => setShowLoginModal(true)}
-                        className="font-medium text-[#141414] hover:underline cursor-pointer"
+                        className="font-medium text-[#141414] dark:text-white hover:underline cursor-pointer"
                       >
                         Continue Path →
                       </button>
@@ -970,16 +1065,16 @@ export default function Home({ user, setUser }) {
         </section>
 
         {/* ── MULTI-AGENT FLEET SECTION ── */}
-        <section id="agents" className="py-20 border-t border-[#E6E2D8]">
+        <section id="agents" className="py-20 border-t border-[#E6E2D8] dark:border-[#222634]">
           <div className="max-w-5xl mx-auto">
             <div className="gsap-agent-header text-center max-w-xl mx-auto mb-14">
-              <span className="text-[11px] font-mono uppercase tracking-widest text-black/40 block mb-2">
+              <span className="text-[11px] font-mono uppercase tracking-widest text-black/40 dark:text-white/40 block mb-2">
                 Multi-Agent Architecture
               </span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414]">
+              <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414] dark:text-white">
                 Specialized Agents For Every Step
               </h2>
-              <p className="text-xs sm:text-sm text-black/50 mt-3 leading-relaxed">
+              <p className="text-xs sm:text-sm text-black/50 dark:text-white/60 mt-3 leading-relaxed">
                 Autonomous AI micro-agents working together in a unified pipeline to prepare you for senior roles.
               </p>
             </div>
@@ -1016,8 +1111,8 @@ export default function Home({ user, setUser }) {
                   onMouseEnter={(e) => {
                     gsap.to(e.currentTarget, {
                       y: -6,
-                      borderColor: "rgba(20, 20, 20, 0.4)",
-                      boxShadow: "0 10px 25px -5px rgba(0,0,0,0.06)",
+                      borderColor: "rgba(224, 90, 62, 0.5)",
+                      boxShadow: "0 10px 25px -5px rgba(0,0,0,0.12)",
                       duration: 0.25,
                       ease: "power2.out",
                     });
@@ -1025,25 +1120,25 @@ export default function Home({ user, setUser }) {
                   onMouseLeave={(e) => {
                     gsap.to(e.currentTarget, {
                       y: 0,
-                      borderColor: "#DCD7CB",
-                      boxShadow: "0 1px 2px 0 rgba(0,0,0,0.05)",
+                      borderColor: "",
+                      boxShadow: "",
                       duration: 0.35,
                       ease: "power2.out",
                     });
                   }}
-                  className="gsap-agent-card rounded-xl border border-[#DCD7CB] bg-white p-5 shadow-xs flex flex-col justify-between transition-colors cursor-default"
+                  className="gsap-agent-card rounded-xl border border-[#DCD7CB] dark:border-[#222634] bg-white dark:bg-[#141722] p-5 shadow-xs flex flex-col justify-between transition-colors cursor-default"
                 >
                   <div>
-                    <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] border border-[#E6E2D8] flex items-center justify-center text-[#141414] mb-3.5">
+                    <div className="w-8 h-8 rounded-lg bg-[#FAF9F5] dark:bg-[#1C2030] border border-[#E6E2D8] dark:border-[#282E40] flex items-center justify-center text-[#141414] dark:text-white mb-3.5">
                       {agent.icon}
                     </div>
-                    <h3 className="font-bold text-sm text-[#141414] mb-0.5">
+                    <h3 className="font-bold text-sm text-[#141414] dark:text-white mb-0.5">
                       {agent.name}
                     </h3>
-                    <span className="text-[10px] font-mono text-black/40 uppercase tracking-wider block mb-2.5">
+                    <span className="text-[10px] font-mono text-black/40 dark:text-white/40 uppercase tracking-wider block mb-2.5">
                       {agent.badge}
                     </span>
-                    <p className="text-xs text-black/60 leading-relaxed font-normal">
+                    <p className="text-xs text-black/60 dark:text-white/60 leading-relaxed font-normal">
                       {agent.desc}
                     </p>
                   </div>
@@ -1056,19 +1151,19 @@ export default function Home({ user, setUser }) {
         {/* ── ARCHITECTURAL ADVANTAGES INFINITE SCROLL MARQUEE ── */}
         <section
           id="features"
-          className="py-20 border-t border-[#E6E2D8] bg-[#F5F3EC]/60 -mx-4 sm:-mx-8 overflow-hidden"
+          className="py-20 border-t border-[#E6E2D8] dark:border-[#222634] bg-[#F5F3EC]/60 dark:bg-[#0D0E15] -mx-4 sm:-mx-8 overflow-hidden"
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-8 mb-9">
             <div className="gsap-feature-header flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
-                <span className="text-[11px] font-mono uppercase tracking-widest text-[#141414]/45 font-bold block mb-1.5">
+                <span className="text-[11px] font-mono uppercase tracking-widest text-[#141414]/45 dark:text-white/45 font-bold block mb-1.5">
                   Continuous Innovation · Architectural Advantages
                 </span>
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#141414]">
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#141414] dark:text-white">
                   Engineered For Senior Engineering Standards
                 </h2>
               </div>
-              <div className="flex items-center gap-2 text-xs text-[#141414]/50">
+              <div className="flex items-center gap-2 text-xs text-[#141414]/50 dark:text-white/50">
                 <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                 <span className="font-mono text-[11px]">Hover card to pause stream</span>
               </div>
@@ -1081,30 +1176,30 @@ export default function Home({ user, setUser }) {
               {[...FEATURE_ITEMS, ...FEATURE_ITEMS].map((item, idx) => (
                 <div
                   key={`feature-card-${idx}`}
-                  className="w-[340px] sm:w-[390px] shrink-0 rounded-2xl border border-[#E6E2D8] bg-white p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col justify-between hover:border-[#141414]/40 hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] hover:-translate-y-1 transition-all duration-300 select-none group"
+                  className="w-[290px] sm:w-[350px] md:w-[390px] shrink-0 rounded-2xl border border-[#E6E2D8] dark:border-[#222634] bg-white dark:bg-[#141722] p-6 sm:p-7 shadow-[0_4px_20px_rgba(0,0,0,0.03)] dark:shadow-[0_4px_20px_rgba(0,0,0,0.3)] flex flex-col justify-between hover:border-[#141414]/40 dark:hover:border-white/30 hover:shadow-[0_12px_32px_rgba(0,0,0,0.07)] hover:-translate-y-1 transition-all duration-300 select-none group"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-[11px] font-mono uppercase font-bold text-[#141414]/50 tracking-wider">
+                      <span className="text-[11px] font-mono uppercase font-bold text-[#141414]/50 dark:text-white/50 tracking-wider">
                         {item.tag}
                       </span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF9F5] border border-[#E8E4DA] text-[#141414]/70">
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF9F5] dark:bg-[#1C2030] border border-[#E8E4DA] dark:border-[#282E40] text-[#141414]/70 dark:text-white/70">
                         {item.badge}
                       </span>
                     </div>
 
-                    <h3 className="text-base sm:text-lg font-bold text-[#141414] leading-snug group-hover:text-black transition-colors mb-2.5">
+                    <h3 className="text-base sm:text-lg font-bold text-[#141414] dark:text-white leading-snug group-hover:text-black dark:group-hover:text-white transition-colors mb-2.5">
                       {item.title}
                     </h3>
 
-                    <p className="text-xs sm:text-[13px] text-[#141414]/65 leading-relaxed">
+                    <p className="text-xs sm:text-[13px] text-[#141414]/65 dark:text-white/65 leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
 
-                  <div className="pt-4 mt-5 border-t border-[#F0ECE4] flex items-center justify-between text-[11px] text-[#141414]/40">
-                    <span className="font-mono text-[10px] text-black/50">{item.subtext}</span>
-                    <span className="text-[#E05A3E] font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
+                  <div className="pt-4 mt-5 border-t border-[#F0ECE4] dark:border-[#222634] flex items-center justify-between text-[11px] text-[#141414]/40 dark:text-white/40">
+                    <span className="font-mono text-[10px] text-black/50 dark:text-white/50">{item.subtext}</span>
+                    <span className="text-[#E05A3E] dark:text-[#F87171] font-semibold group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">
                       Explore ↗
                     </span>
                   </div>
@@ -1115,24 +1210,24 @@ export default function Home({ user, setUser }) {
         </section>
 
         {/* ── CALL TO ACTION SECTION ── */}
-        <section className="gsap-cta-section py-20 border-t border-[#E6E2D8] text-center">
+        <section className="gsap-cta-section py-20 border-t border-[#E6E2D8] dark:border-[#222634] text-center">
           <div className="gsap-cta-content max-w-xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414]">
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414] dark:text-white">
               Start Your Career Preparation Today
             </h2>
-            <p className="text-xs sm:text-sm text-black/55 mt-3 leading-relaxed">
+            <p className="text-xs sm:text-sm text-black/55 dark:text-white/60 mt-3 leading-relaxed">
               Create an account in seconds and receive complimentary Interview Coins to analyze your resume and practice your first AI mock session.
             </p>
             <div className="mt-7 flex items-center justify-center gap-3">
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="px-5 py-2.5 rounded-md bg-[#141414] text-white text-xs font-semibold hover:bg-black/90 shadow-sm transition-all cursor-pointer"
+                className="px-5 py-2.5 rounded-md bg-[#141414] dark:bg-white text-white dark:text-[#090A0F] text-xs font-semibold hover:bg-black/90 dark:hover:bg-neutral-200 shadow-sm transition-all cursor-pointer"
               >
                 Create Free Account
               </button>
               <button
                 onClick={() => setShowLoginModal(true)}
-                className="px-5 py-2.5 rounded-md border border-[#DCD7CB] bg-white text-[#141414] text-xs font-medium hover:border-[#141414]/40 transition-all cursor-pointer"
+                className="px-5 py-2.5 rounded-md border border-[#DCD7CB] dark:border-[#2A2E3D] bg-white dark:bg-[#151822] text-[#141414] dark:text-white text-xs font-medium hover:border-[#141414]/40 dark:hover:border-white/30 transition-all cursor-pointer"
               >
                 Sign In
               </button>
@@ -1141,15 +1236,15 @@ export default function Home({ user, setUser }) {
         </section>
 
         {/* ── CLEAN EDITORIAL FOOTER ── */}
-        <footer className="border-t border-[#E6E2D8] py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/50">
-          <div className="flex items-center gap-2 font-bold text-xs text-[#141414]">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#141414]" />
+        <footer className="border-t border-[#E6E2D8] dark:border-[#222634] py-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-black/50 dark:text-white/50">
+          <div className="flex items-center gap-2 font-bold text-xs text-[#141414] dark:text-white">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#141414] dark:bg-white" />
             SkillForge
           </div>
-          <p className="text-xs text-black/40">
+          <p className="text-xs text-black/40 dark:text-white/40">
             Multi-Agent Career Preparation Platform · Engineered for developers worldwide
           </p>
-          <div className="text-[11px] text-black/30 font-mono">
+          <div className="text-[11px] text-black/30 dark:text-white/30 font-mono">
             © {new Date().getFullYear()} SkillForge
           </div>
         </footer>
@@ -1165,3 +1260,4 @@ export default function Home({ user, setUser }) {
     </div>
   );
 }
+

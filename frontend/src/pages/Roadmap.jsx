@@ -27,57 +27,61 @@ const POPULAR_ROLES = [
   "System Architect",
 ];
 
+import ThemeToggle from "../components/ThemeToggle";
+
 // ─── Navbar ───────────────────────────────────────────────────────────────────
 function RoadmapNavbar({ onHistoryClick, user }) {
   const navigate = useNavigate();
   return (
-    <nav className="sticky top-0 z-40 bg-[#FAF9F5]/90 backdrop-blur-md border-b border-[#E6E2D8]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-4">
+    <nav className="sticky top-0 z-40 bg-[#FAF9F5]/90 dark:bg-[#090A0F]/90 backdrop-blur-md border-b border-[#E6E2D8] dark:border-[#222634] transition-colors">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 h-14 flex items-center justify-between">
+        <div className="flex items-center gap-2 sm:gap-4">
           <button
             onClick={() => navigate("/dashboard")}
-            className="flex items-center gap-1.5 text-xs font-medium text-[#141414]/60 hover:text-[#141414] transition-colors"
+            className="flex items-center gap-1.5 text-xs font-medium text-[#141414]/60 dark:text-white/60 hover:text-[#141414] dark:hover:text-white transition-colors"
           >
             <FiArrowLeft size={14} />
             <span className="hidden sm:inline">Dashboard</span>
           </button>
 
-          <div className="h-4 w-px bg-[#E6E2D8] hidden sm:block" />
+          <div className="h-4 w-px bg-[#E6E2D8] dark:bg-[#222634] hidden sm:block" />
 
           <div
             onClick={() => navigate("/dashboard")}
             className="flex items-center gap-2 cursor-pointer"
           >
             <div className="flex items-center -space-x-1">
-              <span className="w-3 h-3 rounded-full bg-[#141414]" />
-              <span className="w-3 h-3 rounded-full bg-[#141414]/70" />
+              <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#141414] dark:bg-white" />
+              <span className="w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full bg-[#141414]/70 dark:bg-white/60" />
             </div>
-            <span className="font-extrabold text-sm tracking-tight text-[#141414]">
+            <span className="font-extrabold text-xs sm:text-sm tracking-tight text-[#141414] dark:text-white">
               SkillForge
             </span>
-            <span className="rounded-full bg-[#F4F1EA] border border-[#E6E2D8] px-2 py-0.5 text-[10px] font-medium text-[#141414]/60">
+            <span className="hidden md:inline-flex rounded-full bg-[#F4F1EA] dark:bg-[#1A1D29] border border-[#E6E2D8] dark:border-[#222634] px-2 py-0.5 text-[10px] font-medium text-[#141414]/60 dark:text-white/60">
               Roadmap Generator
             </span>
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          <ThemeToggle compact={true} />
+
           <button
             onClick={onHistoryClick}
-            className="flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-[#E6E2D8] bg-white text-[#141414]/80 hover:text-[#141414] hover:border-[#141414]/40 transition-all shadow-sm"
+            className="flex items-center gap-1 sm:gap-1.5 text-xs font-medium px-2.5 sm:px-3 py-1.5 rounded-full border border-[#E6E2D8] dark:border-[#222634] bg-white dark:bg-[#12141C] text-[#141414]/80 dark:text-white/80 hover:text-[#141414] dark:hover:text-white hover:border-[#141414]/40 dark:hover:border-white/40 transition-all shadow-sm"
           >
             <FiClock size={13} />
-            <span>History</span>
+            <span className="hidden sm:inline">History</span>
           </button>
 
           <div
             onClick={() => navigate("/pricing")}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-xs font-semibold text-[#141414] hover:border-[#141414]/40 cursor-pointer transition-all shadow-sm"
+            className="flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full border border-[#E6E2D8] dark:border-[#222634] bg-[#F4F1EA] dark:bg-[#161822] text-xs font-semibold text-[#141414] dark:text-white hover:border-[#141414]/40 dark:hover:border-white/40 cursor-pointer transition-all shadow-sm"
             title="Interview Coins · Click to Top up"
           >
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>{user?.interviewCoin ?? 0} Coins</span>
-            <span className="text-[10px] text-[#141414]/50 ml-0.5 hidden sm:inline">+ Top up</span>
+            <span>{user?.interviewCoin ?? 0}</span>
+            <span className="text-[10px] text-[#141414]/50 dark:text-white/40 ml-0.5 hidden sm:inline">Coins</span>
           </div>
         </div>
       </div>
@@ -171,7 +175,7 @@ export default function Roadmap({ setUser, user }) {
   }
 
   return (
-    <div className="bg-[#FAF9F5] text-[#141414] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col selection:bg-[#141414] selection:text-white">
+    <div className="bg-[#FAF9F5] dark:bg-[#090A0F] text-[#141414] dark:text-[#F9FAFB] font-['Plus_Jakarta_Sans',sans-serif] min-h-screen flex flex-col selection:bg-[#141414] selection:text-white transition-colors">
       <RoadmapNavbar
         user={user}
         onHistoryClick={() => setHistoryOpen(!historyOpen)}
@@ -191,28 +195,28 @@ export default function Roadmap({ setUser, user }) {
                 transition={{ duration: 0.3 }}
                 className="flex flex-col items-center justify-center min-h-[60vh] text-center"
               >
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#E6E2D8] bg-[#F4F1EA] text-[11px] font-semibold text-[#141414]/75 uppercase tracking-wider mb-4">
-                  <FiCompass size={13} className="text-[#141414]" />
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#E6E2D8] dark:border-[#222634] bg-[#F4F1EA] dark:bg-[#161822] text-[11px] font-semibold text-[#141414]/75 dark:text-white/75 uppercase tracking-wider mb-4">
+                  <FiCompass size={13} className="text-[#141414] dark:text-white" />
                   Blueprint Engine · 20 Coins
                 </div>
 
-                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414] max-w-xl">
+                <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[#141414] dark:text-white max-w-xl">
                   Engineering Roadmaps Designed for Your Dream Package.
                 </h1>
 
-                <p className="mt-3 text-xs sm:text-sm text-[#141414]/60 max-w-md leading-relaxed">
+                <p className="mt-3 text-xs sm:text-sm text-[#141414]/60 dark:text-white/60 max-w-md leading-relaxed">
                   Enter your target role and salary bracket. Our AI maps out a systematic weekly curriculum with direct YouTube masterclasses and documentation.
                 </p>
 
                 {error && (
-                  <div className="mt-4 p-3 rounded-xl border border-red-200 bg-red-50 text-xs text-red-600 max-w-md">
+                  <div className="mt-4 p-3 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-950/40 text-xs text-red-600 dark:text-red-400 max-w-md">
                     {error}
                   </div>
                 )}
 
                 {/* Popular Roles Chips */}
                 <div className="mt-8">
-                  <p className="text-[11px] font-semibold text-[#141414]/45 uppercase tracking-wider mb-3">
+                  <p className="text-[11px] font-semibold text-[#141414]/45 dark:text-white/40 uppercase tracking-wider mb-3">
                     Quick Start Suggestions
                   </p>
                   <div className="flex flex-wrap items-center justify-center gap-2 max-w-lg">
@@ -223,8 +227,8 @@ export default function Roadmap({ setUser, user }) {
                         onClick={() => setRole(r)}
                         className={`text-xs px-3.5 py-1.5 rounded-full border transition-all ${
                           role === r
-                            ? "bg-[#141414] text-white border-[#141414]"
-                            : "bg-white text-[#141414]/70 border-[#E6E2D8] hover:border-[#141414]/40 hover:text-[#141414] shadow-sm"
+                            ? "bg-[#141414] dark:bg-white text-white dark:text-[#141414] border-[#141414] dark:border-white font-semibold"
+                            : "bg-white dark:bg-[#12141C] text-[#141414]/70 dark:text-white/70 border-[#E6E2D8] dark:border-[#222634] hover:border-[#141414]/40 dark:hover:border-white/40 hover:text-[#141414] dark:hover:text-white shadow-sm"
                         }`}
                       >
                         {r}
@@ -245,9 +249,9 @@ export default function Roadmap({ setUser, user }) {
       </main>
 
       {/* ── Fixed Bottom Console ── */}
-      <div className="fixed bottom-0 left-0 right-0 z-30 pb-4 pt-3 px-4 bg-gradient-to-t from-[#FAF9F5] via-[#FAF9F5]/95 to-transparent">
+      <div className="fixed bottom-0 left-0 right-0 z-30 pb-4 pt-3 px-3 sm:px-4 bg-gradient-to-t from-[#FAF9F5] via-[#FAF9F5]/95 dark:from-[#090A0F] dark:via-[#090A0F]/95 to-transparent">
         <div className="max-w-3xl mx-auto">
-          <div className="flex items-center gap-2 p-2 rounded-2xl bg-white border border-[#E6E2D8] shadow-[0_8px_30px_rgba(0,0,0,0.06)]">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 p-2 rounded-2xl bg-white dark:bg-[#12141C] border border-[#E6E2D8] dark:border-[#222634] shadow-[0_8px_30px_rgba(0,0,0,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4)] transition-colors">
             {/* Input */}
             <input
               type="text"
@@ -255,94 +259,98 @@ export default function Roadmap({ setUser, user }) {
               onChange={(e) => setRole(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
               placeholder="Enter target role (e.g. Senior Backend Engineer)..."
-              className="flex-1 min-w-0 bg-transparent text-xs sm:text-sm text-[#141414] placeholder-[#141414]/35 outline-none px-3 py-1.5"
+              className="flex-1 min-w-0 bg-transparent text-xs sm:text-sm text-[#141414] dark:text-white placeholder-[#141414]/35 dark:placeholder-white/30 outline-none px-3 py-2"
             />
 
-            {/* Target Package Dropdown */}
-            <div className="relative">
+            <div className="flex items-center gap-1.5 sm:gap-2 justify-between sm:justify-end">
+              {/* Target Package Dropdown */}
+              <div className="relative flex-1 sm:flex-initial">
+                <button
+                  type="button"
+                  onClick={() => setPackageOpen(!packageOpen)}
+                  className="w-full flex items-center justify-between sm:justify-start gap-1 text-xs px-2.5 sm:px-3 py-2 rounded-xl border border-[#E6E2D8] dark:border-[#222634] bg-[#FAF9F5] dark:bg-[#161822] text-[#141414] dark:text-white font-semibold hover:border-[#141414]/30 dark:hover:border-white/30 transition-all whitespace-nowrap"
+                >
+                  <span>{targetPackage}</span>
+                  <FiChevronDown
+                    size={12}
+                    className={`transition-transform text-[#141414]/50 dark:text-white/50 ${packageOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                <AnimatePresence>
+                  {packageOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute bottom-full mb-2 right-0 w-32 rounded-xl overflow-hidden border border-[#E6E2D8] dark:border-[#222634] bg-white dark:bg-[#161822] shadow-[0_8px_24px_rgba(0,0,0,0.12)] z-50 py-1"
+                    >
+                      {PACKAGE_OPTIONS.map((pkg) => (
+                        <button
+                          key={pkg}
+                          onClick={() => {
+                            setTargetPackage(pkg);
+                            setPackageOpen(false);
+                          }}
+                          className={`w-full text-left text-xs px-3 py-2 transition-colors ${
+                            pkg === targetPackage
+                              ? "bg-[#FAF9F5] dark:bg-[#202533] text-[#141414] dark:text-white font-bold"
+                              : "text-[#141414]/70 dark:text-white/70 hover:bg-[#FAF9F5] dark:hover:bg-[#202533] hover:text-[#141414] dark:hover:text-white"
+                          }`}
+                        >
+                          {pkg}
+                        </button>
+                      ))}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Use Resume Button */}
               <button
                 type="button"
-                onClick={() => setPackageOpen(!packageOpen)}
-                className="flex items-center gap-1 text-xs px-3 py-2 rounded-xl border border-[#E6E2D8] bg-[#FAF9F5] text-[#141414] font-semibold hover:border-[#141414]/30 transition-all whitespace-nowrap"
+                onClick={() => setUseResume(!useResume)}
+                className={`flex items-center text-xs gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl border transition-all whitespace-nowrap ${
+                  useResume
+                    ? "bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800 font-semibold"
+                    : "bg-white dark:bg-[#12141C] text-[#141414]/60 dark:text-white/60 border-[#E6E2D8] dark:border-[#222634] hover:border-[#141414]/30 dark:hover:border-white/30"
+                }`}
               >
-                <span>{targetPackage}</span>
-                <FiChevronDown
-                  size={12}
-                  className={`transition-transform text-[#141414]/50 ${packageOpen ? "rotate-180" : ""}`}
-                />
+                {useResume ? (
+                  <>
+                    <FiCheck size={12} />
+                    <span className="hidden sm:inline">Resume Attached</span>
+                    <span className="sm:hidden">Resume</span>
+                  </>
+                ) : (
+                  <>
+                    <FiFileText size={12} />
+                    <span className="hidden sm:inline">Use Resume</span>
+                    <span className="sm:hidden">Resume</span>
+                  </>
+                )}
               </button>
 
-              <AnimatePresence>
-                {packageOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 6, scale: 0.97 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 6, scale: 0.97 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute bottom-full mb-2 right-0 w-32 rounded-xl overflow-hidden border border-[#E6E2D8] bg-white shadow-[0_8px_24px_rgba(0,0,0,0.08)] z-50 py-1"
-                  >
-                    {PACKAGE_OPTIONS.map((pkg) => (
-                      <button
-                        key={pkg}
-                        onClick={() => {
-                          setTargetPackage(pkg);
-                          setPackageOpen(false);
-                        }}
-                        className={`w-full text-left text-xs px-3 py-2 transition-colors ${
-                          pkg === targetPackage
-                            ? "bg-[#FAF9F5] text-[#141414] font-bold"
-                            : "text-[#141414]/70 hover:bg-[#FAF9F5] hover:text-[#141414]"
-                        }`}
-                      >
-                        {pkg}
-                      </button>
-                    ))}
-                  </motion.div>
+              {/* Generate CTA */}
+              <button
+                onClick={handleGenerate}
+                disabled={loading || !role.trim()}
+                className="flex items-center justify-center gap-1.5 text-xs px-3.5 sm:px-4 py-2 rounded-xl font-semibold text-white dark:text-[#141414] bg-[#141414] dark:bg-white hover:bg-black dark:hover:bg-slate-200 transition-all disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap shadow-sm"
+              >
+                {loading ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden sm:inline">Generating…</span>
+                  </>
+                ) : (
+                  <>
+                    <FiSend size={12} />
+                    <span className="hidden sm:inline">Generate</span>
+                  </>
                 )}
-              </AnimatePresence>
+              </button>
             </div>
-
-            {/* Use Resume Button */}
-            <button
-              type="button"
-              onClick={() => setUseResume(!useResume)}
-              className={`flex items-center text-xs gap-1.5 px-3 py-2 rounded-xl border transition-all whitespace-nowrap ${
-                useResume
-                  ? "bg-emerald-50 text-emerald-700 border-emerald-300 font-semibold"
-                  : "bg-white text-[#141414]/60 border-[#E6E2D8] hover:border-[#141414]/30"
-              }`}
-            >
-              {useResume ? (
-                <>
-                  <FiCheck size={12} />
-                  <span>Resume Attached</span>
-                </>
-              ) : (
-                <>
-                  <FiFileText size={12} />
-                  <span>Use Resume</span>
-                </>
-              )}
-            </button>
-
-            {/* Generate CTA */}
-            <button
-              onClick={handleGenerate}
-              disabled={loading || !role.trim()}
-              className="flex items-center gap-1.5 text-xs px-4 py-2 rounded-xl font-semibold text-white bg-[#141414] hover:bg-black transition-all disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap shadow-sm"
-            >
-              {loading ? (
-                <>
-                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  <span className="hidden sm:inline">Generating…</span>
-                </>
-              ) : (
-                <>
-                  <FiSend size={12} />
-                  <span className="hidden sm:inline">Generate</span>
-                </>
-              )}
-            </button>
           </div>
         </div>
       </div>
@@ -357,7 +365,7 @@ export default function Roadmap({ setUser, user }) {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setHistoryOpen(false)}
-              className="fixed inset-0 z-50 bg-black/20 backdrop-blur-sm"
+              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
             />
             <motion.aside
               key="drawer"
@@ -365,13 +373,13 @@ export default function Roadmap({ setUser, user }) {
               animate={{ x: 0 }}
               exit={{ x: 320 }}
               transition={{ type: "spring", stiffness: 320, damping: 32 }}
-              className="fixed right-0 top-0 bottom-0 z-50 w-[320px] max-w-[85vw] bg-[#FAF9F5] border-l border-[#E6E2D8] flex flex-col overflow-y-auto shadow-2xl"
+              className="fixed right-0 top-0 bottom-0 z-50 w-[320px] max-w-[85vw] bg-[#FAF9F5] dark:bg-[#0E1017] border-l border-[#E6E2D8] dark:border-[#222634] flex flex-col overflow-y-auto shadow-2xl"
             >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[#E6E2D8] sticky top-0 bg-[#FAF9F5]/95 backdrop-blur-md">
-                <span className="text-sm font-bold text-[#141414]">Saved Roadmaps</span>
+              <div className="flex items-center justify-between px-5 py-4 border-b border-[#E6E2D8] dark:border-[#222634] sticky top-0 bg-[#FAF9F5]/95 dark:bg-[#0E1017]/95 backdrop-blur-md">
+                <span className="text-sm font-bold text-[#141414] dark:text-white">Saved Roadmaps</span>
                 <button
                   onClick={() => setHistoryOpen(false)}
-                  className="w-7 h-7 rounded-lg border border-[#E6E2D8] flex items-center justify-center text-[#141414]/60 hover:text-[#141414] hover:bg-white transition-all"
+                  className="w-7 h-7 rounded-lg border border-[#E6E2D8] dark:border-[#222634] flex items-center justify-center text-[#141414]/60 dark:text-white/60 hover:text-[#141414] dark:hover:text-white hover:bg-white dark:hover:bg-[#1A1D29] transition-all"
                 >
                   <FiX size={15} />
                 </button>
@@ -379,9 +387,9 @@ export default function Roadmap({ setUser, user }) {
 
               <div className="flex flex-col gap-2.5 p-4">
                 {historyLoading ? (
-                  <p className="text-xs text-[#141414]/40 text-center py-8">Loading history…</p>
+                  <p className="text-xs text-[#141414]/40 dark:text-white/40 text-center py-8">Loading history…</p>
                 ) : history.length === 0 ? (
-                  <p className="text-xs text-[#141414]/40 text-center py-8">No saved roadmaps yet.</p>
+                  <p className="text-xs text-[#141414]/40 dark:text-white/40 text-center py-8">No saved roadmaps yet.</p>
                 ) : (
                   history.map((item) => (
                     <button
@@ -390,16 +398,16 @@ export default function Roadmap({ setUser, user }) {
                         getRoadmapById(item._id);
                         setHistoryOpen(false);
                       }}
-                      className="text-left p-4 rounded-2xl bg-white border border-[#E6E2D8] hover:border-[#141414]/40 transition-all shadow-sm"
+                      className="text-left p-4 rounded-2xl bg-white dark:bg-[#141722] border border-[#E6E2D8] dark:border-[#222634] hover:border-[#141414]/40 dark:hover:border-white/40 transition-all shadow-sm"
                     >
-                      <h3 className="text-xs font-bold text-[#141414] line-clamp-1">{item.title}</h3>
-                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E6E2D8]/60">
-                        <span className="text-[10px] font-semibold text-[#141414] bg-[#F4F1EA] px-2 py-0.5 rounded border border-[#E6E2D8]">
+                      <h3 className="text-xs font-bold text-[#141414] dark:text-white line-clamp-1">{item.title}</h3>
+                      <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#E6E2D8]/60 dark:border-[#222634]">
+                        <span className="text-[10px] font-semibold text-[#141414] dark:text-white bg-[#F4F1EA] dark:bg-[#1A1D29] px-2 py-0.5 rounded border border-[#E6E2D8] dark:border-[#222634]">
                           {item.targetPackage}
                         </span>
-                        <span className="text-[10px] text-[#141414]/50">{item.duration}</span>
+                        <span className="text-[10px] text-[#141414]/50 dark:text-white/40">{item.duration}</span>
                       </div>
-                      <p className="text-[10px] text-[#141414]/40 mt-1">
+                      <p className="text-[10px] text-[#141414]/40 dark:text-white/30 mt-1">
                         {new Date(item.createdAt).toLocaleDateString()}
                       </p>
                     </button>

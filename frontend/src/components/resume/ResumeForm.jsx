@@ -4,7 +4,7 @@ import { FiPlus, FiTrash2 } from "react-icons/fi";
 function Input({ label, value, onChange, placeholder, type = "text" }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[11px] font-bold text-[#141414]/75 uppercase tracking-wider">
+      <label className="text-[11px] font-bold text-[#141414]/75 dark:text-white/75 uppercase tracking-wider">
         {label}
       </label>
       <input
@@ -12,7 +12,7 @@ function Input({ label, value, onChange, placeholder, type = "text" }) {
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="bg-[#FAF9F5] border border-[#DCD7CB] text-[#141414] text-xs sm:text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-[#141414] focus:bg-white transition-all placeholder-[#141414]/30"
+        className="bg-[#FAF9F5] dark:bg-[#161822] border border-[#DCD7CB] dark:border-[#2A3042] text-[#141414] dark:text-white text-xs sm:text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-[#141414] dark:focus:border-white focus:bg-white dark:focus:bg-[#1A1D29] transition-all placeholder-[#141414]/30 dark:placeholder-white/30"
       />
     </div>
   );
@@ -22,7 +22,7 @@ function Input({ label, value, onChange, placeholder, type = "text" }) {
 function Textarea({ label, value, onChange, placeholder, rows = 3 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label className="text-[11px] font-bold text-[#141414]/75 uppercase tracking-wider">
+      <label className="text-[11px] font-bold text-[#141414]/75 dark:text-white/75 uppercase tracking-wider">
         {label}
       </label>
       <textarea
@@ -30,7 +30,7 @@ function Textarea({ label, value, onChange, placeholder, rows = 3 }) {
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        className="bg-[#FAF9F5] border border-[#DCD7CB] text-[#141414] text-xs sm:text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-[#141414] focus:bg-white transition-all placeholder-[#141414]/30 resize-none leading-relaxed"
+        className="bg-[#FAF9F5] dark:bg-[#161822] border border-[#DCD7CB] dark:border-[#2A3042] text-[#141414] dark:text-white text-xs sm:text-sm rounded-xl px-3.5 py-2.5 outline-none focus:border-[#141414] dark:focus:border-white focus:bg-white dark:focus:bg-[#1A1D29] transition-all placeholder-[#141414]/30 dark:placeholder-white/30 resize-none leading-relaxed"
       />
     </div>
   );
@@ -39,12 +39,12 @@ function Textarea({ label, value, onChange, placeholder, rows = 3 }) {
 // ─── Add / Remove Entry Card ──────────────────────────────────────────────────
 function EntryCard({ children, onRemove }) {
   return (
-    <div className="relative bg-[#FDFBF7] border border-[#E6E2D8] rounded-2xl p-4 sm:p-5 shadow-sm">
+    <div className="relative bg-[#FDFBF7] dark:bg-[#141722] border border-[#E6E2D8] dark:border-[#222634] rounded-2xl p-4 sm:p-5 shadow-sm transition-colors">
       <button
         onClick={onRemove}
         type="button"
         title="Remove Entry"
-        className="absolute top-3 right-3 z-10 w-7 h-7 rounded-lg border border-[#E6E2D8] bg-white flex items-center justify-center text-[#141414]/40 hover:text-red-600 hover:border-red-200 transition-all"
+        className="absolute top-3 right-3 z-10 w-7 h-7 rounded-lg border border-[#E6E2D8] dark:border-[#2A3042] bg-white dark:bg-[#1A1D29] flex items-center justify-center text-[#141414]/40 dark:text-white/40 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 transition-all"
       >
         <FiTrash2 size={13} />
       </button>
