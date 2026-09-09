@@ -18,7 +18,7 @@ app.use(express.json());
 
 
 
-const PORT = process.env.RESUME_PORT || process.env.PORT || 8003
+const PORT = process.env.RESUME_PORT || 8003;
 
 app.get("/", (req,res)=>{
     return res.send(`hello from resume-server `)

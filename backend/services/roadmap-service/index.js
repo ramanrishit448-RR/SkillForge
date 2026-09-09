@@ -16,7 +16,7 @@ dns.setServers([
 const app = express()
 app.use(express.json());
 
-const PORT = process.env.ROADMAP_PORT || process.env.PORT || 8004
+const PORT = process.env.ROADMAP_PORT || 8004;
 
 
 

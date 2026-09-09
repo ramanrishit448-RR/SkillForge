@@ -19,7 +19,7 @@ app.use(express.json());
 
 
 
-const PORT = process.env.BILLING_PORT || process.env.PORT || 8005
+const PORT = process.env.BILLING_PORT || 8005;
 
 app.get("/", (req,res)=>{
     return res.send(`hello from Billing-server `)

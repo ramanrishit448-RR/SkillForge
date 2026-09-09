@@ -22,7 +22,7 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-const PORT = process.env.AUTH_PORT || process.env.PORT || 8001
+const PORT = process.env.AUTH_PORT || 8001;
 
 app.use("/",authRouter);
 

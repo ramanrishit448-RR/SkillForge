@@ -18,7 +18,7 @@ app.use(express.json());
 
 
 
-const PORT = process.env.INTERVIEW_PORT || process.env.PORT || 8002
+const PORT = process.env.INTERVIEW_PORT || 8002;
 
 app.get("/", (req,res)=>{
     return res.send(`hello from interview-server `)
