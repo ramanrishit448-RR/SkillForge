@@ -59,23 +59,22 @@ const defaultProxyErrorHandler = (serviceName) => (err, res, next) => {
 
 app.use(
   "/api/auth",
-  proxy(process.env.AUTH_SERVICE_URL || "http://localhost:8001", {
+  proxy(process.env.AUTH_SERVICE_URL || "http://127.0.0.1:8001", {
     proxyErrorHandler: defaultProxyErrorHandler("Auth Service"),
   })
 );
 
 app.get("/api/me", isAuth, getCurrentUser);
 
-app.use("/api/interview", isAuth, proxyWithUser(process.env.INTERVIEW_SERVICE_URL || "http://localhost:8002", "Interview Service"));
+app.use("/api/interview", isAuth, proxyWithUser(process.env.INTERVIEW_SERVICE_URL || "http://127.0.0.1:8002", "Interview Service"));
 
-app.use("/api/resume", isAuth, proxyWithUser(process.env.RESUME_SERVICE_URL || "http://localhost:8003", "Resume Service"));
+app.use("/api/resume", isAuth, proxyWithUser(process.env.RESUME_SERVICE_URL || "http://127.0.0.1:8003", "Resume Service"));
 
-app.use("/api/roadmap", isAuth, proxyWithUser(process.env.ROADMAP_SERVICE_URL || "http://localhost:8004", "Roadmap Service"));
+app.use("/api/roadmap", isAuth, proxyWithUser(process.env.ROADMAP_SERVICE_URL || "http://127.0.0.1:8004", "Roadmap Service"));
 
-app.use("/api/billing", isAuth, proxyWithUser(process.env.BILLING_SERVICE_URL || "http://localhost:8005", "Billing Service"));
+app.use("/api/billing", isAuth, proxyWithUser(process.env.BILLING_SERVICE_URL || "http://127.0.0.1:8005", "Billing Service"));
 
-app.listen(PORT,()=>{
-    console.log(`Gateway Started on ${PORT}`)
-   
-})
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Gateway Started on ${PORT}`);
+});
 

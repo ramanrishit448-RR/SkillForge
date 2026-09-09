@@ -28,8 +28,14 @@ app.use("/",authRouter);
 
 
 
-app.listen(PORT,() => {
-    console.log( `Auth Service Running`);
-    connectDb()
-  }
-);
+process.on("uncaughtException", (err) => {
+  console.error("[Auth Service Uncaught Exception]:", err);
+});
+process.on("unhandledRejection", (reason) => {
+  console.error("[Auth Service Unhandled Rejection]:", reason);
+});
+
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Auth Service Running on port ${PORT}`);
+    connectDb();
+});

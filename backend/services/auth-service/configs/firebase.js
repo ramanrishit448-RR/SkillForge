@@ -32,6 +32,18 @@ if (!serviceAccount) {
   );
 }
 
-export const app = initializeApp({
-  credential: serviceAccount ? cert(serviceAccount) : undefined,
-});
+let appInstance = null;
+
+try {
+  if (serviceAccount?.private_key) {
+    serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+  }
+  appInstance = initializeApp({
+    credential: serviceAccount ? cert(serviceAccount) : undefined,
+  });
+  console.log("✅ Firebase Admin initialized successfully");
+} catch (err) {
+  console.error("❌ Failed to initialize Firebase Admin:", err.message);
+}
+
+export const app = appInstance;

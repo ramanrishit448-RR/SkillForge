@@ -26,9 +26,8 @@ app.get("/", (req,res)=>{
 })
 app.use("/",resumeRouter)
 
-app.listen(PORT,()=>{
-    console.log(`Resume Service Started on ${PORT}`)
-    connectDb()
-   
-})
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Resume Service Started on ${PORT}`);
+    connectDb();
+});
 

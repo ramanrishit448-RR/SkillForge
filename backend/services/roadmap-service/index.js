@@ -23,8 +23,7 @@ const PORT = process.env.ROADMAP_PORT || 8004;
 app.use("/",roadmapRouter)
 
 
-app.listen(PORT,()=>{
-    console.log(`Roadmap Service Started on ${PORT}`)
-   connectDb()
-})
-
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Roadmap Service Started on ${PORT}`);
+    connectDb();
+});

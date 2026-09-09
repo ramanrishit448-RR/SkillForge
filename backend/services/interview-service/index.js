@@ -30,9 +30,8 @@ app.use("/",interviewRouter)
 
 
 
-app.listen(PORT,()=>{
-    console.log(`Interview Service Started on ${PORT}`)
-    connectDb()
-   
-})
+app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Interview Service Started on ${PORT}`);
+    connectDb();
+});
 
