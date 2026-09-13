@@ -21,6 +21,7 @@
   <img src="https://img.shields.io/badge/AUTH-FIREBASE%20ADMIN-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase Admin" />
   <img src="https://img.shields.io/badge/PAYMENTS-RAZORPAY-0C2340?style=for-the-badge&logo=razorpay&logoColor=white" alt="Razorpay" />
   <img src="https://img.shields.io/badge/CODE%20EDITOR-MONACO-1E1E1E?style=for-the-badge&logo=visualstudiocode&logoColor=007ACC" alt="Monaco Editor" />
+  <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-2ea44f?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="MIT License" /></a>
 </p>
 
 ---
@@ -424,7 +425,25 @@ http://localhost:5173
 
 ## 📜 License
 
-This project is licensed under the [ISC License](LICENSE).
+This project is licensed under the **[MIT License](LICENSE)**.
+
+```text
+MIT License
+
+Copyright (c) 2026 ramanrishit448-RR
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+```
+
+For more details, please see the full [LICENSE](LICENSE) file.
 
 ---
 
