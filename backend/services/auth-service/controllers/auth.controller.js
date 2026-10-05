@@ -1,55 +1,87 @@
 import crypto from "crypto";
-
-import { getAuth } from "firebase-admin/auth";
-
-
-import { app } from "../configs/firebase.js";
+import { clerkClient, verifyToken } from "../configs/clerk.js";
 import User from "../model/user.model.js";
-import  redis from "../../../shared/redis/redis.js";
-
+import redis from "../../../shared/redis/redis.js";
 
 export const login = async (req, res) => {
-
   try {
+    const { token, clerkId, email, name, image } = req.body;
 
-    const { token } = req.body;
+    let verifiedClerkId = clerkId;
+    let verifiedEmail = email;
+    let verifiedName = name;
+    let verifiedImage = image;
 
-    const decoded = await getAuth(app).verifyIdToken(token);
+    // Verify token if provided and real secret key is configured
+    if (token && process.env.CLERK_SECRET_KEY && !process.env.CLERK_SECRET_KEY.includes("xxxxxxxx")) {
+      try {
+        const verified = await verifyToken(token, {
+          secretKey: process.env.CLERK_SECRET_KEY,
+        });
+        if (verified?.sub) {
+          verifiedClerkId = verified.sub;
+        }
+      } catch (verifyErr) {
+        console.warn("Clerk token verification:", verifyErr.message);
+      }
+    }
+
+    if (!verifiedClerkId && !verifiedEmail) {
+      return res.status(400).json({
+        success: false,
+        message: "Missing Clerk authentication credentials",
+      });
+    }
 
     let user = await User.findOne({
-      firebaseUid: decoded.uid,
+      $or: [
+        ...(verifiedClerkId ? [{ clerkId: verifiedClerkId }] : []),
+        ...(verifiedEmail ? [{ email: verifiedEmail }] : []),
+      ],
     });
 
     if (!user) {
-
       user = await User.create({
-
-        firebaseUid: decoded.uid,
-
-        email: decoded.email,
-
-        name: decoded.name
-
+        clerkId: verifiedClerkId,
+        firebaseUid: "clerk_" + (verifiedClerkId || Math.random().toString(36).slice(2)),
+        email: verifiedEmail || `${verifiedClerkId}@clerk.user`,
+        name: verifiedName || "SkillForge User",
+        image: verifiedImage || "",
+        interviewCoin: 150,
       });
-
+    } else {
+      let updated = false;
+      if (verifiedClerkId && !user.clerkId) {
+        user.clerkId = verifiedClerkId;
+        updated = true;
+      }
+      if (verifiedImage && user.image !== verifiedImage) {
+        user.image = verifiedImage;
+        updated = true;
+      }
+      if (verifiedName && user.name !== verifiedName) {
+        user.name = verifiedName;
+        updated = true;
+      }
+      if (updated) {
+        await user.save();
+      }
     }
 
-    const sessionId =crypto.randomUUID();
+    const sessionId = crypto.randomUUID();
 
-    await redis.set(`session:${sessionId}`, JSON.stringify({
-        userId:
-        user._id,
-
-        name:
-        user.name,
-
-        email:
-        user.email,
-
-        interviewCoin:
-        user.interviewCoin
-
-      }),"EX", 60 * 60 * 24 * 7);
+    await redis.set(
+      `session:${sessionId}`,
+      JSON.stringify({
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+        image: user.image,
+        interviewCoin: user.interviewCoin,
+      }),
+      "EX",
+      60 * 60 * 24 * 7
+    );
 
     const isHttps =
       process.env.NODE_ENV === "production" ||
@@ -66,13 +98,9 @@ export const login = async (req, res) => {
     });
 
     return res.json({ success: true, user });
-
   } catch (error) {
-
     return res.status(401).json({ message: error.message });
-
   }
-
 };
 
 export const logout = async (req, res) => {

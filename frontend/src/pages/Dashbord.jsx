@@ -45,13 +45,19 @@ export default function Dashboard({ user, setUser }) {
 
   const handleLogout = async () => {
     try {
-      const response = await api.get("/api/auth/logout");
-      if (response.data.success) {
-        setUser(null);
-        navigate("/");
-      }
+      await api.get("/api/auth/logout").catch(() => {});
     } catch (error) {
       console.log(error);
+    } finally {
+      setUser(null);
+      if (window?.Clerk) {
+        try {
+          await window.Clerk.signOut();
+        } catch (e) {
+          console.warn("Clerk signOut:", e);
+        }
+      }
+      navigate("/");
     }
   };
 

@@ -3,25 +3,34 @@ import mongoose from "mongoose";
 const userSchema =
 new mongoose.Schema({
 
-   firebaseUid:{
-      type:String,
-      required:true,
-      unique:true
+   clerkId: {
+      type: String,
+      unique: true,
+      sparse: true,
    },
 
-   name:String,
-
-   email:{
-      type:String,
-      required:true,
-      unique:true
+   firebaseUid: {
+      type: String,
+      default: () => "clerk_" + Math.random().toString(36).slice(2) + Date.now(),
    },
 
+   name: String,
 
-   interviewCoin:{
-      type:Number,
-      default:150
-   }
+   email: {
+      type: String,
+      required: true,
+      unique: true,
+   },
+
+   image: {
+      type: String,
+      default: "",
+   },
+
+   interviewCoin: {
+      type: Number,
+      default: 150,
+   },
 
 },{
    timestamps:true

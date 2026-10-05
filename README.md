@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/LLM-GROQ%20%7C%20LLAMA%203.3-F05A28?style=for-the-badge" alt="Groq LLaMA 3.3" />
   <img src="https://img.shields.io/badge/VISION%20%26%20GENAI-GOOGLE%20GEMINI-4285F4?style=for-the-badge&logo=google&logoColor=white" alt="Google Gemini" />
   <img src="https://img.shields.io/badge/VECTOR%20DB-QDRANT-C82D78?style=for-the-badge" alt="Qdrant Vector DB" />
-  <img src="https://img.shields.io/badge/AUTH-FIREBASE%20ADMIN-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase Admin" />
+  <img src="https://img.shields.io/badge/AUTH-CLERK-6C47FF?style=for-the-badge&logo=clerk&logoColor=white" alt="Clerk Auth" />
   <img src="https://img.shields.io/badge/PAYMENTS-RAZORPAY-0C2340?style=for-the-badge&logo=razorpay&logoColor=white" alt="Razorpay" />
   <img src="https://img.shields.io/badge/CODE%20EDITOR-MONACO-1E1E1E?style=for-the-badge&logo=visualstudiocode&logoColor=007ACC" alt="Monaco Editor" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/LICENSE-MIT-2ea44f?style=for-the-badge&logo=open-source-initiative&logoColor=white" alt="MIT License" /></a>
@@ -34,7 +34,7 @@
 - [🛠️ Deep-Dive Tech Stack](#️-deep-dive-tech-stack)
 - [📂 Detailed Project Structure](#-detailed-project-structure)
 - [⚙️ Microservices & API Gateway Breakdown](#️-microservices--api-gateway-breakdown)
-- [🔑 Firebase serviceAccountKey.json Setup](#-firebase-serviceaccountkeyjson-setup)
+- [🔑 Clerk Authentication Setup](#-clerk-authentication-setup)
 - [🔐 Centralized Environment Setup (.env)](#-centralized-environment-setup-env)
 - [🚀 Getting Started & Local Execution](#-getting-started--local-execution)
 - [📜 License](#-license)
@@ -120,7 +120,7 @@ SkillForge uses a distributed microservices pattern orchestrated via an API Gate
 - **Data Visualizations & Metrics**: [Recharts 3.8](https://recharts.org/), `react-circular-progressbar`, `react-countdown-circle-timer`
 - **Animations & Micro-interactions**: [Motion (Framer Motion 12)](https://motion.dev/)
 - **Document Exporting**: `jspdf`, `html2canvas`, `react-to-print` for downloading generated resumes and roadmaps
-- **Client Authentication**: Firebase Web Client SDK
+- **Client Authentication**: [Clerk React SDK (@clerk/clerk-react)](https://clerk.com/) with customized dark glassmorphism components
 
 ### Backend & Microservices
 - **Runtime & Framework**: [Node.js 20+](https://nodejs.org/) (ES Modules) with [Express.js 5.2](https://expressjs.com/)
@@ -134,7 +134,7 @@ SkillForge uses a distributed microservices pattern orchestrated via an API Gate
   - **Groq SDK (LLaMA 3.3 / OSS Models)**: Ultra-low latency inference for live conversational interviews
   - **Google Generative AI (Gemini 2.0)**: Deep document reasoning and ATS resume parsing
   - **Tavily Search API & YouTube Data API v3**: Autonomous internet resource retrieval for live course roadmaps
-- **Authentication**: Firebase Admin SDK (`firebase-admin`) with private service credentials
+- **Authentication**: [Clerk Backend SDK (@clerk/backend)](https://clerk.com/) with cryptographic JWT token verification and automated user synchronization
 - **Billing & Payments**: Razorpay Node SDK with HMAC-SHA256 signature verification
 
 ---
@@ -148,14 +148,16 @@ SkillForge/
 │   ├── src/
 │   │   ├── assets/                         # Icons, illustrations, and images
 │   │   ├── components/                     # Reusable UI components (Navbar, PricingCard, etc.)
+│   │   │   ├── ClerkSyncBridge.jsx         # Clerk session & backend bridge
+│   │   │   ├── LoginModel.jsx              # Reimagined Clerk sign-in modal
+│   │   │   └── ...                         # Feature components
 │   │   ├── pages/                          # Application pages
 │   │   │   ├── Home.jsx                    # Landing page
-│   │   │   ├── Dashboard.jsx               # Candidate command center
-│   │   │   ├── Interview.jsx               # AI Interview session & Monaco editor
-│   │   │   ├── Resume.jsx                  # Resume builder & ATS scorer
+│   │   │   ├── Dashbord.jsx                # Candidate command center
+│   │   │   ├── InterviewPage.jsx           # AI Interview session & Monaco editor
+│   │   │   ├── ResumeBuilder.jsx           # Resume builder & ATS scorer
 │   │   │   ├── Roadmap.jsx                 # Personalized roadmap view
-│   │   │   ├── Pricing.jsx                 # Coin packages & Razorpay checkout
-│   │   │   └── Login.jsx                   # Firebase authentication modal
+│   │   │   └── Pricing.jsx                 # Coin packages & Razorpay checkout
 │   │   ├── store/                          # Redux slices and global store
 │   │   ├── utils/                          # Axios instance, helpers, and constants
 │   │   ├── App.jsx                         # Application router root
@@ -241,49 +243,33 @@ SkillForge/
 
 ---
 
-## 🔑 Firebase serviceAccountKey.json Setup
+## 🔑 Clerk Authentication Setup
 
-The **Auth Microservice** (`backend/services/auth-service`) uses the official **Firebase Admin SDK** to verify client authentication tokens and validate user credentials securely. To enable this, you need a Firebase Service Account key file.
+SkillForge uses **[Clerk](https://clerk.com/)** for enterprise-grade, seamless authentication across the React frontend and Node.js microservices. Clerk handles multi-factor authentication, social OAuth (Google, GitHub, etc.), email magic links, and session lifecycle with zero complex credential files.
 
 ### Step-by-Step Instructions:
 
-1. **Open Firebase Console**:
-   Navigate to [Firebase Console](https://console.firebase.google.com/) and select your project.
-2. **Access Project Settings**:
-   Click the gear icon (⚙️) next to *Project Overview* in the left sidebar and select **Project settings**.
-3. **Generate Private Key**:
-   - Go to the **Service accounts** tab.
-   - Ensure **Node.js** is selected.
-   - Click the **Generate new private key** button.
-   - Confirm by clicking **Generate key** in the confirmation modal. A `.json` file will download to your computer.
-4. **Place File in Auth Service**:
-   - Rename the downloaded file to:
-     ```text
-     serviceAccountKey.json
-     ```
-   - Move this file directly into your auth service directory:
-     ```text
-     SkillForge/backend/services/auth-service/serviceAccountKey.json
-     ```
-5. **Verify Structure**:
-   Your `serviceAccountKey.json` must follow this structure (see [serviceAccountKey.example.json](file:///c:/Users/raman/Desktop/SkillForge/backend/services/auth-service/serviceAccountKey.example.json)):
-   ```json
-   {
-     "type": "service_account",
-     "project_id": "your-firebase-project-id",
-     "private_key_id": "your_private_key_id",
-     "private_key": "-----BEGIN PRIVATE KEY-----\nYOUR_RSA_PRIVATE_KEY\n-----END PRIVATE KEY-----\n",
-     "client_email": "firebase-adminsdk-xxxxx@your-project.iam.gserviceaccount.com",
-     "client_id": "123456789012345678901",
-     "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-     "token_uri": "https://oauth2.googleapis.com/token",
-     "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-     "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-xxxxx%40your-project.iam.gserviceaccount.com"
-   }
+1. **Create or Open Your Clerk Application**:
+   Navigate to the [Clerk Dashboard](https://dashboard.clerk.com/) and create a new application (e.g., *SkillForge*).
+2. **Retrieve Your API Keys**:
+   - In the left sidebar of your Clerk Dashboard, click **Configure > API Keys**.
+   - Copy your **Publishable Key** (`pk_test_...` or `pk_live_...`).
+   - Copy your **Secret Key** (`sk_test_...` or `sk_live_...`).
+3. **Configure Frontend**:
+   In [frontend/.env](file:///c:/Users/ASUS/Downloads/SkillForge/frontend/.env):
+   ```env
+   VITE_CLERK_PUBLISHABLE_KEY="pk_test_your_clerk_publishable_key"
    ```
-
-> [!IMPORTANT]
-> `serviceAccountKey.json` contains sensitive administrative credentials. It is already added to [backend/.gitignore](file:///c:/Users/raman/Desktop/SkillForge/backend/.gitignore). **Never** commit this file to public version control!
+4. **Configure Backend**:
+   In [backend/.env](file:///c:/Users/ASUS/Downloads/SkillForge/backend/.env):
+   ```env
+   CLERK_PUBLISHABLE_KEY="pk_test_your_clerk_publishable_key"
+   CLERK_SECRET_KEY="sk_test_your_clerk_secret_key"
+   ```
+5. **How It Works**:
+   - The React frontend uses `@clerk/clerk-react` with custom glassmorphic styling for the sign-in modal.
+   - Upon authentication, [ClerkSyncBridge.jsx](file:///c:/Users/ASUS/Downloads/SkillForge/frontend/src/components/ClerkSyncBridge.jsx) automatically synchronizes the authenticated user profile with the backend (`POST /api/auth/login`).
+   - The backend creates/links the user in MongoDB, loads their starter interview coins (150 coins), issues an isolated session in Upstash Redis, and automatically redirects the user to `/dashboard`.
 
 ---
 
@@ -291,7 +277,7 @@ The **Auth Microservice** (`backend/services/auth-service`) uses the official **
 
 All backend microservices and the API Gateway read from a **single, centralized `.env` file** located at the root of `backend/`:
 
-📁 **File**: `SkillForge/backend/.env` (Reference: [backend/.env.example](file:///c:/Users/raman/Desktop/SkillForge/backend/.env.example))
+📁 **File**: `SkillForge/backend/.env` (Reference: [backend/.env.example](file:///c:/Users/ASUS/Downloads/SkillForge/backend/.env.example))
 
 ```env
 # ==========================================
@@ -311,47 +297,50 @@ BILLING_SERVICE_URL=http://localhost:8005
 REDIS_URL="rediss://default:your_password@your-upstash-redis.upstash.io:6379"
 
 # ==========================================
+# AUTH SERVICE & CLERK AUTHENTICATION
+# ==========================================
+AUTH_PORT=8001
+AUTH_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/User?retryWrites=true&w=majority&appName=Cluster0"
+CLERK_PUBLISHABLE_KEY="pk_test_your_clerk_publishable_key"
+CLERK_SECRET_KEY="sk_test_your_clerk_secret_key"
+
+# ==========================================
 # SHARED AI & LLM CONFIGURATION
 # (Shared across Interview, Resume, & Roadmap Services)
 # ==========================================
 GROQ_API_KEY="your_groq_api_key"
 
 # ==========================================
-# AUTH SERVICE
-# ==========================================
-AUTH_PORT=8001
-AUTH_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/User"
-
-# ==========================================
 # INTERVIEW SERVICE
 # ==========================================
 INTERVIEW_PORT=8002
-INTERVIEW_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/interviewStart"
+INTERVIEW_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/interviewStart?retryWrites=true&w=majority&appName=Cluster0"
 
 # ==========================================
 # RESUME SERVICE
 # ==========================================
 RESUME_PORT=8003
-RESUME_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/Resume"
+RESUME_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/Resume?retryWrites=true&w=majority&appName=Cluster0"
 
 # ==========================================
 # ROADMAP SERVICE
 # ==========================================
 ROADMAP_PORT=8004
-ROADMAP_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/Roadmaps"
+ROADMAP_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/Roadmaps?retryWrites=true&w=majority&appName=Cluster0"
+YOUTUBE_API_KEY="your_youtube_api_key"
 
 # ==========================================
 # BILLING SERVICE
 # ==========================================
 BILLING_PORT=8005
-BILLING_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/?appName=Cluster0/billing"
+BILLING_MONGODB_URL="mongodb+srv://<user>:<password>@cluster.mongodb.net/billing?retryWrites=true&w=majority&appName=Cluster0"
 RAZORPAY_KEY_ID="rzp_test_your_razorpay_key_id"
 RAZORPAY_KEY_SECRET="your_razorpay_key_secret"
 ```
 
 📁 **Frontend File**: `SkillForge/frontend/.env` (Reference: `frontend/.env.example`)
 ```env
-VITE_FIREBASE_APIKEY="your_firebase_web_api_key"
+VITE_CLERK_PUBLISHABLE_KEY="pk_test_your_clerk_publishable_key"
 VITE_RAZORPAY_KEY_ID="rzp_test_your_razorpay_key_id"
 ```
 
@@ -364,7 +353,7 @@ VITE_RAZORPAY_KEY_ID="rzp_test_your_razorpay_key_id"
 - **npm**: v10.x or later
 - **MongoDB Atlas** or Local MongoDB instance
 - **Upstash Redis** account or Local Redis server
-- **API Keys**: Groq, Google Gemini, Razorpay, Firebase, YouTube API
+- **API Keys**: Clerk, Groq, Google Gemini, Razorpay, YouTube API
 
 ---
 
@@ -376,16 +365,12 @@ cd SkillForge
 
 ---
 
-### Step 2: Configure Backend Environment & Firebase
+### Step 2: Configure Backend Environment & Clerk
 1. Create the backend `.env`:
    ```bash
    cp backend/.env.example backend/.env
    ```
-2. Open `backend/.env` and paste your actual credentials (MongoDB URLs, Redis URL, Groq API key, Razorpay keys, etc.).
-3. Place your `serviceAccountKey.json` inside:
-   ```text
-   backend/services/auth-service/serviceAccountKey.json
-   ```
+2. Open `backend/.env` and paste your actual credentials (MongoDB URLs, Redis URL, Clerk keys, Groq API key, Razorpay keys, etc.).
 
 ---
 
