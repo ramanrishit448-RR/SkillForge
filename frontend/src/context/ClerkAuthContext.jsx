@@ -30,7 +30,7 @@ export function ClerkAuthSyncProvider({ children, onUserChange }) {
       }
 
       const email = clerkUser.primaryEmailAddress?.emailAddress || "";
-      const name = clerkUser.fullName || clerkUser.firstName || "SkillForge User";
+      const name = clerkUser.fullName || clerkUser.firstName || email.split("@")[0] || "User";
       const image = clerkUser.imageUrl || "";
 
       const res = await api.post("/api/auth/login", {

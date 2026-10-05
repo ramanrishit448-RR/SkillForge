@@ -45,7 +45,7 @@ export const login = async (req, res) => {
         clerkId: verifiedClerkId,
         firebaseUid: "clerk_" + (verifiedClerkId || Math.random().toString(36).slice(2)),
         email: verifiedEmail || `${verifiedClerkId}@clerk.user`,
-        name: verifiedName || "SkillForge User",
+        name: verifiedName || (verifiedEmail ? verifiedEmail.split("@")[0] : "User"),
         image: verifiedImage || "",
         interviewCoin: 150,
       });
